@@ -24,10 +24,10 @@
         </li>
       </ul>
 
-      <!-- Search bar -->
-      <form class="d-flex mx-3">
-        <input class="form-control me-2" type="search" placeholder="Search for products, brands and more">
-        <button class="btn btn-warning" type="submit">Search</button>
+     <!-- Center Section: Search Bar -->
+      <form class="d-flex search-bar mx-auto" method="get" action="{% url 'search' %}">
+        <input type="search" name="keyword" placeholder="Search products, brands..." value="{{ query|default:'' }}">
+        <button type="submit">Search</button>
       </form>
 
       <!-- Right links -->

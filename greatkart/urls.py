@@ -5,10 +5,11 @@ from django.conf.urls.static import static
 from store import views as store_views
 
 urlpatterns = [
-     path('admin/', admin.site.urls),
-    path('', store_views.home, name='home'),  # root URL
+    path('admin/', admin.site.urls),
+    path('', store_views.home, name='home'),             # root URL
     path('home/', store_views.store, name='home_page'),  # /home URL
-    path('store/', include('store.urls')),
+    path('store/', include('store.urls')),               # all store URLs
+    path('carts/', include('carts.urls')),              # cart URLs
 ]
 
 # Serve media files during development

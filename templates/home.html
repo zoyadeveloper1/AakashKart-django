@@ -17,28 +17,24 @@
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
     <div class="container">
-      <a class="navbar-brand" href="{% url 'home' %}">AakashKart </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <a class="navbar-brand" href="{% url 'home' %}">AakashKart</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
+
       <div class="collapse navbar-collapse" id="navbarNav">
         <!-- Left links -->
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'home' %}">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'store' %}">Store</a>
-          </li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'store' %}">Store</a></li>
         </ul>
 
         <!-- Categories Dropdown -->
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-               data-bs-toggle="dropdown" aria-expanded="false">
-              All Categories
-            </a>
+               data-bs-toggle="dropdown" aria-expanded="false">All Categories</a>
             <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
               <li><a class="dropdown-item" href="{% url 'store' %}">All Products</a></li>
               {% for category in categories %}
@@ -50,23 +46,41 @@
           </li>
         </ul>
 
-        <!-- Search bar -->
-        <form class="d-flex mx-3" method="get" action="{% url 'store' %}">
-          <input class="form-control me-2" type="search" name="q" placeholder="Search for products, brands and more">
-          <button class="btn btn-warning" type="submit">Search</button>
-        </form>
+      <!-- Fancy Centered Search Bar -->
+<div class="d-flex justify-content-center my-4">
+  <form class="d-flex shadow-sm rounded-pill overflow-hidden" method="get" action="{% url 'store' %}" style="max-width:500px; width:100%;">
+    <input type="search" name="q" 
+           class="form-control border-0 px-4 py-2" 
+           placeholder="Search products, brands..." 
+           value="{{ query|default:'' }}" 
+           style="border-radius: 50px 0 0 50px;">
+    <button type="submit" 
+            class="btn btn-warning fw-bold px-4" 
+            style="border-radius: 0 50px 50px 0; transition: all 0.3s;">
+      🔍
+    </button>
+  </form>
+</div>
+
+<!-- Optional CSS for extra hover effect -->
+<style>
+  form.d-flex:hover button {
+    background-color: #e0a800;
+    transform: scale(1.05);
+  }
+  form.d-flex input:focus {
+    box-shadow: none;
+    outline: none;
+  }
+</style>
+
+          
 
         <!-- Right links -->
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link" href="#">Login</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Register</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Cart 🛒</a>
-          </li>
+          <li class="nav-item"><a class="nav-link" href="#">Login</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Register</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Cart 🛒</a></li>
         </ul>
       </div>
     </div>
@@ -82,36 +96,35 @@
     </div>
   </div>
 
-    <!-- Popular Products Section -->
-<div class="container my-5" id="popular-products">
-  <a href="{% url 'store' %}" class="btn btn-outline-primary float-end mb-3">See All</a>
-  <h3 class="mb-4">Popular Products</h3>
-  <div class="row g-4">
-    {% for product in products %}
-      <div class="col-md-3">
-        <div class="card product-card h-100">
-          {% if product.image %}
-            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
-          {% else %}
-            <img src="{% static 'images/default-product.jpg' %}" class="card-img-top" alt="{{ product.name }}">
-          {% endif %}
-          <div class="card-body">
-            <h6 class="card-title">{{ product.name }}</h6>
-            <p class="text-success fw-bold">${{ product.price }}</p>
-            <a href="{{ product.get_url }}" class="btn btn-sm btn-primary">View / Add to Cart</a>
+  <!-- Popular Products Section -->
+  <div class="container my-5" id="popular-products">
+    <a href="{% url 'store' %}" class="btn btn-outline-primary float-end mb-3">See All</a>
+    <h3 class="mb-4">Popular Products</h3>
+    <div class="row g-4">
+      {% for product in products %}
+        <div class="col-md-3">
+          <div class="card product-card h-100">
+            {% if product.image %}
+              <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.product_name }}">
+            {% else %}
+              <img src="{% static 'images/default-product.jpg' %}" class="card-img-top" alt="{{ product.product_name }}">
+            {% endif %}
+            <div class="card-body">
+              <h6 class="card-title">{{ product.product_name }}</h6>
+              <p class="text-success fw-bold">${{ product.price }}</p>
+              <a href="{{ product.get_url }}" class="btn btn-sm btn-primary">View / Add to Cart</a>
+            </div>
           </div>
         </div>
-      </div>
-    {% empty %}
-      <p class="text-muted">No products available.</p>
-    {% endfor %}
+      {% empty %}
+        <p class="text-muted">No products available.</p>
+      {% endfor %}
+    </div>
   </div>
-</div>
 
-      
   <!-- Footer -->
   <footer class="bg-dark text-white text-center py-3">
-    <p>&copy; 2025 AakashKart . All Rights Reserved.</p>
+    <p>&copy; 2025 AakashKart. All Rights Reserved.</p>
   </footer>
 
   <!-- Bootstrap JS -->
