@@ -99,6 +99,15 @@ def category_view(request, category_slug):
     }
     return render(request, 'store/category_products.html', context)
 
+def search(request):
+    query = request.GET.get('keyword', '')
+    products = Product.objects.filter(product_name__icontains=query) if query else []
+    context = {
+        'query': query,
+        'products': products
+    }
+    return render(request, 'store/store.html', context)
+
 # ==================== CATEGORY-SPECIFIC SHORTCUTS ====================
 def electronics(request):
     return category_view(request, "electronics")

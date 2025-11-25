@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'widget_tweaks',
     'category',
     'accounts',
     'store',
@@ -137,3 +138,29 @@ MEDIA_ROOT =BASE_DIR /'media'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+from django.contrib.messages import constants as messages
+
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',
+
+}
+
+
+# SMTP configuration
+EMAIL_HOST ='smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'zoya199103@gmail.com'
+EMAIL_HOST_PASSWORD ='mikj kyyr qxmi sonb'
+EMAIL_USE_TLS = True
+
+# ✅ Authentication Redirect Settings
+
+# Login success redirect  page
+LOGIN_REDIRECT_URL = '/'
+
+# Logout redirect  page
+LOGOUT_REDIRECT_URL = '/accounts/login/'
+
+# LoginRequiredMixin  @login_required decorator use  redirect login page
+LOGIN_URL = '/accounts/login/'

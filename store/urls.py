@@ -2,12 +2,22 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.store, name='store'),  # all products / search
+    # Main Store
+    path('', views.store, name='store'),
+
+    # Category-wise
     path('category/<slug:category_slug>/', views.category_view, name='category-store'),
+
+    # Product Details
     path('product/<slug:category_slug>/<slug:product_slug>/', views.product_detail, name='product_detail'),
+
+    # Reviews
     path('add-review/<int:product_id>/', views.add_review, name='add_review'),
 
-    # Category shortcuts (optional)
+    # Search
+    path('search/', views.search, name='search'),
+
+    # Category Shortcuts
     path('electronics/', views.electronics, name='electronics'),
     path('fashion/', views.fashion, name='fashion'),
     path('grocery/', views.grocery, name='grocery'),

@@ -6,12 +6,14 @@ from store import views as store_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', store_views.home, name='home'),             # root URL
-    path('home/', store_views.store, name='home_page'),  # /home URL
-    path('store/', include('store.urls')),               # all store URLs
-    path('carts/', include('carts.urls')),              # cart URLs
+    path('', store_views.home, name='home'),            # Home page
+    path('store/', include('store.urls')),              # Store app
+    path('carts/', include('carts.urls')),              # ✅ Correct cart app path
+    path('accounts/', include('accounts.urls')),        # Accounts app
+   
+
 ]
 
-# Serve media files during development
+# ✅ Serve media files in development mode
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
