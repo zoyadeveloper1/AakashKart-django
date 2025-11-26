@@ -2,14 +2,15 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 
-# Custom user manager
+# -------------------------
+# Custom User Manager
+# -------------------------
 class MyAccountManager(BaseUserManager):
     def create_user(self, first_name, last_name, username, email, password=None):
         if not email:
-            raise ValueError('User must have an email address')
-
+            raise ValueError("User must have an email address")
         if not username:
-            raise ValueError('User must have a username')
+            raise ValueError("User must have a username")
 
         user = self.model(
             email=self.normalize_email(email),
@@ -17,7 +18,6 @@ class MyAccountManager(BaseUserManager):
             first_name=first_name,
             last_name=last_name,
         )
-
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -38,7 +38,9 @@ class MyAccountManager(BaseUserManager):
         return user
 
 
-# Custom user model
+# -------------------------
+# Custom User Model
+# -------------------------
 class Account(AbstractBaseUser):
     first_name   = models.CharField(max_length=50)
     last_name    = models.CharField(max_length=50)
@@ -46,7 +48,6 @@ class Account(AbstractBaseUser):
     email        = models.EmailField(max_length=100, unique=True)
     phone_number = models.CharField(max_length=50)
 
-    # required fields
     date_joined   = models.DateTimeField(auto_now_add=True)
     last_login    = models.DateTimeField(auto_now_add=True)
     is_admin      = models.BooleanField(default=False)
@@ -54,8 +55,8 @@ class Account(AbstractBaseUser):
     is_active     = models.BooleanField(default=False)
     is_superadmin = models.BooleanField(default=False)
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["username", "first_name", "last_name"]
 
     objects = MyAccountManager()
 
@@ -67,3 +68,22 @@ class Account(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return True
+
+
+# -------------------------
+# Address Model
+# -------------------------
+class Address(models.Model):
+    user = models.ForeignKey(Account, on_delete=models.CASCADE)
+    full_name = models.CharField(max_length=100)
+    phone = models.CharField(max_length=15)
+    address_line_1 = models.CharField(max_length=255)
+    address_line_2 = models.CharField(max_length=255, blank=True, null=True)
+    city = models.CharField(max_length=100)
+    state = models.CharField(max_length=100)
+    country = models.CharField(max_length=100)
+    pincode = models.CharField(max_length=10)
+    is_default = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.full_name} - {self.address_line_1}"

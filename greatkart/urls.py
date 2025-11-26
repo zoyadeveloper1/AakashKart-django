@@ -10,7 +10,8 @@ urlpatterns = [
     path('store/', include('store.urls')),              # Store app
     path('carts/', include('carts.urls')),              # ✅ Correct cart app path
     path('accounts/', include('accounts.urls')),        # Accounts app
-   
+    path('orders/', include('orders.urls')),
+
 
 ]
 

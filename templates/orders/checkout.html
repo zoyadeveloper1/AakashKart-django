@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Checkout</h2>
+
+<table border="1" cellpadding="10">
+    <tr>
+        <th>Product</th>
+        <th>Qty</th>
+        <th>Price</th>
+        <th>Total</th>
+    </tr>
+
+    {% for item in cart_items %}
+    <tr>
+        <td>{{ item.product.product_name }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>{{ item.product.price }}</td>
+        <td>{{ item.total_price }}</td>  {# Use total_price from view #}
+    </tr>
+    {% endfor %}
+</table>
+
+<br>
+
+<p><strong>Subtotal:</strong> {{ total }}</p>
+<p><strong>Tax (2%):</strong> {{ tax }}</p>
+<p><strong>Grand Total:</strong> {{ grand_total }}</p>
+
+<br>
+
+<form action="{% url 'place_order' %}" method="POST">
+    {% csrf_token %}
+    <button type="submit">Place Order</button>
+</form>
+
+{% endblock %}

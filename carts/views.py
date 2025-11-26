@@ -86,4 +86,7 @@ def cart_view(request):
 
 
 def checkout(request):
-    return render(request, 'carts/checkout.html')
+    return render(request, 'store/checkout.html')
+
+def place_order(request):
+    return HttpResponse("Order placed!")  # temporary
