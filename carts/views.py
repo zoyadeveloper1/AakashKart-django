@@ -6,73 +6,92 @@ from store.models import Product
 from .models import Cart, CartItem
 from decimal import Decimal
 
-
+# ---------------------------------------------------
+# ADD TO CART
+# ---------------------------------------------------
 def add_cart(request, product_id):
-    """Add product to user's cart or increase quantity if exists"""
-    # ✅ Get color, size, and quantity safely from POST
+
+    # User login check
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    # Get product
+    product = get_object_or_404(Product, id=product_id)
+
+    # POST values
     color = request.POST.get('color')
     size = request.POST.get('size')
     quantity = int(request.POST.get('quantity', 1))
 
-    # For debugging (optional)
-    # return HttpResponse(f"Color: {color}, Size: {size}, Quantity: {quantity}")
-
-    # ✅ Redirect unauthenticated users to login
-    if not request.user.is_authenticated:
-        return redirect('login')
-
-    # ✅ Get the product and user's cart
-    product = get_object_or_404(Product, id=product_id)
+    # Get user cart
     cart, created = Cart.objects.get_or_create(user=request.user)
 
-    # ✅ Check if item already exists with same color & size
-    cart_item, item_created = CartItem.objects.get_or_create(
+    # Check if item already exists with SAME color & size
+    existing_item = CartItem.objects.filter(
         cart=cart,
         product=product,
         color=color,
-        size=size,
-        defaults={'quantity': quantity}
-    )
+        size=size
+    ).first()
 
-    # ✅ If item exists, just update quantity
-    if not item_created:
-        cart_item.quantity += quantity
-        cart_item.save()
+    if existing_item:
+        # If same item exists → increase quantity
+        existing_item.quantity += quantity
+        existing_item.save()
+    else:
+        # Otherwise → create new item
+        CartItem.objects.create(
+            cart=cart,
+            product=product,
+            color=color,
+            size=size,
+            quantity=quantity
+        )
 
-    return redirect('cart')  # redirect to cart view
+    return redirect('cart')
 
 
+# ---------------------------------------------------
+# DECREASE CART ITEM
+# ---------------------------------------------------
 def decrease_cart_item(request, item_id):
-    """Decrease quantity of a specific cart item by 1"""
     cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
 
     if cart_item.quantity > 1:
         cart_item.quantity -= 1
         cart_item.save()
     else:
-        cart_item.delete()  # remove if quantity becomes 0
+        cart_item.delete()
 
     return redirect('cart')
 
 
-
+# ---------------------------------------------------
+# REMOVE ITEM COMPLETELY
+# ---------------------------------------------------
 def remove_cart_item(request, cart_item_id):
-    """Remove a specific CartItem from user's cart"""
     if not request.user.is_authenticated:
         return redirect('login')
 
-    # ✅ Get the specific cart item (not just product)
     cart_item = get_object_or_404(CartItem, id=cart_item_id, cart__user=request.user)
     cart_item.delete()
+
     return redirect('cart')
 
 
+# ---------------------------------------------------
+# CART VIEW
+# ---------------------------------------------------
 def cart_view(request):
+
+    if not request.user.is_authenticated:
+        return redirect('login')
+
     cart = Cart.objects.get(user=request.user)
     cart_items = CartItem.objects.filter(cart=cart)
 
-    total = sum([item.sub_total for item in cart_items])  # total of items
-    tax_rate = Decimal('0.05')  # 5% tax as Decimal
+    total = sum(item.sub_total for item in cart_items)
+    tax_rate = Decimal('0.05')  # 5%
     tax = total * tax_rate
     grand_total = total + tax
 
@@ -82,11 +101,25 @@ def cart_view(request):
         'tax': tax,
         'grand_total': grand_total,
     }
+
     return render(request, 'store/cart.html', context)
 
 
+# ---------------------------------------------------
+# CHECKOUT
+# ---------------------------------------------------
 def checkout(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
     return render(request, 'store/checkout.html')
 
+
+# ---------------------------------------------------
+# PLACE ORDER
+# ---------------------------------------------------
 def place_order(request):
-    return HttpResponse("Order placed!")  # temporary
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    return HttpResponse("Order placed!")
