@@ -8,9 +8,12 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', store_views.home, name='home'),            # Home page
     path('store/', include('store.urls')),              # Store app
-    path('carts/', include('carts.urls')),              # ✅ Correct cart app path
+    path('carts/', include('carts.urls', namespace='carts')),
     path('accounts/', include('accounts.urls')),        # Accounts app
-    path('orders/', include('orders.urls')),
+    path('orders/', include('orders.urls', namespace='orders')),
+
+     
+     
 
 
 ]

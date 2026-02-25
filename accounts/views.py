@@ -14,6 +14,7 @@ from django.urls import reverse
 from .utils import send_reset_email
 from .forms import RegistrationForm, LoginForm
 from .models import Account
+import requests
 
 
 # ---------------------------------------------------

@@ -61,7 +61,7 @@
         <!-- Left Links -->
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item"><a class="nav-link active" href="{% url 'home' %}">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'store' %}">Store</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'store:store' %}">Store</a></li>
         </ul>
 
         <!-- Categories Dropdown -->
@@ -70,7 +70,7 @@
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
               data-bs-toggle="dropdown" aria-expanded="false">All Categories</a>
             <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" href="{% url 'store' %}">All Products</a></li>
+              <li><a class="dropdown-item" href="{% url 'store:store' %}">All Products</a></li>
               {% for category in categories %}
                 <li><a class="dropdown-item" href="{{ category.get_url }}">{{ category.category_name }}</a></li>
               {% empty %}
@@ -82,7 +82,7 @@
 
         <!-- Search Bar -->
         <div class="mx-auto my-2" style="max-width: 350px; width: 100%;">
-          <form class="d-flex shadow-sm rounded-pill overflow-hidden" method="get" action="{% url 'store' %}">
+          <form class="d-flex shadow-sm rounded-pill overflow-hidden" method="get" action="{% url 'store:search' %}">
             <input type="search" name="q" class="form-control border-0 px-3 py-1"
               placeholder="Search products, brands..." value="{{ query|default:'' }}"
               style="border-radius: 50px 0 0 50px;">
@@ -93,16 +93,19 @@
 
         <!-- Right Links -->
         <ul class="navbar-nav mb-2 mb-lg-0 ms-3">
-          <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'cart' %}">Cart🛒</a></li>
+          {% if user.is_authenticated %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
+          {% else %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
+          {% endif %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'carts:cart' %}">Cart 🛒</a></li>
         </ul>
 
       </div>
     </div>
   </nav>
-
- 
 
   <!-- Sale Banner -->
   <div class="container-fluid p-0 mb-5">
@@ -121,7 +124,7 @@
   <div class="container my-5" id="popular-products">
     <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
       <h3 class="mb-2 mb-md-0">Popular Products</h3>
-      <a href="{% url 'store' %}" class="btn btn-outline-primary btn-sm">See All</a>
+      <a href="{% url 'store:store' %}" class="btn btn-outline-primary btn-sm">See All</a>
     </div>
 
     <div class="row g-3 g-md-4">
@@ -129,11 +132,11 @@
       <div class="col-6 col-sm-6 col-md-4 col-lg-3">
         <div class="card h-100 shadow-sm border-0">
           {% if product.image %}
-          <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.product_name }}"
-            style="height: 180px; object-fit: cover;">
+            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.product_name }}"
+              style="height: 180px; object-fit: cover;">
           {% else %}
-          <img src="{% static 'images/default-product.jpg' %}" class="card-img-top"
-            alt="{{ product.product_name }}" style="height: 180px; object-fit: cover;">
+            <img src="{% static 'images/default-product.jpg' %}" class="card-img-top"
+              alt="{{ product.product_name }}" style="height: 180px; object-fit: cover;">
           {% endif %}
 
           <div class="card-body d-flex flex-column">
@@ -148,7 +151,6 @@
       {% endfor %}
     </div>
   </div>
- 
 
   <!-- Footer -->
   <footer class="bg-dark text-white text-center py-3 mt-5">

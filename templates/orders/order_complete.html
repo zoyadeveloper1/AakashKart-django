@@ -1,45 +1,127 @@
 {% extends "base.html" %}
-{% block content %}
+{% load static %}
 
+{% block content %}
 <div class="container my-5">
-    <div class="row justify-content-center">
+
+    <!-- Success Message -->
+    <div class="text-center mb-5">
+        <h2 class="fw-bold text-success">🎉 Order Placed Successfully!</h2>
+        <p class="text-muted">Thank you for your purchase. Your order has been confirmed.</p>
+    </div>
+
+    <div class="row g-4">
+
+        <!-- LEFT SIDE: Order Details -->
         <div class="col-md-8">
 
-            <!-- Order Summary Card -->
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-primary text-white">
-                    <h3 class="mb-0">Order Summary</h3>
-                </div>
+            <!-- Order Info -->
+            <div class="card shadow-sm mb-3">
+                <div class="card-header fw-semibold bg-light">Order Details</div>
                 <div class="card-body">
-
                     <p><strong>Order Number:</strong> {{ order.order_number }}</p>
-                    <p><strong>Status:</strong> <span class="badge 
-                        {% if order.status == 'Pending' %}bg-warning{% elif order.status == 'Completed' %}bg-success{% else %}bg-secondary{% endif %}">
-                        {{ order.status }}
-                    </span></p>
-                    <p><strong>Total Paid:</strong> ₹{{ order.total }}</p>
+                    <p><strong>Payment Method:</strong> {{ order.payment_set.first.payment_method }}</p>
+                    <p><strong>Status:</strong> <span class="badge bg-success">{{ order.status }}</span></p>
+                </div>
+            </div>
 
-                    <hr>
+            <!-- Billing Address -->
+            <div class="card shadow-sm mb-3">
+                <div class="card-header fw-semibold bg-light">Billing Address</div>
+                <div class="card-body">
+                    <p>{{ order.first_name }} {{ order.last_name }}</p>
+                    <p>{{ order.address_line_1 }}</p>
+                    {% if order.address_line_2 %}<p>{{ order.address_line_2 }}</p>{% endif %}
+                    <p>{{ order.city }}, {{ order.state }}</p>
+                    <p>{{ order.country }}</p>
+                    <p>📞 {{ order.phone }}</p>
+                    <p>✉️ {{ order.email }}</p>
+                </div>
+            </div>
 
-                    <h5 class="mb-3">Products</h5>
-                    <ul class="list-group list-group-flush">
-                        {% for item in ordered_products %}
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            {{ item.product.product_name }}
-                            <span class="badge bg-primary rounded-pill">Qty: {{ item.quantity }}</span>
-                        </li>
-                        {% endfor %}
-                    </ul>
-
-                    <div class="mt-4 text-center">
-                        <a href="{% url 'store' %}" class="btn btn-success btn-lg">Continue Shopping</a>
+            <!-- Ordered Products -->
+            <div class="card shadow-sm mb-3">
+                <div class="card-header fw-semibold bg-light">Ordered Products</div>
+                <div class="card-body">
+                    {% for item in order_products %}
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="me-3">
+                            {% if item.product.image %}
+                                <img src="{{ item.product.image.url }}" alt="{{ item.product.product_name }}" class="img-thumbnail" style="width:80px; height:80px; object-fit:cover;">
+                            {% else %}
+                                <img src="{% static 'images/default.png' %}" alt="No Image" class="img-thumbnail" style="width:80px; height:80px; object-fit:cover;">
+                            {% endif %}
+                        </div>
+                        <div>
+                            <h6 class="mb-1">{{ item.product.product_name }}</h6>
+                            <small>Qty: {{ item.quantity }}</small><br>
+                            <small>Price: ₹{{ item.price }}</small>
+                        </div>
                     </div>
-
+                    <hr>
+                    {% endfor %}
                 </div>
             </div>
 
         </div>
+
+        <!-- RIGHT SIDE: Summary -->
+        <div class="col-md-4">
+            <div class="card shadow-sm p-4 mb-4">
+                <h5 class="fw-bold mb-3">Order Summary</h5>
+                <div class="d-flex justify-content-between"><span>Subtotal</span><strong>₹{{ order.total|floatformat:2 }}</strong></div>
+                <div class="d-flex justify-content-between mt-2"><span>Tax</span><strong>₹{{ order.tax|floatformat:2 }}</strong></div>
+                <hr>
+                <div class="d-flex justify-content-between"><span class="fw-bold">Grand Total</span><span class="fw-bold text-success">₹{{ order.total|floatformat:2 }}</span></div>
+
+                <a href="{% url 'store:store' %}" class="btn btn-primary w-70 mt-4 mb-3">Continue Shopping 🛒</a>
+
+                <!-- Payment Buttons Row -->
+                <div class="d-flex justify-content-between">
+                    <div id="paypal-button-container" style="width:250px;"></div>
+                    <div id="Debit-Credit-card-button-container" style="width:250px;">
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
+
 </div>
 
+<!-- PayPal SDK -->
+<script src="https://www.paypal.com/sdk/js?client-id=AVKSTT13JGBOr5AwhAOD_l5oJHwCYv0xGaz3XbaPkvbxBm2G3AeFo3GjpnlYj3ORCbwkw0IU_OhM4qFm&currency=USD"></script>
+
+<script>
+    
+paypal.Buttons({
+    style: {
+        layout: 'vertical',
+        height: 40,
+        color: 'gold',
+        shape: 'rect',
+        label: 'paypal'
+
+    },
+    createOrder: function (data, actions) {
+        return actions.order.create({
+            purchase_units: [{
+                amount: { value: '{{ order.total|floatformat:2 }}' }
+            }]
+        });
+    },
+    onApprove: function (data, actions) {
+        return actions.order.capture().then(function (details) {
+            alert("Payment Successful ✅\n" + details.payer.name.given_name);
+        });
+    },
+    onCancel: function (data) { alert("Payment Cancelled ❌"); },
+    onError: function (err) { console.error(err); alert("Something went wrong ⚠️"); }
+}).render('#paypal-button-container');
+
+</script>
+
+
 {% endblock %}
+

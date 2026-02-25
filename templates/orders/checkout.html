@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout | AakashKart</title>
 
     <!-- Bootstrap 5 -->
@@ -12,17 +12,11 @@
         body {
             background: #f1f3f6;
         }
-        .checkout-card {
+        .checkout-card, .summary-card {
             background: #fff;
             border-radius: 12px;
             padding: 25px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        .summary-card {
-            background: #fff;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.12);
         }
         .place-btn {
             width: 100%;
@@ -39,26 +33,24 @@
         }
     </style>
 </head>
-
 <body>
 
 <div class="container py-5">
 
     <h2 class="text-center mb-4 fw-bold">Checkout</h2>
 
-    <div class="row">
+    <div class="row g-4">
 
         <!-- LEFT SIDE : Billing Form -->
         <div class="col-md-7">
-            <div class="checkout-card mb-4">
+            <div class="checkout-card">
 
                 <h4 class="mb-3 fw-semibold">Billing Details</h4>
 
-                <form action="{% url 'place_order' %}" method="POST">
+                <form method="post" action="{% url 'orders:place_order' %}">
                     {% csrf_token %}
 
                     <div class="row">
-
                         <div class="col-md-6 mb-3">
                             <label class="form-label">First Name</label>
                             <input type="text" name="first_name" class="form-control" required>
@@ -79,12 +71,12 @@
                             <input type="email" name="email" class="form-control" required>
                         </div>
 
-                        <div class="col-md-12 mb-3">
+                        <div class="col-12 mb-3">
                             <label class="form-label">Address Line 1</label>
                             <input type="text" name="address_line_1" class="form-control" required>
                         </div>
 
-                        <div class="col-md-12 mb-3">
+                        <div class="col-12 mb-3">
                             <label class="form-label">Address Line 2</label>
                             <input type="text" name="address_line_2" class="form-control">
                         </div>
@@ -105,7 +97,7 @@
                         </div>
                     </div>
 
-                    <!-- Payment -->
+                    <!-- Payment Method -->
                     <h5 class="mt-4 fw-semibold">Payment Method</h5>
 
                     <div class="form-check mt-2">
@@ -124,7 +116,6 @@
             </div>
         </div>
 
-
         <!-- RIGHT SIDE : Order Summary -->
         <div class="col-md-5">
             <div class="summary-card">
@@ -132,29 +123,33 @@
                 <h4 class="fw-semibold">Order Summary</h4>
                 <hr>
 
-                {% for item in cart_items %}
-                <div class="d-flex justify-content-between mb-2">
-                    <span>{{ item.product.product_name }} (x{{ item.quantity }})</span>
-                    <span>₹{{ item.sub_total }}</span>
-                </div>
-                {% endfor %}
+                {% if cart_items %}
+                    {% for item in cart_items %}
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>{{ item.product.product_name }} (x{{ item.quantity }})</span>
+                        <span>₹{{ item.sub_total }}</span>
+                    </div>
+                    {% endfor %}
 
-                <hr>
+                    <hr>
 
-                <div class="d-flex justify-content-between">
-                    <h6>Subtotal</h6>
-                    <h6>₹{{ total }}</h6>
-                </div>
+                    <div class="d-flex justify-content-between">
+                        <h6>Subtotal</h6>
+                        <h6>₹{{ total }}</h6>
+                    </div>
 
-                <div class="d-flex justify-content-between">
-                    <h6>Tax</h6>
-                    <h6>₹{{ tax }}</h6>
-                </div>
+                    <div class="d-flex justify-content-between">
+                        <h6>Tax (5%)</h6>
+                        <h6>₹{{ tax }}</h6>
+                    </div>
 
-                <div class="d-flex justify-content-between">
-                    <h5 class="fw-bold">Grand Total</h5>
-                    <h5 class="fw-bold">₹{{ grand_total }}</h5>
-                </div>
+                    <div class="d-flex justify-content-between">
+                        <h5 class="fw-bold">Grand Total</h5>
+                        <h5 class="fw-bold">₹{{ grand_total }}</h5>
+                    </div>
+                {% else %}
+                    <p class="text-center">Your cart is empty!</p>
+                {% endif %}
 
             </div>
         </div>

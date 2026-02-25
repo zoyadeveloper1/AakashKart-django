@@ -20,36 +20,38 @@
           <a class="nav-link text-white fw-semibold px-3" href="{% url 'home' %}">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white fw-semibold px-3" href="{% url 'store' %}">Store</a>
+          {# Use correct store URL name. Remove namespace if not defined #}
+          <a class="nav-link text-white fw-semibold px-3" href="{% url 'store:store' %} ">Store</a>
         </li>
       </ul>
 
       <!-- Center Search Bar -->
-      <form class="d-flex mx-lg-auto my-2 my-lg-0" method="get" action="{% url 'search' %}" style="max-width: 450px; width: 100%;">
+      <form class="d-flex mx-lg-auto my-2 my-lg-0" method="get"
+            action="{% url 'store:search' %}" style="max-width: 450px; width: 100%;">
         <input class="form-control me-2" type="search" name="keyword" placeholder="Search products, brands..."
-          value="{{ query|default:'' }}">
+               value="{{ query|default:'' }}">
         <button class="btn btn-warning fw-semibold" type="submit">Search</button>
       </form>
 
       <!-- Right Links -->
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
         {% if user.is_authenticated %}
-        <li class="nav-item">
-          <a class="nav-link text-white fw-semibold px-3" href="{% url 'dashboard' %}">Dashboard</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white fw-semibold px-3" href="{% url 'logout' %}">Logout</a>
-        </li>
+          <li class="nav-item">
+            <a class="nav-link text-white fw-semibold px-3" href="{% url 'dashboard' %}">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white fw-semibold px-3" href="{% url 'logout' %}">Logout</a>
+          </li>
         {% else %}
-        <li class="nav-item">
-          <a class="nav-link text-white fw-semibold px-3" href="{% url 'login' %}">Login</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white fw-semibold px-3" href="{% url 'register' %}">Register</a>
-        </li>
+          <li class="nav-item">
+            <a class="nav-link text-white fw-semibold px-3" href="{% url 'login' %}">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white fw-semibold px-3" href="{% url 'register' %}">Register</a>
+          </li>
         {% endif %}
         <li class="nav-item">
-          <a class="nav-link text-white fw-semibold px-3" href="{% url 'cart' %}">Cart 🛒</a>
+          <a class="nav-link text-white fw-semibold px-3" href="{% url 'carts:cart' %}">Cart 🛒</a>
         </li>
       </ul>
 

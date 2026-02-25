@@ -58,7 +58,7 @@
 </head>
 <body>
 
-  <!-- ✅ Navbar -->
+  <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3 shadow-sm">
     <div class="container">
       <a class="navbar-brand fw-bold" href="{% url 'home' %}">AakashKart</a>
@@ -70,20 +70,32 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'store' %}">Store</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'store:store' %}">Store</a></li>
         </ul>
+
+        <!-- Search Bar -->
+        <form class="d-flex mx-auto my-2" method="get" action="{% url 'store:store' %}">
+          <input type="search" name="q" class="form-control me-2" placeholder="Search products..."
+            value="{{ query|default:'' }}">
+          <button class="btn btn-warning fw-bold" type="submit">🔍</button>
+        </form>
 
         <!-- Right Links -->
         <ul class="navbar-nav mb-2 mb-lg-0 ms-3">
-          <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'cart' %}">Cart 🛒</a></li>
+          {% if user.is_authenticated %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
+          {% else %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
+          {% endif %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'carts:cart' %}">Cart 🛒</a></li>
         </ul>
       </div>
     </div>
   </nav>
 
-  <!-- ✅ Product Details Section -->
+  <!-- Product Details -->
   <div class="container my-5">
     <div class="row g-4">
 
@@ -101,7 +113,6 @@
       <!-- Product Info -->
       <div class="col-12 col-md-6">
         <h2 class="fw-bold">{{ single_product.product_name }}</h2>
-
         {% if single_product.is_available %}
           <span class="badge bg-success px-3 py-2">✔ In Stock</span>
         {% else %}
@@ -115,18 +126,10 @@
 
         <p class="mb-3 text-secondary">{{ single_product.description|default:"No description available." }}</p>
 
-        <ul class="list-unstyled mb-3">
-          <li><strong>Type:</strong> {{ single_product.type|default:"Regular" }}</li>
-          <li><strong>Material:</strong> {{ single_product.material|default:"N/A" }}</li>
-          <li><strong>Brand:</strong> {{ single_product.brand|default:"N/A" }}</li>
-        </ul>
-
         <!-- Add to Cart Form -->
-        <form method="post" action="{% url 'add_cart' single_product.id %}">
+        <form method="post" action="{% url 'carts:add_cart' single_product.id %}">
           {% csrf_token %}
           <div class="row g-3 mb-3">
-
-            <!-- Color -->
             <div class="col-md-4">
               <label class="form-label fw-bold">Color</label>
               <select name="color" class="form-select" required>
@@ -138,8 +141,6 @@
                 {% endfor %}
               </select>
             </div>
-
-            <!-- Size -->
             <div class="col-md-4">
               <label class="form-label fw-bold">Size</label>
               <select name="size" class="form-select" required>
@@ -151,8 +152,6 @@
                 {% endfor %}
               </select>
             </div>
-
-            <!-- Quantity -->
             <div class="col-md-4">
               <label class="form-label fw-bold">Quantity</label>
               <div class="input-group">
@@ -170,14 +169,13 @@
           {% endif %}
         </form>
 
-        <a href="{% url 'cart' %}" class="btn btn-outline-primary btn-lg w-50">View Cart 🛒</a>
+        <a href="{% url 'carts:cart' %}" class="btn btn-outline-primary btn-lg w-50">View Cart 🛒</a>
       </div>
     </div>
 
-    <!-- Reviews -->
+    <!-- Reviews Section -->
     <div class="mt-5">
       <h3 class="fw-bold mb-4">Customer Reviews 💬</h3>
-
       {% if reviews %}
         {% for review in reviews %}
           <div class="review-card p-3 mb-3">
@@ -201,11 +199,10 @@
         <p class="text-muted">No reviews yet. Be the first to review! 🎉</p>
       {% endif %}
 
-      <!-- Add Review -->
       {% if user.is_authenticated %}
         <div class="review-form bg-white p-4 rounded shadow-sm mt-4">
           <h5 class="fw-bold mb-3">Write a Review ✍️</h5>
-          <form method="post" action="{% url 'add_review' single_product.id %}">
+          <form method="post" action="{% url 'store:add_review' single_product.id %}">
             {% csrf_token %}
             <div class="mb-3">
               <label class="form-label">Rating</label>

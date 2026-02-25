@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="container mt-5 mb-5">
+
+    <!-- SUCCESS ICON -->
+    <div class="text-center mb-4">
+        <img src="{% static 'images/success.png' %}" width="70">
+        <h2 class="mt-3 text-success">Payment Successful</h2>
+        <a href="{% url 'store:store' %}" class="btn btn-success mt-2">
+            Shop more
+        </a>
+    </div>
+
+    <!-- INVOICE -->
+    <div class="card shadow p-4">
+
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <h3 class="text-primary">GreatKart</h3>
+            </div>
+
+            <div class="col-md-6 text-end">
+                <strong>Invoiced To</strong><br>
+                {{ order.first_name }} {{ order.last_name }}<br>
+                {{ order.address_line_1 }}<br>
+                {{ order.city }}, {{ order.state }}<br>
+                {{ order.country }}
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- ORDER DETAILS -->
+        <p>
+            <strong>Order:</strong> {{ order.order_number }} <br>
+            <strong>Order Date:</strong> {{ order.created_at }} <br>
+            <strong>Status:</strong> {{ order.status }}
+        </p>
+
+        <!-- PRODUCTS TABLE -->
+        <table class="table table-bordered mt-4">
+            <thead class="table-light">
+                <tr>
+                    <th>Products</th>
+                    <th>Qty</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for item in ordered_products %}
+                <tr>
+                    <td>{{ item.product.product_name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>₹{{ item.price|floatformat:2 }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+            <tfoot>
+                <tr>
+                    <th colspan="2" class="text-end">Sub Total:</th>
+                    <th>₹{{ subtotal|floatformat:2 }}</th>
+                </tr>
+                <tr>
+                    <th colspan="2" class="text-end">Tax:</th>
+                    <th>₹{{ order.tax|floatformat:2 }}</th>
+                </tr>
+                <tr>
+                    <th colspan="2" class="text-end">Grand Total:</th>
+                    <th>₹{{ order.total|floatformat:2 }}</th>
+                </tr>
+            </tfoot>
+        </table>
+
+        <p class="text-center mt-4">
+            Thank you for shopping with us! 💙
+        </p>
+
+    </div>
+</div>
+
+{% endblock %}
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="container mt-5 mb-5">
+
+    <!-- SUCCESS ICON -->
+    <div class="text-center mb-4">
+        <img src="{% static 'images/success.png' %}" width="70">
+        <h2 class="mt-3 text-success">Payment Successful</h2>
+        <a href="{% url 'store:store' %}" class="btn btn-success mt-2">
+            Shop more
+        </a>
+    </div>
+
+    <!-- INVOICE -->
+    <div class="card shadow p-4">
+
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <h3 class="text-primary">GreatKart</h3>
+            </div>
+
+            <div class="col-md-6 text-end">
+                <strong>Invoiced To</strong><br>
+                {{ order.first_name }} {{ order.last_name }}<br>
+                {{ order.address_line_1 }}<br>
+                {{ order.city }}, {{ order.state }}<br>
+                {{ order.country }}
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- ORDER DETAILS -->
+        <p>
+            <strong>Order:</strong> {{ order.order_number }} <br>
+            <strong>Order Date:</strong> {{ order.created_at }} <br>
+            <strong>Status:</strong> {{ order.status }}
+        </p>
+
+        <!-- PRODUCTS TABLE -->
+        <table class="table table-bordered mt-4">
+            <thead class="table-light">
+                <tr>
+                    <th>Products</th>
+                    <th>Qty</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for item in ordered_products %}
+                <tr>
+                    <td>{{ item.product.product_name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>₹{{ item.price|floatformat:2 }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+            <tfoot>
+                <tr>
+                    <th colspan="2" class="text-end">Sub Total:</th>
+                    <th>₹{{ subtotal|floatformat:2 }}</th>
+                </tr>
+                <tr>
+                    <th colspan="2" class="text-end">Tax:</th>
+                    <th>₹{{ order.tax|floatformat:2 }}</th>
+                </tr>
+                <tr>
+                    <th colspan="2" class="text-end">Grand Total:</th>
+                    <th>₹{{ order.total|floatformat:2 }}</th>
+                </tr>
+            </tfoot>
+        </table>
+
+        <p class="text-center mt-4">
+            Thank you for shopping with us! 💙
+        </p>
+
+    </div>
+</div>
+
+{% endblock %}

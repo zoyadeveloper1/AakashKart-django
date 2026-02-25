@@ -39,6 +39,21 @@
       margin-right: 5px;
     }
 
+    .btn-add-cart {
+      background-color: #ffc107;
+      border: none;
+      color: #000;
+      font-weight: bold;
+      padding: 5px 10px;
+      border-radius: 5px;
+      text-decoration: none;
+    }
+
+    .btn-add-cart:hover {
+      background-color: #e0a800;
+      color: #fff;
+    }
+
     /* Search bar */
     .search-bar {
       border-radius: 50px;
@@ -75,13 +90,6 @@
       overflow-y: auto;
     }
 
-    /* Sidebar checkboxes */
-    .form-check-label a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    /* Responsive tweaks */
     @media (max-width: 992px) {
       .sidebar {
         margin-bottom: 20px;
@@ -92,7 +100,7 @@
 
 <body>
 
-  <!-- ✅ Navbar -->
+  <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
     <div class="container">
       <a class="navbar-brand fw-bold" href="{% url 'home' %}">AakashKart</a>
@@ -105,53 +113,32 @@
         <!-- Left Links -->
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'store' %}">Store</a></li>
-
-             <!-- Search Bar -->
-        <div class="mx-auto my-2" style="max-width: 350px; width: 100%;">
-          <form class="d-flex shadow-sm rounded-pill overflow-hidden" method="get" action="{% url 'store' %}">
-            <input type="search" name="q" class="form-control border-0 px-3 py-1"
-              placeholder="Search products, brands..." value="{{ query|default:'' }}"
-              style="border-radius: 50px 0 0 50px;">
-            <button type="submit" class="btn btn-warning fw-bold px-3"
-              style="border-radius: 0 50px 50px 0;">🔍</button>
-          </form>
-        </div>
-
-          <!-- Categories Dropdown -->
-          <li class="nav-item dropdown ms-2">
-            <a class="nav-link dropdown-toggle text-warning fw-semibold" href="#" id="navbarDropdown" role="button"
-              data-bs-toggle="dropdown" aria-expanded="false">
-              All Categories
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" href="{% url 'store' %}">All Products</a></li>
-              {% for category in categories %}
-                <li>
-                  <a class="dropdown-item" href="{% url 'category-store' category_slug=category.slug %}">
-                    {{ category.category_name }}
-                  </a>
-                </li>
-              {% empty %}
-                <li><a class="dropdown-item text-muted" href="#">No Categories Available</a></li>
-              {% endfor %}
-            </ul>
-          </li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'store:store' %}">Store</a></li>
         </ul>
 
-        <!-- ✅ Navbar Right Links -->
+        <!-- Search Bar -->
+        <form class="d-flex mx-auto my-2" method="get" action="{% url 'store:search' %}">
+          <input type="search" name="q" class="form-control me-2" placeholder="Search products..."
+            value="{{ query|default:'' }}">
+          <button class="btn btn-warning fw-bold" type="submit">🔍</button>
+        </form>
+
+        <!-- Right Links -->
         <ul class="navbar-nav mb-2 mb-lg-0 ms-3">
-          <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'cart' %}">Cart 🛒</a></li>
+          {% if user.is_authenticated %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
+          {% else %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
+          {% endif %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'carts:cart' %}">Cart 🛒</a></li>
         </ul>
       </div>
     </div>
   </nav>
 
-  
-
-  <!-- ✅ Main Content -->
+  <!-- Main Content -->
   <div class="container-fluid my-4">
     <div class="row">
 
@@ -159,52 +146,13 @@
       <div class="col-lg-3 col-md-4">
         <div class="sidebar shadow-sm">
           <h5 class="fw-bold">CATEGORIES</h5>
-          <a href="{% url 'store' %}" class="d-block mb-2">All Products</a>
+          <a href="{% url 'store:store' %}" class="d-block mb-2">All Products</a>
           {% for category in categories %}
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="cat{{ forloop.counter }}">
-              <label class="form-check-label" for="cat{{ forloop.counter }}">
-                <a href="{% url 'category-store' category_slug=category.slug %}" class="text-decoration-none">
-                  {{ category.category_name }}
-                </a>
-              </label>
-            </div>
+            <a href="{% url 'store:category-store' category_slug=category.slug %}" class="d-block mb-1">{{ category.category_name }}</a>
           {% empty %}
             <p class="text-muted">No categories available</p>
           {% endfor %}
           <hr>
-
-          <!-- SIZE Section -->
-          <div class="mb-3">
-            <h5 class="fw-bold d-flex justify-content-between align-items-center">
-              SIZE
-              <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse"
-                data-bs-target="#sizeContent" aria-expanded="true" aria-controls="sizeContent">
-                Toggle
-              </button>
-            </h5>
-            <div class="collapse show" id="sizeContent">
-              {% for size in sizes %}
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="size{{ forloop.counter }}">
-                  <label class="form-check-label" for="size{{ forloop.counter }}">{{ size }}</label>
-                </div>
-              {% endfor %}
-            </div>
-          </div>
-          <hr>
-
-          <!-- Price Filter -->
-          <h5 class="fw-bold">PRICE</h5>
-          <div class="row g-2">
-            <div class="col">
-              <input type="number" class="form-control form-control-sm" placeholder="Min" value="100" min="100">
-            </div>
-            <div class="col">
-              <input type="number" class="form-control form-control-sm" placeholder="Max" value="5000" max="5000">
-            </div>
-          </div>
-          <button class="btn btn-primary btn-sm w-100 mt-2">Apply</button>
         </div>
       </div>
 
@@ -214,7 +162,7 @@
           <div class="alert alert-warning">
             Search results for: "<strong>{{ query }}</strong>"
             {% if product_count == 0 %}
-              <br>No products found! Please try again later.
+              <br>No products found!
             {% endif %}
           </div>
         {% endif %}
@@ -226,22 +174,20 @@
                 {% if product.image %}
                   <img src="{{ product.image.url }}" class="card-img-top product-image" alt="{{ product.product_name }}">
                 {% else %}
-                  <img src="{% static 'images/default-product.jpg' %}" class="card-img-top product-image"
-                    alt="{{ product.product_name }}">
+                  <img src="{% static 'images/default-product.jpg' %}" class="card-img-top product-image" alt="{{ product.product_name }}">
                 {% endif %}
                 <div class="card-body d-flex flex-column">
                   <h6 class="card-title">{{ product.product_name }}</h6>
                   <p class="mb-2">
                     {% if product.old_price %}
-                      <span class="old-price text-muted text-decoration-line-through">₹{{ product.old_price }}</span>
+                      <span class="old-price">₹{{ product.old_price }}</span>
                     {% endif %}
-                    <span class="price fw-bold">₹{{ product.price }}</span>
+                    <span class="price">₹{{ product.price }}</span>
                   </p>
                   <div class="mt-auto d-flex justify-content-between align-items-center">
-                    <a href="{% url 'product_detail' product.category.slug product.slug %}"
-                      class="btn btn-sm btn-outline-primary">View details</a>
+                    <a href="{% url 'store:product_detail' product.category.slug product.slug %}" class="btn btn-sm btn-outline-primary">View</a>
                     {% if product.stock > 0 %}
-                      <a href="{% url 'add_cart' product.id %}" class="btn btn-sm btn-success">Add to Cart 🛒</a>
+                      <a href="{% url 'carts:add_cart' product.id %}" class="btn-add-cart">Add to Cart</a>
                     {% else %}
                       <span class="text-danger fw-bold">OUT OF STOCK</span>
                     {% endif %}
@@ -251,7 +197,7 @@
             </div>
           {% empty %}
             <div class="col-12 text-center text-muted">
-              <p>No products available. Please try again later.</p>
+              <p>No products available.</p>
             </div>
           {% endfor %}
         </div>
@@ -275,6 +221,5 @@
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
 </html>

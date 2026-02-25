@@ -12,9 +12,12 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / ".env")
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -44,6 +47,8 @@ INSTALLED_APPS = [
     'store',
     'carts',
     'orders',
+    'shop',
+    'django_extensions',
 
 ]
 
@@ -166,3 +171,10 @@ LOGOUT_REDIRECT_URL = '/accounts/login/'
 
 # LoginRequiredMixin  @login_required decorator use  redirect login page
 LOGIN_URL = '/accounts/login/'
+
+
+
+# PayPal sandbox credentials
+PAYPAL_CLIENT_ID = os.getenv("PAYPAL_CLIENT_ID")
+PAYPAL_SECRET = os.getenv("PAYPAL_SECRET")
+PAYPAL_BASE_URL = os.getenv("PAYPAL_BASE_URL")

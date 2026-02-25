@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+
+    <div class="text-center mb-4">
+        <h2 class="fw-bold">Complete Your Payment</h2>
+        <p class="text-muted">Order No: {{ order.order_number }}</p>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <div class="card shadow-sm p-4">
+                <h5 class="fw-bold mb-3">Order Summary</h5>
+
+                <p><strong>Total:</strong> ₹{{ order.total }}</p>
+
+                <!-- PAYPAL BUTTON -->
+                <div id="paypal-button-container"></div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<!-- PayPal SDK -->
+<script src="https://www.paypal.com/sdk/js?client-id=YOUR_CLIENT_ID&currency=USD"></script>
+
+<script>
+paypal.Buttons({
+
+    createOrder: function () {
+        return fetch("{% url 'orders:create_paypal_order' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: JSON.stringify({
+                order_id: "{{ order.id }}"
+            })
+        })
+        .then(res => res.json())
+        .then(data => data.id);
+    },
+
+    onApprove: function (data) {
+        return fetch(`/orders/capture-paypal-order/${data.orderID}/`, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}"
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.redirect_url) {
+                window.location.href = data.redirect_url; // ✅ REDIRECT
+            }
+        });
+    },
+
+    onCancel: function () {
+        alert("Payment cancelled ❌");
+    },
+
+    onError: function (err) {
+        console.error(err);
+        alert("Payment error ⚠️");
+    }
+
+}).render('#paypal-button-container');
+</script>
+
+{% endblock %}
