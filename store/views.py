@@ -1,8 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Product, Review
 from category.models import Category
 from django.core.paginator import Paginator
 from django.db.models import Q
+from .models import Product, Variation, ReviewRating
+
 
 # ==================== HOME ====================
 def home(request):
@@ -10,19 +11,17 @@ def home(request):
     return render(request, 'home.html', {'products': products})
 
 
-# ==================== STORE (WITH OPTIONAL CATEGORY FILTER) ====================
+# ==================== STORE ====================
 def store(request, category_slug=None):
     categories = Category.objects.all()
     products = Product.objects.filter(is_available=True)
 
-    # Filter by category if category_slug is provided
     if category_slug:
         category = get_object_or_404(Category, slug=category_slug)
         products = products.filter(category=category)
     else:
         category = None
 
-    # Search query
     query = request.GET.get('q')
     if query:
         products = products.filter(
@@ -53,7 +52,10 @@ def product_detail(request, category_slug, product_slug):
         category__slug=category_slug
     )
 
-    reviews = product.reviews.all().order_by('-created_at')
+    reviews = ReviewRating.objects.filter(
+        product=product
+    ).order_by('-created_at')
+
     sizes = getattr(product, 'sizes', ["Small", "Medium", "Large", "X-Large"])
 
     context = {
@@ -69,19 +71,25 @@ def product_detail(request, category_slug, product_slug):
 def add_review(request, product_id):
     product = get_object_or_404(Product, id=product_id)
 
-    if request.method == "POST":
+    if request.method == "POST" and request.user.is_authenticated:
         rating = int(request.POST.get('rating', 0))
-        comment = request.POST.get('comment', '')
+        review_text = request.POST.get('review', '')
 
-        Review.objects.create(
-            product=product,
-            user=request.user,
-            rating=rating,
-            comment=comment
-        )
+        # Update if already reviewed
+        if ReviewRating.objects.filter(product=product, user=request.user).exists():
+            review = ReviewRating.objects.get(product=product, user=request.user)
+            review.rating = rating
+            review.review = review_text
+            review.save()
+        else:
+            ReviewRating.objects.create(
+                product=product,
+                user=request.user,
+                rating=rating,
+                review=review_text
+            )
 
     return redirect(product.get_url())
-
 
 # ==================== CATEGORY VIEW ====================
 def category_view(request, category_slug):

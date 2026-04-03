@@ -6,26 +6,14 @@ app_name = "store"
 urlpatterns = [
     # ==================== STORE ====================
     path('', views.store, name='store'),
-
     # ==================== SEARCH ====================
     path('search/', views.search, name='search'),
-
-    # ==================== CATEGORY (DYNAMIC) ====================
+    # ==================== CATEGORY ====================
     path('category/<slug:category_slug>/', views.store, name='category-store'),
-
     # ==================== PRODUCT DETAIL ====================
-    path(
-        'product/<slug:category_slug>/<slug:product_slug>/',
-        views.product_detail,
-        name='product_detail'
-    ),
-
+    path('product/<slug:category_slug>/<slug:product_slug>/',views.product_detail,name='product_detail'),
     # ==================== REVIEWS ====================
-    path(
-        'add-review/<int:product_id>/',
-        views.add_review,
-        name='add_review'
-    ),
+    path('add-review/<int:product_id>/',views.add_review,name='add_review'),
 
     # ==================== CATEGORY SHORTCUTS ====================
     path('electronics/', views.electronics, name='electronics'),

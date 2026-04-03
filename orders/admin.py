@@ -7,9 +7,11 @@ class OrderProductInline(admin.TabularInline):
     model = OrderProduct
     extra = 0
     readonly_fields = ('product', 'quantity', 'price', 'ordered')
+    can_delete = False
 
 
 # ==================== ORDER ADMIN ====================
+@admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = (
         'order_number',
@@ -23,10 +25,7 @@ class OrderAdmin(admin.ModelAdmin):
         'created_at',
     )
 
-    list_filter = (
-        'status',
-        'created_at',
-    )
+    list_filter = ('status', 'created_at')
 
     search_fields = (
         'order_number',
@@ -40,6 +39,8 @@ class OrderAdmin(admin.ModelAdmin):
     list_per_page = 20
     inlines = [OrderProductInline]
 
+    readonly_fields = ('order_number', 'created_at', 'updated_at')
+
     def full_name(self, obj):
         return f"{obj.first_name} {obj.last_name}"
 
@@ -47,6 +48,7 @@ class OrderAdmin(admin.ModelAdmin):
 
 
 # ==================== PAYMENT ADMIN ====================
+@admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
     list_display = (
         'payment_id',
@@ -61,7 +63,17 @@ class PaymentAdmin(admin.ModelAdmin):
     search_fields = ('payment_id', 'user__username')
 
 
-# ==================== REGISTER MODELS ====================
-admin.site.register(Order, OrderAdmin)
-admin.site.register(Payment, PaymentAdmin)
-admin.site.register(OrderProduct)
+# ==================== ORDER PRODUCT ADMIN ====================
+@admin.register(OrderProduct)
+class OrderProductAdmin(admin.ModelAdmin):
+    list_display = (
+        'order',
+        'user',
+        'product',
+        'quantity',
+        'price',
+        'ordered',
+    )
+
+    list_filter = ('ordered',)
+    search_fields = ('order__order_number', 'product__product_name')

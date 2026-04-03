@@ -7,24 +7,17 @@ from decimal import Decimal
 import uuid, json, requests
 
 from carts.models import Cart, CartItem
-from store.models import Product
 from .models import Order, OrderProduct, Payment
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 
 
-
-# ==================================================
-# PAYPAL CONFIG
-# ==================================================
+# ================= PAYPAL CONFIG =================
 PAYPAL_CLIENT_ID = settings.PAYPAL_CLIENT_ID
 PAYPAL_SECRET = settings.PAYPAL_SECRET
 PAYPAL_API = "https://api-m.sandbox.paypal.com"
 
 
-# ==================================================
-# PAYPAL TOKEN
-# ==================================================
 def get_paypal_access_token():
     response = requests.post(
         f"{PAYPAL_API}/v1/oauth2/token",
@@ -36,17 +29,12 @@ def get_paypal_access_token():
     return None
 
 
-# ==================================================
-# CLIENT IP
-# ==================================================
 def get_client_ip(request):
     x_forwarded_for = request.META.get("HTTP_X_FORWARDED_FOR")
     return x_forwarded_for.split(",")[0] if x_forwarded_for else request.META.get("REMOTE_ADDR")
 
 
-# ==================================================
-# CHECKOUT
-# ==================================================
+# ================= CHECKOUT =================
 @login_required
 def checkout(request):
     cart = get_object_or_404(Cart, user=request.user)
@@ -67,11 +55,10 @@ def checkout(request):
     })
 
 
-# ==================================================
-# PLACE ORDER
-# ==================================================
+# ================= PLACE ORDER =================
 @login_required
 def place_order(request):
+
     if request.method != "POST":
         return redirect("orders:checkout")
 
@@ -96,11 +83,10 @@ def place_order(request):
         city=request.POST.get("city"),
         state=request.POST.get("state"),
         country=request.POST.get("country"),
-        total=grand_total,
+        total=grand_total,   # ✅ FIXED
         tax=tax,
         status="Pending",
         ip=get_client_ip(request),
-        order_number=str(uuid.uuid4()).replace("-", "")[:10],
     )
 
     for item in cart_items:
@@ -119,21 +105,20 @@ def place_order(request):
         complete_order(order)
         return redirect("orders:order_complete", order_number=order.order_number)
 
-    return redirect("orders:paypal_checkout", order_id=order.id)
+    elif payment_method == "ONLINE":
+        return redirect("orders:paypal_checkout", order_id=order.id)
+
+    return redirect("orders:checkout")
 
 
-# ==================================================
-# PAYPAL PAGE
-# ==================================================
+# ================= PAYPAL PAGE =================
 @login_required
 def paypal_checkout(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
     return render(request, "orders/paypal.html", {"order": order})
 
 
-# ==================================================
-# CREATE PAYPAL ORDER
-# ==================================================
+# ================= CREATE PAYPAL ORDER =================
 @csrf_exempt
 @login_required
 def create_paypal_order(request):
@@ -141,12 +126,13 @@ def create_paypal_order(request):
     order = get_object_or_404(Order, id=data["order_id"], user=request.user)
 
     token = get_paypal_access_token()
-    usd_amount = round(order.total / Decimal("83"), 2)
+
+    usd_amount = round(order.total / Decimal("83"), 2)  # ✅ FIXED
 
     response = requests.post(
         f"{PAYPAL_API}/v2/checkout/orders",
         headers={
-            "Authorization": f"Bearer {token}",
+            "Authorization": f"Bearer {token}",  # ✅ FIXED
             "Content-Type": "application/json",
         },
         json={
@@ -162,9 +148,7 @@ def create_paypal_order(request):
     return JsonResponse(response.json())
 
 
-# ==================================================
-# CAPTURE PAYPAL PAYMENT (FIXED)
-# ==================================================
+# ================= CAPTURE PAYMENT =================
 @csrf_exempt
 @login_required
 def capture_paypal_order(request, paypal_order_id):
@@ -185,13 +169,12 @@ def capture_paypal_order(request, paypal_order_id):
             order=order,
             payment_id=paypal_order_id,
             payment_method="PayPal",
-            amount_paid=order.total,
+            amount_paid=order.total,   # ✅ FIXED
             status="Completed",
         )
 
         complete_order(order)
 
-        # 🔥 THIS is what sends user to Payment Successful page
         return JsonResponse({
             "redirect_url": redirect(
                 "orders:order_complete",
@@ -201,9 +184,8 @@ def capture_paypal_order(request, paypal_order_id):
 
     return JsonResponse({"error": "Payment failed"})
 
-# ==================================================
-# COMPLETE ORDER (FINAL FIX 🔥)
-# ==================================================
+
+# ================= COMPLETE ORDER =================
 def complete_order(order):
     order_products = OrderProduct.objects.filter(order=order)
 
@@ -220,12 +202,10 @@ def complete_order(order):
     order.status = "Completed"
     order.save()
 
-    # ✅ SEND EMAIL HERE
     send_order_confirmation_email(order)
 
-# ==================================================
-# ORDER COMPLETE PAGE
-# ==================================================
+
+# ================= ORDER COMPLETE =================
 @login_required
 def order_complete(request, order_number):
     order = get_object_or_404(Order, order_number=order_number, user=request.user)
@@ -235,6 +215,7 @@ def order_complete(request, order_number):
         "order": order,
         "order_products": order_products,
     })
+
 
 def send_order_confirmation_email(order):
     subject = f"Order Confirmed 🎉 | Order No: {order.order_number}"
@@ -251,6 +232,7 @@ def send_order_confirmation_email(order):
         [order.email],
         fail_silently=False,
     )
+
 
 @login_required
 def payment_successful(request, order_number):

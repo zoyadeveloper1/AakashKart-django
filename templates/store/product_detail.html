@@ -16,13 +16,11 @@
       font-family: 'Segoe UI', sans-serif;
     }
 
-    /* Navbar */
     .navbar .nav-link:hover {
       color: #ffc107 !important;
       transition: 0.2s;
     }
 
-    /* Gradient Buttons */
     .btn-gradient {
       background: linear-gradient(135deg, #667eea, #764ba2);
       border: none;
@@ -30,6 +28,7 @@
       transition: 0.3s ease;
       border-radius: 8px;
     }
+
     .btn-gradient:hover {
       background: linear-gradient(135deg, #764ba2, #667eea);
       transform: scale(1.05);
@@ -56,178 +55,223 @@
     }
   </style>
 </head>
+
 <body>
 
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3 shadow-sm">
-    <div class="container">
-      <a class="navbar-brand fw-bold" href="{% url 'home' %}">AakashKart</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3 shadow-sm">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="{% url 'home' %}">AakashKart</a>
 
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'store:store' %}">Store</a></li>
-        </ul>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+      data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-        <!-- Search Bar -->
-        <form class="d-flex mx-auto my-2" method="get" action="{% url 'store:store' %}">
-          <input type="search" name="q" class="form-control me-2" placeholder="Search products..."
-            value="{{ query|default:'' }}">
-          <button class="btn btn-warning fw-bold" type="submit">🔍</button>
-        </form>
+    <div class="collapse navbar-collapse" id="navbarNav">
 
-        <!-- Right Links -->
-        <ul class="navbar-nav mb-2 mb-lg-0 ms-3">
-          {% if user.is_authenticated %}
-            <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a></li>
-            <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
-          {% else %}
-            <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
-            <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
-          {% endif %}
-          <li class="nav-item"><a class="nav-link" href="{% url 'carts:cart' %}">Cart 🛒</a></li>
-        </ul>
-      </div>
-    </div>
-  </nav>
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'store:store' %}">Store</a></li>
+      </ul>
 
-  <!-- Product Details -->
-  <div class="container my-5">
-    <div class="row g-4">
+      <!-- Search -->
+      <form class="d-flex mx-auto" method="get" action="{% url 'store:store' %}">
+        <input type="search" name="q" class="form-control me-2"
+          placeholder="Search products..."
+          value="{{ query|default:'' }}">
+        <button class="btn btn-warning fw-bold">🔍</button>
+      </form>
 
-      <!-- Product Image -->
-      <div class="col-12 col-md-6">
-        <div class="product-image-box">
-          {% if single_product.image %}
-            <img src="{{ single_product.image.url }}" alt="{{ single_product.product_name }}" class="img-fluid rounded">
-          {% else %}
-            <img src="{% static 'images/default-product.jpg' %}" alt="{{ single_product.product_name }}" class="img-fluid rounded">
-          {% endif %}
-        </div>
-      </div>
-
-      <!-- Product Info -->
-      <div class="col-12 col-md-6">
-        <h2 class="fw-bold">{{ single_product.product_name }}</h2>
-        {% if single_product.is_available %}
-          <span class="badge bg-success px-3 py-2">✔ In Stock</span>
+      <ul class="navbar-nav ms-3">
+        {% if user.is_authenticated %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
         {% else %}
-          <span class="badge bg-danger px-3 py-2">❌ Out of Stock</span>
+          <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
         {% endif %}
+        <li class="nav-item"><a class="nav-link" href="{% url 'carts:cart' %}">Cart 🛒</a></li>
+      </ul>
 
-        <h3 class="fw-bold text-primary mt-3">₹{{ single_product.price }}</h3>
-        {% if single_product.old_price %}
-          <p class="text-danger"><del>₹{{ single_product.old_price }}</del></p>
-        {% endif %}
-
-        <p class="mb-3 text-secondary">{{ single_product.description|default:"No description available." }}</p>
-
-        <!-- Add to Cart Form -->
-        <form method="post" action="{% url 'carts:add_cart' single_product.id %}">
-          {% csrf_token %}
-          <div class="row g-3 mb-3">
-            <div class="col-md-4">
-              <label class="form-label fw-bold">Color</label>
-              <select name="color" class="form-select" required>
-                <option value="" disabled selected>Choose Color</option>
-                {% for var in single_product.variation_set.all %}
-                  {% if var.variation_category == "color" %}
-                    <option value="{{ var.variation_value }}">{{ var.variation_value }}</option>
-                  {% endif %}
-                {% endfor %}
-              </select>
-            </div>
-            <div class="col-md-4">
-              <label class="form-label fw-bold">Size</label>
-              <select name="size" class="form-select" required>
-                <option value="" disabled selected>Choose Size</option>
-                {% for var in single_product.variation_set.all %}
-                  {% if var.variation_category == "size" %}
-                    <option value="{{ var.variation_value }}">{{ var.variation_value }}</option>
-                  {% endif %}
-                {% endfor %}
-              </select>
-            </div>
-            <div class="col-md-4">
-              <label class="form-label fw-bold">Quantity</label>
-              <div class="input-group">
-                <button type="button" class="btn btn-outline-danger" onclick="document.getElementById('quantity').stepDown()">-</button>
-                <input type="number" id="quantity" name="quantity" class="form-control text-center" value="1" min="1">
-                <button type="button" class="btn btn-outline-success" onclick="document.getElementById('quantity').stepUp()">+</button>
-              </div>
-            </div>
-          </div>
-
-          {% if single_product.stock > 0 %}
-            <button type="submit" class="btn btn-gradient btn-lg w-50 mb-2">Add to Cart 🛒</button>
-          {% else %}
-            <h5 class="text-danger">OUT OF STOCK</h5>
-          {% endif %}
-        </form>
-
-        <a href="{% url 'carts:cart' %}" class="btn btn-outline-primary btn-lg w-50">View Cart 🛒</a>
-      </div>
-    </div>
-
-    <!-- Reviews Section -->
-    <div class="mt-5">
-      <h3 class="fw-bold mb-4">Customer Reviews 💬</h3>
-      {% if reviews %}
-        {% for review in reviews %}
-          <div class="review-card p-3 mb-3">
-            <div class="d-flex justify-content-between align-items-center">
-              <h6 class="fw-bold text-primary">{{ review.user.username }}</h6>
-              <small class="text-muted">{{ review.created_at|date:"M d, Y" }}</small>
-            </div>
-            <p class="mb-1">
-              {% for i in "12345" %}
-                {% if forloop.counter <= review.rating %}
-                  <span class="text-warning">&#9733;</span>
-                {% else %}
-                  <span class="text-secondary">&#9733;</span>
-                {% endif %}
-              {% endfor %}
-            </p>
-            <p class="mb-0">{{ review.comment }}</p>
-          </div>
-        {% endfor %}
-      {% else %}
-        <p class="text-muted">No reviews yet. Be the first to review! 🎉</p>
-      {% endif %}
-
-      {% if user.is_authenticated %}
-        <div class="review-form bg-white p-4 rounded shadow-sm mt-4">
-          <h5 class="fw-bold mb-3">Write a Review ✍️</h5>
-          <form method="post" action="{% url 'store:add_review' single_product.id %}">
-            {% csrf_token %}
-            <div class="mb-3">
-              <label class="form-label">Rating</label>
-              <select name="rating" class="form-select border-primary" required>
-                <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
-                <option value="4">⭐⭐⭐⭐ Good</option>
-                <option value="3">⭐⭐⭐ Average</option>
-                <option value="2">⭐⭐ Poor</option>
-                <option value="1">⭐ Very Bad</option>
-              </select>
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Your Review</label>
-              <textarea name="comment" class="form-control border-primary" rows="3" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-gradient">Submit Review 🚀</button>
-          </form>
-        </div>
-      {% else %}
-        <p class="text-muted mt-3">👉 <a href="{% url 'login' %}">Login</a> to write a review.</p>
-      {% endif %}
     </div>
   </div>
+</nav>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Product Section -->
+<div class="container my-5">
+  <div class="row g-4">
+
+    <!-- Image -->
+    <div class="col-md-6">
+      <div class="product-image-box">
+        {% if single_product.image %}
+          <img src="{{ single_product.image.url }}" class="img-fluid rounded">
+        {% else %}
+          <img src="{% static 'images/default-product.jpg' %}" class="img-fluid rounded">
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Info -->
+    <div class="col-md-6">
+      <h2 class="fw-bold">{{ single_product.product_name }}</h2>
+
+      {% if single_product.is_available %}
+        <span class="badge bg-success">✔ In Stock</span>
+      {% else %}
+        <span class="badge bg-danger">❌ Out of Stock</span>
+      {% endif %}
+
+      <h3 class="fw-bold text-primary mt-3">₹{{ single_product.price }}</h3>
+
+      {% if single_product.old_price %}
+        <p class="text-danger"><del>₹{{ single_product.old_price }}</del></p>
+      {% endif %}
+
+      <p class="text-secondary">
+        {{ single_product.description|default:"No description available." }}
+      </p>
+
+      <!-- Add to Cart -->
+      <form method="post" action="{% url 'carts:add_cart' single_product.id %}">
+        {% csrf_token %}
+
+        <div class="row g-3 mb-3">
+
+          <div class="col-md-4">
+            <label class="form-label fw-bold">Color</label>
+            <select name="color" class="form-select" required>
+              <option value="" disabled selected>Choose Color</option>
+              {% for var in single_product.variation_set.all %}
+                {% if var.variation_category == "color" %}
+                  <option value="{{ var.variation_value }}">{{ var.variation_value }}</option>
+                {% endif %}
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label fw-bold">Size</label>
+            <select name="size" class="form-select" required>
+              <option value="" disabled selected>Choose Size</option>
+              {% for var in single_product.variation_set.all %}
+                {% if var.variation_category == "size" %}
+                  <option value="{{ var.variation_value }}">{{ var.variation_value }}</option>
+                {% endif %}
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label fw-bold">Quantity</label>
+            <input type="number" name="quantity"
+              class="form-control text-center" value="1" min="1">
+          </div>
+
+        </div>
+
+        {% if single_product.stock > 0 %}
+          <button type="submit" class="btn btn-gradient btn-lg w-50">
+            Add to Cart 🛒
+          </button>
+        {% else %}
+          <h5 class="text-danger">OUT OF STOCK</h5>
+        {% endif %}
+      </form>
+
+      <a href="{% url 'carts:cart' %}" class="btn btn-outline-primary btn-lg w-50 mt-2">
+        View Cart 🛒
+      </a>
+    </div>
+
+  </div>
+
+
+  <!-- Reviews Section -->
+  <div class="mt-5">
+    <h3 class="fw-bold mb-4">Customer Reviews 💬</h3>
+
+    {% if reviews %}
+      {% for review in reviews %}
+        <div class="review-card p-3 mb-3">
+
+          <h6 class="fw-bold text-primary">
+            {{ review.user.username }}
+            <small class="text-muted ms-2">
+              {{ review.created_at|date:"M d, Y" }}
+            </small>
+          </h6>
+
+          <p>
+            {% for i in "12345" %}
+              {% if forloop.counter <= review.rating %}
+                <span class="text-warning">&#9733;</span>
+              {% else %}
+                <span class="text-secondary">&#9733;</span>
+              {% endif %}
+            {% endfor %}
+          </p>
+
+          <h6 class="fw-bold">{{ review.subject }}</h6>
+          <p>{{ review.review }}</p>
+
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="text-muted">No reviews yet. Be the first to review! 🎉</p>
+    {% endif %}
+
+
+    {% if user.is_authenticated %}
+      <div class="review-card p-4 mt-4">
+        <h5 class="fw-bold mb-3">Write a Review ✍️</h5>
+
+        <form method="post"
+          action="{% url 'store:add_review' single_product.id %}">
+          {% csrf_token %}
+
+          <div class="mb-3">
+            <label class="form-label">Rating</label>
+            <select name="rating" class="form-select" required>
+              <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
+              <option value="4">⭐⭐⭐⭐ Good</option>
+              <option value="3">⭐⭐⭐ Average</option>
+              <option value="2">⭐⭐ Poor</option>
+              <option value="1">⭐ Very Bad</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Review Title</label>
+            <input type="text" name="subject"
+              class="form-control" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Your Review</label>
+            <textarea name="review"
+              class="form-control" rows="3" required></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-gradient">
+            Submit Review 🚀
+          </button>
+        </form>
+      </div>
+    {% else %}
+      <p class="text-muted mt-3">
+        👉 <a href="{% url 'login' %}">Login</a> to write a review.
+      </p>
+    {% endif %}
+
+  </div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
 {% endblock %}
