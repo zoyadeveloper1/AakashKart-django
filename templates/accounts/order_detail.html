@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    body {
+        background: #f4f6f9;
+    }
+
+    .card {
+        border-radius: 12px;
+    }
+
+    .product-img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+
+    .table th, .table td {
+        vertical-align: middle;
+    }
+</style>
+
+<section class="section-content padding-y">
+<div class="container">
+
+<div class="row">
+
+    <!-- Sidebar -->
+    <aside class="col-md-3">
+        <div class="card p-3 shadow-sm">
+            <ul class="list-group">
+                <a class="list-group-item" href="{% url 'dashboard' %}">🏠 Dashboard</a>
+                <a class="list-group-item active" href="{% url 'my_orders' %}">📦 My Orders</a>
+                <a class="list-group-item" href="{% url 'edit_profile' %}">👤 Edit Profile</a>
+                <a class="list-group-item" href="{% url 'change_password' %}">🔒 Change Password</a>
+            </ul>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="col-md-9">
+
+        <!-- Order Info -->
+        <div class="card mb-3 shadow-sm">
+            <div class="card-header">
+                Order Details
+            </div>
+
+            <div class="card-body">
+                <p><strong>Order ID:</strong> #{{ order.id }}</p>
+                <p><strong>Name:</strong> {{ order.full_name }}</p>
+                <p><strong>Email:</strong> {{ order.email }}</p>
+                <p><strong>Phone:</strong> {{ order.phone }}</p>
+                <p><strong>Date:</strong> {{ order.created_at }}</p>
+                <p><strong>Status:</strong> 
+                    <span class="badge bg-success">Completed</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Product List -->
+        <div class="card shadow-sm">
+            <div class="card-header">
+                Ordered Products
+            </div>
+
+            <div class="card-body">
+
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Product</th>
+                            <th>Qty</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for item in order_products %}
+                        <tr>
+                            <td>
+                               {% if item.product.images %}
+                            <img src="{{ item.product.images.url }}" class="product-img">
+                            {% else %}
+                            <img src="{% static 'images/default-product.png' %}" class="product-img">
+                            {% endif %}
+                            </td>
+                            <td>{{ item.product.product_name }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>₹ {{ item.product_price }}</td>
+
+                            <!-- ✅ FIXED TOTAL -->
+                            <td>
+                                ₹ {{ item.total }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <!-- Total -->
+                <div class="text-end mt-3">
+                    <h5>Total Amount: ₹ {{ order.order_total }}</h5>
+                </div>
+
+                <!-- Invoice Button -->
+                <div class="text-end mt-2">
+                    <a href="{% url 'invoice_pdf' order.id %}" class="btn btn-success">
+                        Download Invoice
+
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+</div>
+
+</div>
+</section>
+
+{% endblock %}

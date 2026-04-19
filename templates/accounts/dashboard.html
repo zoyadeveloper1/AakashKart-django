@@ -3,109 +3,80 @@
 
 {% block content %}
 
-{% include 'includes/alerts.html' %}
+<section class="section-content padding-y bg">
+<div class="container">
 
+<div class="row">
 
+    <!-- Sidebar -->
+    <aside class="col-md-3">
+        <ul class="list-group">
+            <a class="list-group-item active" href="{% url 'dashboard' %}">
+    <i class="bi bi-speedometer2 me-2"></i> Dashboard
+</a>
 
-<div class="container my-5">
+<a class="list-group-item" href="{% url 'my_orders' %}">
+    <i class="bi bi-bag-check me-2"></i> My Orders
+</a>
 
-    <div class="row">
-        <!-- LEFT SIDEBAR -->
-        <div class="col-md-3">
-            <div class="list-group">
-                <a href="#" class="list-group-item list-group-item-action active">
-                    My order history
-                </a>
-                <a href="#" class="list-group-item list-group-item-action">Transactions</a>
-                <a href="#" class="list-group-item list-group-item-action">Return and refunds</a>
-                <a href="#" class="list-group-item list-group-item-action">Settings</a>
-                <a href="#" class="list-group-item list-group-item-action">My Selling Items</a>
-                <a href="#" class="list-group-item list-group-item-action">Received orders</a>
-                <a href="{% url 'logout' %}" class="list-group-item list-group-item-action text-danger">
-                    Log out
-                </a>
-            </div>
-        </div>
+<a class="list-group-item" href="{% url 'edit_profile' %}">
+    <i class="bi bi-person-circle me-2"></i> Edit Profile
+</a>
 
-        <!-- RIGHT CONTENT -->
-        <div class="col-md-9">
+<a class="list-group-item" href="{% url 'change_password' %}">
+    <i class="bi bi-shield-lock me-2"></i> Change Password
+</a>
+        </ul>
+        <br>
+        <a class="btn btn-light btn-block" href="{% url 'logout' %}">
+            <i class="fa fa-power-off"></i> Logout
+        </a>
+    </aside>
 
-            <div class="card shadow-sm">
-                <div class="card-body">
+    <!-- Main Content -->
+    <main class="col-md-9">
 
-                    <h5 class="mb-3">
-                        <strong>Order ID:</strong> 6123456789  
-                        <span class="float-end">Order Date: 16 December 2018</span>
-                    </h5>
-                    
-                    <hr>
+        <!-- Dashboard Card -->
+        <article class="card mb-4">
+            <header class="card-header">
+                <strong>Logged in as:</strong> {{ user.first_name }}
+            </header>
 
-                    <div class="row">
-                        <!-- DELIVERY INFO -->
-                        <div class="col-md-6">
-                            <h6><strong>Delivery to</strong></h6>
-                            <p class="mb-1">Michael Jackson</p>
-                            <p class="mb-1">Phone: +1234567890</p>
-                            <p class="mb-1">Email: myname@pixsellz.com</p>
-                            <p class="mb-1">Location: Street 123, Tashkent, UZB</p>
-                            <p class="mb-1">P.O. Box: 100123</p>
-                        </div>
+            <div class="card-body">
 
-                        <!-- PAYMENT INFO -->
-                        <div class="col-md-6">
-                            <h6><strong>Payment</strong></h6>
-                            <p class="mb-1">Visa •••• 4216</p>
-                            <p class="mb-1">Subtotal: $356</p>
-                            <p class="mb-1">Shipping fee: $56</p>
-                            <h6><strong>Total: $456</strong></h6>
+                <div class="row">
+
+                    <!-- Total Orders -->
+                    <div class="col-md-6">
+                        <div class="card text-center p-3">
+                            <h6>Total Orders</h6>
+                            <h3>{{ orders_count }}</h3>
+                            <a href="{% url 'my_orders' %}">View Orders</a>
                         </div>
                     </div>
 
-                    <hr>
+                    <!-- Profile Info -->
+                    <div class="col-md-6">
+                        <div class="card text-center p-3">
+                            <div class="mb-2">
+                                <i class="fa fa-user-circle fa-3x text-primary"></i>
+                            </div>
 
-                    <!-- ORDER ITEMS -->
-                    <div class="row align-items-center mb-3">
-                        <div class="col-md-7">
-                            <img src="{% static 'images/placeholder.png' %}" width="50">
-                            <span class="ms-2">Product name goes here — USD 145</span>
-                        </div>
-                        <div class="col-md-3">Seller: Nike clothing</div>
-                        <div class="col-md-2">
-                            <button class="btn btn-primary btn-sm w-100">Track order</button>
-                            <button class="btn btn-outline-secondary btn-sm mt-1 w-100">Details</button>
-                        </div>
-                    </div>
-
-                    <div class="row align-items-center mb-3">
-                        <div class="col-md-7">
-                            <img src="{% static 'images/placeholder.png' %}" width="50">
-                            <span class="ms-2">Another product — USD 15</span>
-                        </div>
-                        <div class="col-md-3">Seller: ABC Shop</div>
-                        <div class="col-md-2">
-                            <button class="btn btn-primary btn-sm w-100">Track order</button>
-                            <button class="btn btn-outline-secondary btn-sm mt-1 w-100">Details</button>
-                        </div>
-                    </div>
-
-                    <div class="row align-items-center mb-3">
-                        <div class="col-md-7">
-                            <img src="{% static 'images/placeholder.png' %}" width="50">
-                            <span class="ms-2">Product name here — USD 145</span>
-                        </div>
-                        <div class="col-md-3">Seller: Walmart</div>
-                        <div class="col-md-2">
-                            <button class="btn btn-primary btn-sm w-100">Track order</button>
-                            <button class="btn btn-outline-secondary btn-sm mt-1 w-100">Details</button>
+                            <p class="mb-1">{{ user.email }}</p>
+                            <small>{{ user.phone_number }}</small>
                         </div>
                     </div>
 
                 </div>
-            </div>
 
-        </div>
-    </div>
+            </div>
+        </article>
+
+    </main>
 
 </div>
+
+</div>
+</section>
 
 {% endblock %}

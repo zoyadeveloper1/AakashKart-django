@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<section class="section-content padding-y bg">
+<div class="container">
+
+<div class="row">
+
+    <!-- Sidebar -->
+    <aside class="col-md-3">
+        <ul class="list-group">
+           <a class="list-group-item active" href="{% url 'dashboard' %}">
+    <i class="bi bi-speedometer2 me-2"></i> Dashboard
+</a>
+
+<a class="list-group-item" href="{% url 'my_orders' %}">
+    <i class="bi bi-bag-check me-2"></i> My Orders
+</a>
+
+<a class="list-group-item" href="{% url 'edit_profile' %}">
+    <i class="bi bi-person-circle me-2"></i> Edit Profile
+</a>
+
+<a class="list-group-item" href="{% url 'change_password' %}">
+    <i class="bi bi-shield-lock me-2"></i> Change Password
+</a>
+        </ul>
+        <br>
+        <a class="btn btn-light btn-block" href="{% url 'logout' %}">
+            <i class="fa fa-power-off"></i> Logout
+        </a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="col-md-9">
+
+        <article class="card">
+            <header class="card-header">
+                <strong class="d-inline-block mr-3">Your order history</strong>
+            </header>
+
+            <div class="card-body">
+
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Order #</th>
+                                    
+                                    <th scope="col">Billing Name</th>
+                                    <th scope="col">Phone</th>
+                                    <th scope="col">Order Total</th>
+                                    <th scope="col">Date</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for order in orders %}
+                                <tr>
+                                    <th scope="row">
+                                        {{ order.order_number }}
+                                    </th>
+
+                                   <td>{{ order.user.first_name }} {{ order.user.last_name }}</td>
+
+                                    <td>{{ order.phone }}</td>
+
+                                    <td>₹{{ order.total }}</td>
+
+                                    <td>{{ order.created_at }}</td>
+                                     <td>
+        <a href="{% url 'order_detail' order.id %}" class="btn btn-primary btn-sm">
+            View Details
+        </a>
+    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+
+                        </table>
+
+                    </div>
+                </div>
+
+            </div>
+        </article>
+
+    </main>
+
+</div>
+
+</div>
+</section>
+
+{% endblock %}

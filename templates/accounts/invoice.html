@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial; font-size: 14px; }
+        h2 { text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        table, th, td { border: 1px solid black; padding: 8px; }
+    </style>
+</head>
+<body>
+
+<h2>Invoice</h2>
+
+<p><strong>Order ID:</strong> {{ order.id }}</p>
+<p><strong>Name:</strong> {{ order.full_name }}</p>
+<p><strong>Email:</strong> {{ order.email }}</p>
+<p><strong>Date:</strong> {{ order.created_at }}</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Qty</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in order_products %}
+        <tr>
+            <td>{{ item.product.product_name }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.product_price }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h3>Total: ₹ {{ order.order_total }}</h3>
+
+</body>
+</html>

@@ -22,4 +22,15 @@ urlpatterns = [
     path('resetpassword/', views.resetpassword, name='resetpassword'),
 
     path('signup/', views.signup, name='signup'),
+    path('my-orders/', views.my_orders, name='my_orders'),
+    path('edit-profile/', views.edit_profile, name='edit_profile'),
+    path('change-password/', views.change_password, name='change_password'),
+    path('order-detail/<int:order_id>/', views.order_detail, name='order_detail'),
+    path('invoice/<int:order_id>/', views.invoice_pdf, name='invoice_pdf'),
+    
+    
+
+
 ]
+
+
