@@ -30,10 +30,7 @@ SECRET_KEY = 'django-insecure-j)$f78tk9vl+vzhlvornp4-9+jg!a#174c2%p4%#eluu(s2=hb
 
 DEBUG = False
 
-ALLOWED_HOSTS = [
-    'aakashkart-django.onrender.com',
-]
-
+ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
