@@ -116,17 +116,24 @@ def category_view(request, category_slug):
 
 
 # ==================== SEARCH ====================
+
+
 def search(request):
-    query = request.GET.get('keyword', '')
+    categories = Category.objects.all()
+    query = request.GET.get('q', '')
+
     products = Product.objects.filter(
-        product_name__icontains=query
-    ) if query else Product.objects.none()
+        Q(product_name__icontains=query) |
+        Q(category__category_name__icontains=query),
+        is_available=True
+    )
 
     return render(request, 'store/store.html', {
         'query': query,
-        'products': products
+        'products': products,
+        'categories': categories,
+        'product_count': products.count(),
     })
-
 
 # ==================== CATEGORY SHORTCUTS ====================
 def electronics(request):

@@ -6,159 +6,404 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AakashKart - Home</title>
 
-  <!-- Bootstrap CSS -->
+  <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
   <style>
-    /* Search Bar Hover */
-    form.d-flex:hover button {
-      background-color: #e0a800;
-      transform: scale(1.05);
-      transition: all 0.2s ease-in-out;
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Poppins',sans-serif;
     }
 
-    form.d-flex input:focus {
-      box-shadow: none;
-      outline: none;
+    body{
+      background:#f5f7fb;
+      overflow-x:hidden;
     }
 
-    /* Navbar Responsive Fix */
-    @media (max-width: 991px) {
-      .navbar-collapse .ms-auto {
-        margin-top: 10px;
+    /* Navbar */
+    .navbar{
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(12px);
+    }
+
+    .navbar-brand{
+      font-size:1.7rem;
+      font-weight:700;
+      color:#ffc107 !important;
+    }
+
+    .nav-link{
+      color:white !important;
+      transition:0.3s;
+      font-weight:500;
+    }
+
+    .nav-link:hover{
+      color:#ffc107 !important;
+      transform:translateY(-2px);
+    }
+
+    /* Search */
+    .search-box{
+      background:white;
+      border-radius:50px;
+      overflow:hidden;
+      box-shadow:0 5px 20px rgba(0,0,0,0.08);
+    }
+
+    .search-box input{
+      border:none;
+      padding:10px 15px;
+    }
+
+    .search-box input:focus{
+      outline:none;
+      box-shadow:none;
+    }
+
+    .search-btn{
+      background:#ffc107;
+      border:none;
+      padding:10px 18px;
+      transition:0.3s;
+    }
+
+    .search-btn:hover{
+      background:#ffb300;
+      transform:scale(1.05);
+    }
+
+    /* Hero Banner */
+    .hero{
+      position:relative;
+      overflow:hidden;
+      border-radius:0 0 40px 40px;
+    }
+
+    .hero img{
+      width:100%;
+      height:500px;
+      object-fit:cover;
+      filter:brightness(55%);
+    }
+
+    .hero-content{
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%,-50%);
+      text-align:center;
+      color:white;
+      width:90%;
+    }
+
+    .hero-content h1{
+      font-size:3rem;
+      font-weight:700;
+      margin-bottom:15px;
+    }
+
+    .hero-content p{
+      font-size:1.1rem;
+      margin-bottom:25px;
+    }
+
+    .hero-btn{
+      background:#ffc107;
+      color:black;
+      border:none;
+      padding:12px 28px;
+      border-radius:50px;
+      font-weight:600;
+      transition:0.3s;
+      text-decoration:none;
+    }
+
+    .hero-btn:hover{
+      background:white;
+      transform:translateY(-3px);
+    }
+
+    /* Section */
+    .section-title{
+      font-weight:700;
+      color:#222;
+    }
+
+    /* Product Card */
+    .product-card{
+      border:none;
+      border-radius:20px;
+      overflow:hidden;
+      background:white;
+      transition:0.4s;
+      box-shadow:0 8px 25px rgba(0,0,0,0.06);
+      position:relative;
+    }
+
+    .product-card:hover{
+      transform:translateY(-10px);
+      box-shadow:0 15px 35px rgba(0,0,0,0.15);
+    }
+
+    .product-card img{
+      height:220px;
+      object-fit:cover;
+      transition:0.4s;
+    }
+
+    .product-card:hover img{
+      transform:scale(1.08);
+    }
+
+    .price{
+      color:#198754;
+      font-weight:700;
+      font-size:1.1rem;
+    }
+
+    .cart-btn{
+      border-radius:50px;
+      padding:10px;
+      font-weight:600;
+      transition:0.3s;
+    }
+
+    .cart-btn:hover{
+      transform:scale(1.03);
+    }
+
+    /* Badge */
+    .sale-badge{
+      position:absolute;
+      top:15px;
+      left:15px;
+      background:red;
+      color:white;
+      padding:5px 12px;
+      border-radius:50px;
+      font-size:0.8rem;
+      z-index:2;
+    }
+
+    /* Footer */
+    footer{
+      background:#111;
+      color:white;
+      margin-top:70px;
+    }
+
+    footer a{
+      color:#ffc107;
+      text-decoration:none;
+    }
+
+    /* Responsive */
+    @media(max-width:768px){
+
+      .hero img{
+        height:350px;
       }
-    }
 
-    /* Banner Text Shadow */
-    .banner-text h2, .banner-text p {
-      text-shadow: 1px 1px 8px rgba(0,0,0,0.5);
-    }
+      .hero-content h1{
+        font-size:2rem;
+      }
 
-    /* Card Hover Effect */
-    .card:hover {
-      transform: translateY(-5px);
-      transition: all 0.3s ease;
+      .hero-content p{
+        font-size:0.95rem;
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3 shadow-sm">
-    <div class="container">
-      <a class="navbar-brand fw-bold fs-4" href="{% url 'home' %}">
-        🛍️ AakashKart
-      </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top shadow">
+  <div class="container">
 
-      <div class="collapse navbar-collapse" id="navbarNav">
+    <a class="navbar-brand" href="{% url 'home' %}">
+      🛍️ AakashKart
+    </a>
 
-        <!-- Left Links -->
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item"><a class="nav-link active" href="{% url 'home' %}">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'store:store' %}">Store</a></li>
-        </ul>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-        <!-- Categories Dropdown -->
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-              data-bs-toggle="dropdown" aria-expanded="false">All Categories</a>
-            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" href="{% url 'store:store' %}">All Products</a></li>
-              {% for category in categories %}
-                <li><a class="dropdown-item" href="{{ category.get_url }}">{{ category.category_name }}</a></li>
-              {% empty %}
-                <li><a class="dropdown-item" href="#">No Categories Available</a></li>
-              {% endfor %}
-            </ul>
-          </li>
-        </ul>
+    <div class="collapse navbar-collapse" id="navbarNav">
 
-        <!-- Search Bar -->
-        <div class="mx-auto my-2" style="max-width: 350px; width: 100%;">
-          <form class="d-flex shadow-sm rounded-pill overflow-hidden" method="get" action="{% url 'store:search' %}">
-            <input type="search" name="q" class="form-control border-0 px-3 py-1"
-              placeholder="Search products, brands..." value="{{ query|default:'' }}"
-              style="border-radius: 50px 0 0 50px;">
-            <button type="submit" class="btn btn-warning fw-bold px-3"
-              style="border-radius: 0 50px 50px 0;">🔍</button>
-          </form>
-        </div>
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link active" href="{% url 'home' %}">Home</a>
+        </li>
 
-        <!-- Right Links -->
-        <ul class="navbar-nav mb-2 mb-lg-0 ms-3">
-          {% if user.is_authenticated %}
-            <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a></li>
-            <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
-          {% else %}
-            <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
-            <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
-          {% endif %}
-          <li class="nav-item"><a class="nav-link" href="{% url 'carts:cart' %}">Cart 🛒</a></li>
-        </ul>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'store:store' %}">Store</a>
+        </li>
 
-      </div>
-    </div>
-  </nav>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+            Categories
+          </a>
 
-  <!-- Sale Banner -->
-  <div class="container-fluid p-0 mb-5">
-    <div class="position-relative" style="overflow:hidden;">
-      <img src="{% static 'images/sale banner2.jpg' %}" class="img-fluid w-100" alt="Sale Banner"
-        style="max-height: 400px; object-fit: cover;">
-      <div class="position-absolute top-50 start-50 translate-middle text-center text-white px-2 banner-text">
-        <h2 class="fw-bold display-6">Mega Sale! Up to 70% Off</h2>
-        <p class="lead fs-6">Don't miss our exclusive deals on top products.</p>
-        <a href="#popular-products" class="btn btn-warning btn-sm">Shop Now</a>
-      </div>
-    </div>
-  </div>
+          <ul class="dropdown-menu">
+            {% for category in categories %}
+            <li>
+              <a class="dropdown-item" href="{{ category.get_url }}">
+                {{ category.category_name }}
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
+        </li>
+      </ul>
 
-  <!-- Popular Products -->
-  <div class="container my-5" id="popular-products">
-    <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
-      <h3 class="mb-2 mb-md-0">Popular Products</h3>
-      <a href="{% url 'store:store' %}" class="btn btn-outline-primary btn-sm">See All</a>
-    </div>
+      <!-- Search -->
+      <form class="d-flex mx-auto my-2 search-box" method="get" action="{% url 'store:search' %}">
+        <input type="search" name="q" placeholder="Search products...">
+        <button class="search-btn">
+          <i class="bi bi-search"></i>
+        </button>
+      </form>
 
-    <div class="row g-3 g-md-4">
-      {% for product in products %}
-      <div class="col-6 col-sm-6 col-md-4 col-lg-3">
-        <div class="card h-100 shadow-sm border-0">
-          {% if product.image %}
-            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.product_name }}"
-              style="height: 180px; object-fit: cover;">
-          {% else %}
-            <img src="{% static 'images/default-product.jpg' %}" class="card-img-top"
-              alt="{{ product.product_name }}" style="height: 180px; object-fit: cover;">
-          {% endif %}
+      <!-- Right -->
+      <ul class="navbar-nav ms-3">
 
-          <div class="card-body d-flex flex-column">
-            <h6 class="card-title fs-6 text-truncate">{{ product.product_name }}</h6>
-            <p class="text-success fw-bold mb-2 fs-6">${{ product.price }}</p>
-            <a href="{{ product.get_url }}" class="btn btn-primary btn-sm mt-auto">View / Add to Cart</a>
-          </div>
-        </div>
-      </div>
-      {% empty %}
-      <p class="text-muted">No products available.</p>
-      {% endfor %}
+        {% if user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'dashboard' %}">
+            <i class="bi bi-person-circle"></i> Dashboard
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'logout' %}">
+            Logout
+          </a>
+        </li>
+
+        {% else %}
+
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'login' %}">
+            Login
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'register' %}">
+            Register
+          </a>
+        </li>
+
+        {% endif %}
+
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'carts:cart' %}">
+            🛒 Cart
+          </a>
+        </li>
+
+      </ul>
     </div>
   </div>
+</nav>
 
-  <!-- Footer -->
-  <footer class="bg-dark text-white text-center py-3 mt-5">
-    <p class="mb-0">&copy; 2025 AakashKart. All Rights Reserved.</p>
-  </footer>
+<!-- Hero -->
+<section class="hero mb-5">
 
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <img src="{% static 'images/sale banner2.jpg' %}" alt="Banner">
+
+  <div class="hero-content">
+    <h1>Big Fashion Sale 2025</h1>
+    <p>Discover premium collections with amazing discounts up to 70% OFF</p>
+
+    <a href="#products" class="hero-btn">
+      Shop Now
+    </a>
+  </div>
+
+</section>
+
+<!-- Products -->
+<div class="container" id="products">
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="section-title">🔥 Trending Products</h2>
+
+    <a href="{% url 'store:store' %}" class="btn btn-outline-dark rounded-pill px-4">
+      View All
+    </a>
+  </div>
+
+  <div class="row g-4">
+
+    {% for product in products %}
+
+    <div class="col-6 col-md-4 col-lg-3">
+
+      <div class="card product-card h-100">
+
+        <span class="sale-badge">SALE</span>
+
+        {% if product.image %}
+        <img src="{{ product.image.url }}" class="card-img-top">
+        {% else %}
+        <img src="{% static 'images/default-product.jpg' %}" class="card-img-top">
+        {% endif %}
+
+        <div class="card-body d-flex flex-column">
+
+          <h6 class="fw-semibold">
+            {{ product.product_name }}
+          </h6>
+
+          <p class="price mb-3">
+            ${{ product.price }}
+          </p>
+
+          <a href="{{ product.get_url }}" class="btn btn-dark cart-btn mt-auto">
+            <i class="bi bi-cart-plus"></i> Add to Cart
+          </a>
+
+        </div>
+      </div>
+
+    </div>
+
+    {% empty %}
+
+    <p>No Products Available</p>
+
+    {% endfor %}
+
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="text-center py-4">
+
+  <h5 class="mb-2">🛍️ AakashKart</h5>
+
+  <p class="mb-1">
+    Smart Shopping Experience
+  </p>
+
+  <small>
+    © 2025 All Rights Reserved
+  </small>
+
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

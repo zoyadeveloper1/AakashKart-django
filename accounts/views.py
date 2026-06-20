@@ -191,14 +191,12 @@ def order_detail(request, order_id):
     order_products = OrderProduct.objects.filter(order=order)
 
     for item in order_products:
-        item.total = item.quantity * (item.product_price or item.product.price)
+        item.total = item.quantity * item.product.price
 
     return render(request, 'accounts/order_detail.html', {
         'order': order,
         'order_products': order_products,
     })
-
-
 # ---------------------------------------------------
 # INVOICE PDF
 # ---------------------------------------------------
