@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
+from pickle import TRUE
 from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -48,6 +49,8 @@ INSTALLED_APPS = [
     'orders',
     'shop',
     'django_extensions',
+    'cloudinary',
+    'cloudinary_storage',
 
 ]
 
@@ -130,7 +133,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-DEBUG = False
+DEBUG = True
 
 STATIC_URL = '/static/'
 
@@ -184,3 +187,12 @@ LOGIN_URL = '/accounts/login/'
 PAYPAL_CLIENT_ID = os.getenv("PAYPAL_CLIENT_ID")
 PAYPAL_SECRET = os.getenv("PAYPAL_SECRET")
 PAYPAL_BASE_URL = os.getenv("PAYPAL_BASE_URL")
+
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': os.getenv('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.getenv('CLOUDINARY_API_SECRET'),
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
