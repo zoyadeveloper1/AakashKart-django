@@ -14,10 +14,23 @@ from pathlib import Path
 import os
 from pickle import TRUE
 from dotenv import load_dotenv
+from pathlib import Path
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv(BASE_DIR / ".env")
+
+# Load .env file
+env_file = Path(__file__).resolve().parent / ".env"
+load_dotenv(env_file)
+
+
+# Debug (Temporary)
+print("ENV Path:", env_file)
+print("ENV Exists:", env_file.exists())
+print("Cloud Name:", os.getenv("CLOUDINARY_CLOUD_NAME"))
+print("API Key:", os.getenv("CLOUDINARY_API_KEY"))
+print("API Secret:", os.getenv("CLOUDINARY_API_SECRET"))
 
 
 
@@ -189,10 +202,21 @@ PAYPAL_SECRET = os.getenv("PAYPAL_SECRET")
 PAYPAL_BASE_URL = os.getenv("PAYPAL_BASE_URL")
 
 
+
+
+
+
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME'),
     'API_KEY': os.getenv('CLOUDINARY_API_KEY'),
     'API_SECRET': os.getenv('CLOUDINARY_API_SECRET'),
 }
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
