@@ -2,9 +2,9 @@
 
 GreatKart is a Django-based e-commerce web application developed using Python and Django. The project provides a foundation for building an online shopping platform with a structured Django backend and database integration.
 
-<<<<<<< HEAD
 
-![alt text](image.png)
+
+![alt text](image-2.png)
 
 
 ## 📌 Project Overview
