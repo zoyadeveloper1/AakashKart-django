@@ -2,76 +2,506 @@
 {% load static %}
 
 {% block content %}
-<div class="container my-5">
 
-    <div class="text-center mb-4">
-        <h2 class="fw-bold">Complete Your Payment</h2>
-        <p class="text-muted">Order No: {{ order.order_number }}</p>
+<style>
+    /* ===============================
+       PAYMENT PAGE
+    ================================ */
+
+    .payment-page {
+        min-height: 82vh;
+        padding: 55px 15px;
+        background:
+            radial-gradient(circle at 10% 10%, rgba(99,102,241,.12), transparent 30%),
+            radial-gradient(circle at 90% 90%, rgba(16,185,129,.10), transparent 30%),
+            #f8fafc;
+    }
+
+    /* Header */
+    .payment-header {
+        text-align: center;
+        margin-bottom: 35px;
+    }
+
+    .payment-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        border-radius: 50px;
+        background: #eef2ff;
+        color: #4f46e5;
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+
+    .payment-header h2 {
+        font-size: 36px;
+        font-weight: 800;
+        color: #0f172a;
+        margin-bottom: 8px;
+        letter-spacing: -.7px;
+    }
+
+    .payment-header p {
+        color: #64748b;
+        font-size: 16px;
+        margin: 0;
+    }
+
+    /* Main Card */
+    .payment-card {
+        max-width: 570px;
+        margin: auto;
+        background: rgba(255,255,255,.96);
+        border: 1px solid #e2e8f0;
+        border-radius: 26px;
+        padding: 35px;
+        box-shadow:
+            0 20px 60px rgba(15,23,42,.10),
+            0 5px 20px rgba(15,23,42,.05);
+        animation: slideUp .7s ease;
+    }
+
+    /* Order Header */
+    .order-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        padding-bottom: 22px;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .order-label {
+        font-size: 13px;
+        color: #94a3b8;
+        text-transform: uppercase;
+        letter-spacing: .7px;
+        font-weight: 700;
+    }
+
+    .order-number {
+        font-size: 16px;
+        font-weight: 700;
+        color: #334155;
+        margin-top: 4px;
+    }
+
+    .secure-badge {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: #ecfdf5;
+        color: #15803d;
+        border: 1px solid #bbf7d0;
+        padding: 8px 12px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    /* Total */
+    .total-box {
+        margin: 25px 0;
+        padding: 25px;
+        border-radius: 18px;
+        background: linear-gradient(135deg, #f8fafc, #eef2ff);
+        border: 1px solid #e0e7ff;
+        text-align: center;
+    }
+
+    .total-label {
+        color: #64748b;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 6px;
+    }
+
+    .total-amount {
+        font-size: 36px;
+        font-weight: 900;
+        color: #4f46e5;
+        letter-spacing: -.8px;
+    }
+
+    /* Payment Title */
+    .payment-method-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .payment-method-title .icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        background: #fff7ed;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+    }
+
+    .payment-method-title h5 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 800;
+        color: #1e293b;
+    }
+
+    .payment-method-title p {
+        margin: 2px 0 0;
+        font-size: 13px;
+        color: #94a3b8;
+    }
+
+    /* PayPal Container */
+    .paypal-box {
+        padding: 18px;
+        border: 1px solid #e2e8f0;
+        border-radius: 18px;
+        background: #fff;
+        min-height: 70px;
+    }
+
+    /* Security */
+    .security-info {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 7px;
+        margin-top: 20px;
+        color: #64748b;
+        font-size: 13px;
+    }
+
+    .security-info span {
+        color: #16a34a;
+    }
+
+    /* Bottom */
+    .payment-footer {
+        text-align: center;
+        margin-top: 25px;
+        color: #94a3b8;
+        font-size: 13px;
+    }
+
+    /* Loading */
+    .loading-text {
+        text-align: center;
+        color: #64748b;
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    /* Animation */
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Mobile */
+    @media (max-width: 576px) {
+
+        .payment-page {
+            padding: 35px 12px;
+        }
+
+        .payment-header h2 {
+            font-size: 28px;
+        }
+
+        .payment-card {
+            padding: 24px 18px;
+            border-radius: 22px;
+        }
+
+        .order-top {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .secure-badge {
+            align-self: flex-start;
+        }
+
+        .total-amount {
+            font-size: 31px;
+        }
+    }
+</style>
+
+
+<section class="payment-page">
+
+    <!-- ================= HEADER ================= -->
+
+    <div class="payment-header">
+
+        <div class="payment-badge">
+            💳 Secure Checkout
+        </div>
+
+        <h2>Complete Your Payment</h2>
+
+        <p>
+            You're one step away from completing your order.
+        </p>
+
     </div>
 
-    <div class="row justify-content-center">
-        <div class="col-md-6">
 
-            <div class="card shadow-sm p-4">
-                <h5 class="fw-bold mb-3">Order Summary</h5>
+    <!-- ================= PAYMENT CARD ================= -->
 
-                <p><strong>Total:</strong> ₹{{ order.total }}</p>
+    <div class="payment-card">
 
-                <!-- PAYPAL BUTTON -->
-                <div id="paypal-button-container"></div>
+        <!-- Order Information -->
+
+        <div class="order-top">
+
+            <div>
+                <div class="order-label">
+                    Order Number
+                </div>
+
+                <div class="order-number">
+                    #{{ order.order_number }}
+                </div>
+            </div>
+
+            <div class="secure-badge">
+                🔒 Secure Payment
             </div>
 
         </div>
+
+
+        <!-- Total -->
+
+        <div class="total-box">
+
+            <div class="total-label">
+                Amount Payable
+            </div>
+
+            <div class="total-amount">
+                ₹{{ order.total }}
+            </div>
+
+        </div>
+
+
+        <!-- Payment Method -->
+
+        <div class="payment-method-title">
+
+            <div class="icon">
+                💳
+            </div>
+
+            <div>
+                <h5>Pay with PayPal</h5>
+
+                <p>
+                    Fast & secure online payment
+                </p>
+            </div>
+
+        </div>
+
+
+        <!-- PayPal -->
+
+        <div class="paypal-box">
+
+            <div id="paypal-button-container">
+
+                <div class="loading-text">
+                    Loading secure payment...
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Security -->
+
+        <div class="security-info">
+
+            <span>🔒</span>
+
+            Your payment information is encrypted and secure.
+
+        </div>
+
+
+        <!-- Footer -->
+
+        <div class="payment-footer">
+
+            Powered securely by PayPal • AakashKart
+
+        </div>
+
     </div>
 
-</div>
+</section>
 
-<!-- PayPal SDK -->
+
+<!-- =========================================
+     PAYPAL SDK
+========================================= -->
+
 <script src="https://www.paypal.com/sdk/js?client-id=YOUR_CLIENT_ID&currency=USD"></script>
 
+
 <script>
+
 paypal.Buttons({
 
-    createOrder: function () {
-        return fetch("{% url 'orders:create_paypal_order' %}", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": "{{ csrf_token }}"
-            },
-            body: JSON.stringify({
-                order_id: "{{ order.id }}"
-            })
-        })
-        .then(res => res.json())
-        .then(data => data.id);
+    style: {
+        layout: 'vertical',
+        color: 'gold',
+        shape: 'rect',
+        label: 'paypal',
+        height: 48
     },
+
+
+    /* =====================================
+       CREATE PAYPAL ORDER
+    ====================================== */
+
+    createOrder: function () {
+
+        return fetch(
+            "{% url 'orders:create_paypal_order' %}",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+
+                body: JSON.stringify({
+                    order_id: "{{ order.id }}"
+                })
+            }
+        )
+
+        .then(function(response) {
+
+            if (!response.ok) {
+                throw new Error("Unable to create PayPal order");
+            }
+
+            return response.json();
+
+        })
+
+        .then(function(data) {
+
+            if (!data.id) {
+                throw new Error("PayPal Order ID missing");
+            }
+
+            return data.id;
+
+        });
+
+    },
+
+
+    /* =====================================
+       PAYMENT APPROVED
+    ====================================== */
 
     onApprove: function (data) {
-        return fetch(`/orders/capture-paypal-order/${data.orderID}/`, {
-            method: "POST",
-            headers: {
-                "X-CSRFToken": "{{ csrf_token }}"
+
+        return fetch(
+            `/orders/capture-paypal-order/${data.orderID}/`,
+            {
+                method: "POST",
+
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}"
+                }
             }
+        )
+
+        .then(function(response) {
+
+            if (!response.ok) {
+                throw new Error("Payment capture failed");
+            }
+
+            return response.json();
+
         })
-        .then(res => res.json())
-        .then(data => {
+
+        .then(function(data) {
+
             if (data.redirect_url) {
-                window.location.href = data.redirect_url; // ✅ REDIRECT
+
+                window.location.href = data.redirect_url;
+
+            } else {
+
+                alert(
+                    "Payment completed, but redirect URL was not returned."
+                );
+
             }
+
         });
+
     },
+
+
+    /* =====================================
+       PAYMENT CANCELLED
+    ====================================== */
 
     onCancel: function () {
-        alert("Payment cancelled ❌");
+
+        alert(
+            "Payment cancelled ❌\n\nYour order has not been paid."
+        );
+
     },
 
+
+    /* =====================================
+       PAYMENT ERROR
+    ====================================== */
+
     onError: function (err) {
-        console.error(err);
-        alert("Payment error ⚠️");
+
+        console.error("PayPal Error:", err);
+
+        alert(
+            "Payment error ⚠️\n\nPlease try again."
+        );
+
     }
 
 }).render('#paypal-button-container');
+
 </script>
+
 
 {% endblock %}

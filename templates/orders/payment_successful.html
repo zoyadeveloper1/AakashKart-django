@@ -3,170 +3,716 @@
 
 {% block content %}
 
-<div class="container mt-5 mb-5">
+<style>
+    /* =========================
+       ORDER COMPLETE PAGE
+    ========================= */
 
-    <!-- SUCCESS ICON -->
-    <div class="text-center mb-4">
-        <img src="{% static 'images/success.png' %}" width="70">
-        <h2 class="mt-3 text-success">Payment Successful</h2>
-        <a href="{% url 'store:store' %}" class="btn btn-success mt-2">
-            Shop more
-        </a>
-    </div>
+    :root {
+        --primary: #6366f1;
+        --primary-dark: #4f46e5;
+        --success: #16a34a;
+        --dark: #111827;
+        --muted: #6b7280;
+        --light: #f8fafc;
+        --border: #e5e7eb;
+    }
 
-    <!-- INVOICE -->
-    <div class="card shadow p-4">
+    body {
+        background:
+            radial-gradient(circle at top left, rgba(99,102,241,.08), transparent 35%),
+            #f5f7fb;
+        font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    }
 
-        <div class="row mb-4">
-            <div class="col-md-6">
-                <h3 class="text-primary">GreatKart</h3>
-            </div>
+    .success-wrapper {
+        padding: 60px 0 80px;
+    }
 
-            <div class="col-md-6 text-end">
-                <strong>Invoiced To</strong><br>
-                {{ order.first_name }} {{ order.last_name }}<br>
-                {{ order.address_line_1 }}<br>
-                {{ order.city }}, {{ order.state }}<br>
-                {{ order.country }}
-            </div>
+    /* SUCCESS HEADER */
+    .success-header {
+        text-align: center;
+        margin-bottom: 45px;
+    }
+
+    .success-icon {
+        width: 92px;
+        height: 92px;
+        margin: auto;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 15px 35px rgba(22,163,74,.25);
+        animation: popIn .7s ease;
+    }
+
+    .success-icon i {
+        color: white;
+        font-size: 48px;
+        font-weight: bold;
+    }
+
+    .success-header h1 {
+        margin-top: 24px;
+        color: var(--dark);
+        font-size: 38px;
+        font-weight: 800;
+        letter-spacing: -.5px;
+    }
+
+    .success-header p {
+        color: var(--muted);
+        font-size: 17px;
+        margin-top: 10px;
+    }
+
+    .shop-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 20px;
+        padding: 13px 25px;
+        border-radius: 12px;
+        color: white;
+        text-decoration: none;
+        font-size: 16px;
+        font-weight: 700;
+        background: linear-gradient(
+            135deg,
+            var(--primary),
+            var(--primary-dark)
+        );
+        box-shadow: 0 10px 25px rgba(79,70,229,.25);
+        transition: .3s ease;
+    }
+
+    .shop-btn:hover {
+        color: white;
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px rgba(79,70,229,.35);
+    }
+
+    /* INVOICE */
+    .invoice-card {
+        max-width: 1100px;
+        margin: auto;
+        background: rgba(255,255,255,.96);
+        border: 1px solid rgba(229,231,235,.8);
+        border-radius: 24px;
+        padding: 42px;
+        box-shadow: 0 20px 60px rgba(15,23,42,.08);
+        animation: fadeUp .7s ease;
+    }
+
+    /* INVOICE TOP */
+    .invoice-top {
+        display: flex;
+        justify-content: space-between;
+        gap: 30px;
+        padding-bottom: 30px;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .brand {
+        font-size: 32px;
+        font-weight: 900;
+        background: linear-gradient(
+            135deg,
+            #6366f1,
+            #8b5cf6,
+            #ec4899
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .invoice-label {
+        color: var(--muted);
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 700;
+        margin-bottom: 7px;
+    }
+
+    .customer-info {
+        text-align: right;
+        color: #374151;
+        line-height: 1.7;
+        font-size: 15px;
+    }
+
+    .customer-name {
+        color: var(--dark);
+        font-size: 18px;
+        font-weight: 800;
+    }
+
+    /* ORDER META */
+    .order-meta {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+        margin: 30px 0;
+    }
+
+    .meta-box {
+        background: var(--light);
+        border: 1px solid var(--border);
+        border-radius: 15px;
+        padding: 18px;
+    }
+
+    .meta-title {
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+
+    .meta-value {
+        color: var(--dark);
+        font-size: 16px;
+        font-weight: 750;
+        word-break: break-word;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #dcfce7;
+        color: #15803d;
+        border-radius: 50px;
+        padding: 6px 13px;
+        font-size: 13px;
+        font-weight: 800;
+    }
+
+    /* TABLE */
+    .products-heading {
+        margin: 35px 0 18px;
+        color: var(--dark);
+        font-size: 21px;
+        font-weight: 800;
+    }
+
+    .invoice-table-wrapper {
+        overflow-x: auto;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+    }
+
+    .invoice-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0;
+        min-width: 650px;
+    }
+
+    .invoice-table thead {
+        background: #f8fafc;
+    }
+
+    .invoice-table th {
+        padding: 17px 20px;
+        color: #64748b;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: .7px;
+        font-weight: 800;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .invoice-table td {
+        padding: 20px;
+        color: #374151;
+        font-size: 15px;
+        border-bottom: 1px solid #eef0f3;
+    }
+
+    .invoice-table tbody tr {
+        transition: .2s ease;
+    }
+
+    .invoice-table tbody tr:hover {
+        background: #fafafa;
+    }
+
+    .product-name {
+        color: var(--dark);
+        font-weight: 750;
+    }
+
+    .qty-badge {
+        background: #eef2ff;
+        color: #4f46e5;
+        padding: 6px 11px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 800;
+    }
+
+    .price {
+        font-weight: 750;
+        color: #111827;
+    }
+
+    /* TOTAL AREA */
+    .invoice-bottom {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 28px;
+    }
+
+    .totals {
+        width: 360px;
+    }
+
+    .total-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 9px 0;
+        color: #64748b;
+        font-size: 15px;
+    }
+
+    .grand-total {
+        margin-top: 10px;
+        padding-top: 18px;
+        border-top: 2px dashed var(--border);
+        color: var(--dark);
+        font-size: 21px;
+        font-weight: 850;
+    }
+
+    .grand-total span:last-child {
+        color: var(--success);
+        font-size: 24px;
+    }
+
+    /* FOOTER */
+    .thank-you {
+        margin-top: 40px;
+        padding: 24px;
+        border-radius: 16px;
+        text-align: center;
+        background: linear-gradient(
+            135deg,
+            #eef2ff,
+            #f5f3ff
+        );
+        border: 1px solid #e0e7ff;
+    }
+
+    .thank-you h5 {
+        color: var(--dark);
+        font-weight: 800;
+        margin-bottom: 5px;
+    }
+
+    .thank-you p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+    }
+
+    .invoice-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 30px;
+        padding-top: 22px;
+        border-top: 1px solid var(--border);
+        color: #9ca3af;
+        font-size: 13px;
+    }
+
+    /* ANIMATIONS */
+    @keyframes popIn {
+        0% {
+            opacity: 0;
+            transform: scale(.5);
+        }
+
+        70% {
+            transform: scale(1.08);
+        }
+
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @keyframes fadeUp {
+        from {
+            opacity: 0;
+            transform: translateY(25px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* PRINT */
+    @media print {
+
+        body {
+            background: white;
+        }
+
+        .success-header,
+        .shop-btn {
+            display: none !important;
+        }
+
+        .success-wrapper {
+            padding: 0;
+        }
+
+        .invoice-card {
+            box-shadow: none;
+            border: none;
+            max-width: 100%;
+            padding: 20px;
+        }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+
+        .success-wrapper {
+            padding: 35px 12px 50px;
+        }
+
+        .success-header h1 {
+            font-size: 29px;
+        }
+
+        .success-header p {
+            font-size: 15px;
+        }
+
+        .invoice-card {
+            padding: 22px 16px;
+            border-radius: 18px;
+        }
+
+        .invoice-top {
+            flex-direction: column;
+        }
+
+        .customer-info {
+            text-align: left;
+        }
+
+        .order-meta {
+            grid-template-columns: 1fr;
+        }
+
+        .brand {
+            font-size: 27px;
+        }
+
+        .invoice-bottom {
+            justify-content: stretch;
+        }
+
+        .totals {
+            width: 100%;
+        }
+
+        .invoice-footer {
+            flex-direction: column;
+            gap: 8px;
+            text-align: center;
+        }
+    }
+</style>
+
+
+<div class="success-wrapper">
+
+    <!-- ================= SUCCESS HEADER ================= -->
+
+    <div class="success-header">
+
+        <div class="success-icon">
+            <i>✓</i>
         </div>
 
-        <hr>
+        <h1>Payment Successful!</h1>
 
-        <!-- ORDER DETAILS -->
         <p>
-            <strong>Order:</strong> {{ order.order_number }} <br>
-            <strong>Order Date:</strong> {{ order.created_at }} <br>
-            <strong>Status:</strong> {{ order.status }}
+            Your order has been confirmed successfully.
+            Thank you for shopping with AakashKart.
         </p>
 
-        <!-- PRODUCTS TABLE -->
-        <table class="table table-bordered mt-4">
-            <thead class="table-light">
-                <tr>
-                    <th>Products</th>
-                    <th>Qty</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                {% for item in ordered_products %}
-                <tr>
-                    <td>{{ item.product.product_name }}</td>
-                    <td>{{ item.quantity }}</td>
-                    <td>₹{{ item.price|floatformat:2 }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-
-            <tfoot>
-                <tr>
-                    <th colspan="2" class="text-end">Sub Total:</th>
-                    <th>₹{{ subtotal|floatformat:2 }}</th>
-                </tr>
-                <tr>
-                    <th colspan="2" class="text-end">Tax:</th>
-                    <th>₹{{ order.tax|floatformat:2 }}</th>
-                </tr>
-                <tr>
-                    <th colspan="2" class="text-end">Grand Total:</th>
-                    <th>₹{{ order.total|floatformat:2 }}</th>
-                </tr>
-            </tfoot>
-        </table>
-
-        <p class="text-center mt-4">
-            Thank you for shopping with us! 💙
-        </p>
-
-    </div>
-</div>
-
-{% endblock %}
-{% extends "base.html" %}
-{% load static %}
-
-{% block content %}
-
-<div class="container mt-5 mb-5">
-
-    <!-- SUCCESS ICON -->
-    <div class="text-center mb-4">
-        <img src="{% static 'images/success.png' %}" width="70">
-        <h2 class="mt-3 text-success">Payment Successful</h2>
-        <a href="{% url 'store:store' %}" class="btn btn-success mt-2">
-            Shop more
+        <a href="{% url 'store:store' %}" class="shop-btn">
+            🛍️ Continue Shopping
         </a>
+
     </div>
 
-    <!-- INVOICE -->
-    <div class="card shadow p-4">
 
-        <div class="row mb-4">
-            <div class="col-md-6">
-                <h3 class="text-primary">GreatKart</h3>
+    <!-- ================= INVOICE ================= -->
+
+    <div class="invoice-card">
+
+        <!-- INVOICE HEADER -->
+
+        <div class="invoice-top">
+
+            <div>
+                <div class="brand">
+                    AakashKart
+                </div>
+
+                <div class="invoice-label mt-2">
+                    Order Invoice
+                </div>
+
+                <small class="text-muted">
+                    Thank you for choosing us.
+                </small>
             </div>
 
-            <div class="col-md-6 text-end">
-                <strong>Invoiced To</strong><br>
-                {{ order.first_name }} {{ order.last_name }}<br>
+
+            <!-- CUSTOMER -->
+
+            <div class="customer-info">
+
+                <div class="invoice-label">
+                    Invoiced To
+                </div>
+
+                <div class="customer-name">
+                    {{ order.first_name }} {{ order.last_name }}
+                </div>
+
                 {{ order.address_line_1 }}<br>
+
+                {% if order.address_line_2 %}
+                    {{ order.address_line_2 }}<br>
+                {% endif %}
+
                 {{ order.city }}, {{ order.state }}<br>
+
                 {{ order.country }}
+
             </div>
+
         </div>
 
-        <hr>
 
-        <!-- ORDER DETAILS -->
-        <p>
-            <strong>Order:</strong> {{ order.order_number }} <br>
-            <strong>Order Date:</strong> {{ order.created_at }} <br>
-            <strong>Status:</strong> {{ order.status }}
-        </p>
+        <!-- ================= ORDER INFORMATION ================= -->
 
-        <!-- PRODUCTS TABLE -->
-        <table class="table table-bordered mt-4">
-            <thead class="table-light">
-                <tr>
-                    <th>Products</th>
-                    <th>Qty</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
+        <div class="order-meta">
 
-            <tbody>
-                {% for item in ordered_products %}
-                <tr>
-                    <td>{{ item.product.product_name }}</td>
-                    <td>{{ item.quantity }}</td>
-                    <td>₹{{ item.price|floatformat:2 }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
+            <div class="meta-box">
 
-            <tfoot>
-                <tr>
-                    <th colspan="2" class="text-end">Sub Total:</th>
-                    <th>₹{{ subtotal|floatformat:2 }}</th>
-                </tr>
-                <tr>
-                    <th colspan="2" class="text-end">Tax:</th>
-                    <th>₹{{ order.tax|floatformat:2 }}</th>
-                </tr>
-                <tr>
-                    <th colspan="2" class="text-end">Grand Total:</th>
-                    <th>₹{{ order.total|floatformat:2 }}</th>
-                </tr>
-            </tfoot>
-        </table>
+                <div class="meta-title">
+                    Order Number
+                </div>
 
-        <p class="text-center mt-4">
-            Thank you for shopping with us! 💙
-        </p>
+                <div class="meta-value">
+                    #{{ order.order_number }}
+                </div>
+
+            </div>
+
+
+            <div class="meta-box">
+
+                <div class="meta-title">
+                    Order Date
+                </div>
+
+                <div class="meta-value">
+                    {{ order.created_at|date:"d M Y, h:i A" }}
+                </div>
+
+            </div>
+
+
+            <div class="meta-box">
+
+                <div class="meta-title">
+                    Order Status
+                </div>
+
+                <div class="meta-value">
+
+                    <span class="status-badge">
+                        ● {{ order.status }}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= PRODUCTS ================= -->
+
+        <h4 class="products-heading">
+            🛍️ Ordered Products
+        </h4>
+
+
+        <div class="invoice-table-wrapper">
+
+            <table class="invoice-table">
+
+                <thead>
+
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th class="text-end">Price</th>
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for item in ordered_products %}
+
+                    <tr>
+
+                        <td>
+
+                            <div class="product-name">
+                                {{ item.product.product_name }}
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="qty-badge">
+                                × {{ item.quantity }}
+                            </span>
+
+                        </td>
+
+
+                        <td class="text-end price">
+
+                            ₹{{ item.price|floatformat:2 }}
+
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="3" class="text-center text-muted py-4">
+                            No products found.
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- ================= TOTALS ================= -->
+
+        <div class="invoice-bottom">
+
+            <div class="totals">
+
+                <div class="total-row">
+
+                    <span>
+                        Subtotal
+                    </span>
+
+                    <strong>
+                        ₹{{ subtotal|floatformat:2 }}
+                    </strong>
+
+                </div>
+
+
+                <div class="total-row">
+
+                    <span>
+                        Tax
+                    </span>
+
+                    <strong>
+                        ₹{{ order.tax|floatformat:2 }}
+                    </strong>
+
+                </div>
+
+
+                <div class="total-row grand-total">
+
+                    <span>
+                        Grand Total
+                    </span>
+
+                    <span>
+                        ₹{{ order.total|floatformat:2 }}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= THANK YOU ================= -->
+
+        <div class="thank-you">
+
+            <h5>
+                🎉 Thank you for your purchase!
+            </h5>
+
+            <p>
+                Your order is now being processed.
+                We appreciate your business.
+            </p>
+
+        </div>
+
+
+        <!-- ================= FOOTER ================= -->
+
+        <div class="invoice-footer">
+
+            <span>
+                AakashKart • Online Shopping
+            </span>
+
+            <span>
+                Payment Confirmed ✓
+            </span>
+
+        </div>
 
     </div>
+
 </div>
 
 {% endblock %}

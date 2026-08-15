@@ -4,127 +4,759 @@
 {% block content %}
 
 <style>
+    /* ===============================
+       PAGE
+    =============================== */
     body {
-        background: #f4f6f9;
+        background: #f6f8fc;
+        font-family: "Inter", "Segoe UI", sans-serif;
+        color: #1f2937;
     }
 
-    .card {
+    .orders-page {
+        padding: 45px 0 70px;
+    }
+
+    /* ===============================
+       ANIMATION
+    =============================== */
+    @keyframes fadeUp {
+        from {
+            opacity: 0;
+            transform: translateY(18px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes softPulse {
+        0%, 100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.03);
+        }
+    }
+
+    .animate-card {
+        animation: fadeUp .6s ease both;
+    }
+
+    .animate-card:nth-child(2) {
+        animation-delay: .1s;
+    }
+
+    /* ===============================
+       PAGE HEADER
+    =============================== */
+    .page-heading {
+        margin-bottom: 30px;
+    }
+
+    .page-heading h2 {
+        font-size: 2rem;
+        font-weight: 800;
+        margin-bottom: 6px;
+        letter-spacing: -.5px;
+    }
+
+    .page-heading p {
+        color: #6b7280;
+        font-size: 1rem;
+        margin: 0;
+    }
+
+    /* ===============================
+       SIDEBAR
+    =============================== */
+    .profile-sidebar {
+        background: rgba(255, 255, 255, .9);
+        border: 1px solid #e8ecf3;
+        border-radius: 20px;
+        padding: 18px;
+        box-shadow: 0 8px 30px rgba(15, 23, 42, .06);
+        position: sticky;
+        top: 90px;
+        animation: fadeUp .6s ease;
+    }
+
+    .sidebar-title {
+        font-size: .78rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #9ca3af;
+        padding: 8px 12px 14px;
+    }
+
+    .profile-sidebar a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+        color: #4b5563;
+        padding: 13px 14px;
+        margin-bottom: 6px;
         border-radius: 12px;
+        font-size: .95rem;
+        font-weight: 600;
+        transition: all .25s ease;
     }
 
-    .product-img {
-        width: 60px;
-        height: 60px;
-        object-fit: cover;
-        border-radius: 8px;
+    .profile-sidebar a:hover {
+        background: #f1f5ff;
+        color: #4f46e5;
+        transform: translateX(4px);
     }
 
-    .table th, .table td {
+    .profile-sidebar a.active {
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        color: #fff;
+        box-shadow: 0 8px 18px rgba(79, 70, 229, .22);
+    }
+
+    /* ===============================
+       MAIN CARDS
+    =============================== */
+    .modern-card {
+        background: rgba(255, 255, 255, .96);
+        border: 1px solid #e8ecf3;
+        border-radius: 20px;
+        box-shadow: 0 8px 30px rgba(15, 23, 42, .06);
+        overflow: hidden;
+        margin-bottom: 22px;
+        transition: all .3s ease;
+    }
+
+    .modern-card:hover {
+        box-shadow: 0 14px 40px rgba(15, 23, 42, .09);
+        transform: translateY(-2px);
+    }
+
+    .card-top {
+        padding: 20px 24px;
+        border-bottom: 1px solid #edf0f5;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .card-top h5 {
+        margin: 0;
+        font-size: 1.08rem;
+        font-weight: 800;
+    }
+
+    .card-top small {
+        color: #9ca3af;
+    }
+
+    .card-content {
+        padding: 24px;
+    }
+
+    /* ===============================
+       ORDER INFO
+    =============================== */
+    .order-info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+    }
+
+    .info-box {
+        background: #f8fafc;
+        border: 1px solid #eef1f6;
+        border-radius: 14px;
+        padding: 15px 17px;
+        transition: all .25s ease;
+    }
+
+    .info-box:hover {
+        background: #f5f7ff;
+        border-color: #dfe3ff;
+        transform: translateY(-2px);
+    }
+
+    .info-label {
+        display: block;
+        color: #9ca3af;
+        font-size: .78rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        letter-spacing: .4px;
+    }
+
+    .info-value {
+        font-size: .98rem;
+        font-weight: 700;
+        color: #1f2937;
+        word-break: break-word;
+    }
+
+    /* ===============================
+       STATUS
+    =============================== */
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #ecfdf3;
+        color: #15803d;
+        border: 1px solid #bbf7d0;
+        padding: 7px 13px;
+        border-radius: 50px;
+        font-size: .82rem;
+        font-weight: 800;
+        animation: softPulse 2.5s ease-in-out infinite;
+    }
+
+    .status-dot {
+        width: 7px;
+        height: 7px;
+        background: #22c55e;
+        border-radius: 50%;
+    }
+
+    /* ===============================
+       TABLE
+    =============================== */
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+    .modern-table {
+        margin: 0;
+        min-width: 650px;
+        border-collapse: separate;
+        border-spacing: 0 8px;
+    }
+
+    .modern-table thead th {
+        border: none;
+        background: #f8fafc;
+        color: #6b7280;
+        font-size: .78rem;
+        text-transform: uppercase;
+        letter-spacing: .5px;
+        padding: 14px 15px;
+        font-weight: 800;
+    }
+
+    .modern-table tbody tr {
+        background: #fff;
+        transition: all .25s ease;
+    }
+
+    .modern-table tbody tr:hover {
+        background: #fafbff;
+        transform: scale(1.005);
+        box-shadow: 0 5px 15px rgba(15, 23, 42, .04);
+    }
+
+    .modern-table tbody td {
+        border-top: 1px solid #f0f2f6;
+        border-bottom: 1px solid #f0f2f6;
+        padding: 15px;
         vertical-align: middle;
+        font-size: .94rem;
+        font-weight: 600;
+    }
+
+    .modern-table tbody td:first-child {
+        border-left: 1px solid #f0f2f6;
+        border-radius: 12px 0 0 12px;
+    }
+
+    .modern-table tbody td:last-child {
+        border-right: 1px solid #f0f2f6;
+        border-radius: 0 12px 12px 0;
+    }
+
+    /* ===============================
+       PRODUCT
+    =============================== */
+    .product-img {
+        width: 65px;
+        height: 65px;
+        object-fit: cover;
+        border-radius: 13px;
+        border: 1px solid #e5e7eb;
+        background: #f8fafc;
+        transition: all .3s ease;
+    }
+
+    .modern-table tr:hover .product-img {
+        transform: scale(1.06);
+    }
+
+    .product-name {
+        font-weight: 750;
+        color: #111827;
+    }
+
+    .product-price {
+        color: #4f46e5;
+        font-weight: 800;
+    }
+
+    .qty-badge {
+        display: inline-flex;
+        min-width: 32px;
+        justify-content: center;
+        background: #f3f4f6;
+        color: #374151;
+        border-radius: 8px;
+        padding: 6px 9px;
+        font-size: .85rem;
+        font-weight: 800;
+    }
+
+    /* ===============================
+       TOTAL SECTION
+    =============================== */
+    .total-section {
+        margin-top: 20px;
+        padding: 20px;
+        background: linear-gradient(135deg, #f8faff, #f5f3ff);
+        border: 1px solid #e7e7ff;
+        border-radius: 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .total-label {
+        color: #6b7280;
+        font-size: .9rem;
+        font-weight: 700;
+    }
+
+    .total-amount {
+        font-size: 1.45rem;
+        font-weight: 900;
+        color: #4f46e5;
+    }
+
+    /* ===============================
+       BUTTONS
+    =============================== */
+    .btn-invoice {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: none;
+        border-radius: 12px;
+        padding: 11px 18px;
+        background: linear-gradient(135deg, #16a34a, #22c55e);
+        color: #fff;
+        text-decoration: none;
+        font-weight: 750;
+        font-size: .9rem;
+        transition: all .3s ease;
+        box-shadow: 0 6px 16px rgba(34, 197, 94, .18);
+    }
+
+    .btn-invoice:hover {
+        color: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 22px rgba(34, 197, 94, .28);
+    }
+
+    /* ===============================
+       RESPONSIVE
+    =============================== */
+    @media (max-width: 991px) {
+        .profile-sidebar {
+            position: static;
+            margin-bottom: 25px;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .orders-page {
+            padding: 30px 0 50px;
+        }
+
+        .page-heading h2 {
+            font-size: 1.6rem;
+        }
+
+        .order-info-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .card-content {
+            padding: 18px;
+        }
+
+        .card-top {
+            padding: 17px 18px;
+        }
+
+        .total-section {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .btn-invoice {
+            width: 100%;
+            justify-content: center;
+        }
     }
 </style>
 
-<section class="section-content padding-y">
-<div class="container">
 
-<div class="row">
+<section class="orders-page">
 
-    <!-- Sidebar -->
-    <aside class="col-md-3">
-        <div class="card p-3 shadow-sm">
-            <ul class="list-group">
-                <a class="list-group-item" href="{% url 'dashboard' %}">🏠 Dashboard</a>
-                <a class="list-group-item active" href="{% url 'my_orders' %}">📦 My Orders</a>
-                <a class="list-group-item" href="{% url 'edit_profile' %}">👤 Edit Profile</a>
-                <a class="list-group-item" href="{% url 'change_password' %}">🔒 Change Password</a>
-            </ul>
-        </div>
-    </aside>
+    <div class="container">
 
-    <!-- Main Content -->
-    <main class="col-md-9">
-
-        <!-- Order Info -->
-        <div class="card mb-3 shadow-sm">
-            <div class="card-header">
-                Order Details
-            </div>
-
-            <div class="card-body">
-                <p><strong>Order ID:</strong> #{{ order.id }}</p>
-                <p><strong>Name:</strong> {{ order.full_name }}</p>
-                <p><strong>Email:</strong> {{ order.email }}</p>
-                <p><strong>Phone:</strong> {{ order.phone }}</p>
-                <p><strong>Date:</strong> {{ order.created_at }}</p>
-                <p><strong>Status:</strong> 
-                    <span class="badge bg-success">Completed</span>
-                </p>
-            </div>
+        <!-- PAGE HEADER -->
+        <div class="page-heading animate-card">
+            <h2>📦 Order Details</h2>
+            <p>View your order information and purchased products.</p>
         </div>
 
-        <!-- Product List -->
-        <div class="card shadow-sm">
-            <div class="card-header">
-                Ordered Products
-            </div>
 
-            <div class="card-body">
+        <div class="row g-4">
 
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Image</th>
-                            <th>Product</th>
-                            <th>Qty</th>
-                            <th>Price</th>
-                            <th>Total</th>
-                        </tr>
-                    </thead>
+            <!-- ================= SIDEBAR ================= -->
+            <aside class="col-lg-3">
 
-                    <tbody>
-                        {% for item in order_products %}
-                        <tr>
-                            <td>
-                               {% if item.product.images %}
-                            <img src="{{ item.product.images.url }}" class="product-img">
-                            {% else %}
-                            <img src="{% static 'images/default-product.png' %}" class="product-img">
-                            {% endif %}
-                            </td>
-                            <td>{{ item.product.product_name }}</td>
-                            <td>{{ item.quantity }}</td>
-                            <td>₹ {{ item.product_price }}</td>
+                <div class="profile-sidebar">
 
-                            <!-- ✅ FIXED TOTAL -->
-                            <td>
-                                ₹ {{ item.total }}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                    <div class="sidebar-title">
+                        My Account
+                    </div>
 
-                <!-- Total -->
-                <div class="text-end mt-3">
-                    <h5>Total Amount: ₹ {{ order.order_total }}</h5>
-                </div>
-
-                <!-- Invoice Button -->
-                <div class="text-end mt-2">
-                    <a href="{% url 'invoice_pdf' order.id %}" class="btn btn-success">
-                        Download Invoice
-
+                    <a href="{% url 'dashboard' %}">
+                        🏠
+                        <span>Dashboard</span>
                     </a>
+
+                    <a href="{% url 'my_orders' %}" class="active">
+                        📦
+                        <span>My Orders</span>
+                    </a>
+
+                    <a href="{% url 'edit_profile' %}">
+                        👤
+                        <span>Edit Profile</span>
+                    </a>
+
+                    <a href="{% url 'change_password' %}">
+                        🔒
+                        <span>Change Password</span>
+                    </a>
+
                 </div>
 
-            </div>
+            </aside>
+
+
+            <!-- ================= MAIN ================= -->
+            <main class="col-lg-9">
+
+
+                <!-- ORDER INFORMATION -->
+                <div class="modern-card animate-card">
+
+                    <div class="card-top">
+
+                        <div>
+                            <h5>Order Information</h5>
+                            <small>Complete order overview</small>
+                        </div>
+
+                        <span class="status-badge">
+                            <span class="status-dot"></span>
+                            Completed
+                        </span>
+
+                    </div>
+
+
+                    <div class="card-content">
+
+                        <div class="order-info-grid">
+
+                            <div class="info-box">
+                                <span class="info-label">
+                                    Order ID
+                                </span>
+
+                                <span class="info-value">
+                                    #{{ order.id }}
+                                </span>
+                            </div>
+
+
+                            <div class="info-box">
+                                <span class="info-label">
+                                    Customer
+                                </span>
+
+                                <span class="info-value">
+                                    {{ order.full_name }}
+                                </span>
+                            </div>
+
+
+                            <div class="info-box">
+                                <span class="info-label">
+                                    Email
+                                </span>
+
+                                <span class="info-value">
+                                    {{ order.email }}
+                                </span>
+                            </div>
+
+
+                            <div class="info-box">
+                                <span class="info-label">
+                                    Phone
+                                </span>
+
+                                <span class="info-value">
+                                    {{ order.phone }}
+                                </span>
+                            </div>
+
+
+                            <div class="info-box">
+
+                                <span class="info-label">
+                                    Order Date
+                                </span>
+
+                                <span class="info-value">
+                                    {{ order.created_at }}
+                                </span>
+
+                            </div>
+
+
+                            <div class="info-box">
+
+                                <span class="info-label">
+                                    Status
+                                </span>
+
+                                <span class="status-badge">
+                                    <span class="status-dot"></span>
+                                    {{ order.status|default:"Completed" }}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ORDERED PRODUCTS -->
+                <div class="modern-card animate-card">
+
+                    <div class="card-top">
+
+                        <div>
+                            <h5>🛍️ Ordered Products</h5>
+                            <small>Your purchased items</small>
+                        </div>
+
+                        <span class="badge rounded-pill text-bg-light">
+                            {{ order_products|length }} Items
+                        </span>
+
+                    </div>
+
+
+                    <div class="card-content">
+
+                        <div class="table-wrapper">
+
+                            <table class="table modern-table">
+
+                                <thead>
+
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Quantity</th>
+                                        <th>Price</th>
+                                        <th>Total</th>
+                                    </tr>
+
+                                </thead>
+
+
+                                <tbody>
+
+                                    {% for item in order_products %}
+
+                                    <tr>
+
+                                        <!-- PRODUCT -->
+                                        <td>
+
+                                            <div class="d-flex align-items-center gap-3">
+
+                                                {% if item.product.images %}
+
+                                                    <img
+                                                        src="{{ item.product.images.url }}"
+                                                        class="product-img"
+                                                        alt="{{ item.product.product_name }}">
+
+                                                {% elif item.product.image %}
+
+                                                    <img
+                                                        src="{{ item.product.image.url }}"
+                                                        class="product-img"
+                                                        alt="{{ item.product.product_name }}">
+
+                                                {% else %}
+
+                                                    <img
+                                                        src="{% static 'images/default-product.png' %}"
+                                                        class="product-img"
+                                                        alt="Product">
+
+                                                {% endif %}
+
+
+                                                <div>
+
+                                                    <div class="product-name">
+                                                        {{ item.product.product_name }}
+                                                    </div>
+
+                                                    <small class="text-muted">
+                                                        AakashKart Product
+                                                    </small>
+
+                                                </div>
+
+                                            </div>
+
+                                        </td>
+
+
+                                        <!-- QUANTITY -->
+                                        <td>
+
+                                            <span class="qty-badge">
+                                                × {{ item.quantity }}
+                                            </span>
+
+                                        </td>
+
+
+                                        <!-- PRICE -->
+                                        <td>
+
+                                            <span class="product-price">
+                                                ₹{{ item.product_price }}
+                                            </span>
+
+                                        </td>
+
+
+                                        <!-- TOTAL -->
+                                        <td>
+
+                                            <strong>
+                                                ₹{{ item.total }}
+                                            </strong>
+
+                                        </td>
+
+                                    </tr>
+
+                                    {% empty %}
+
+                                    <tr>
+
+                                        <td colspan="4" class="text-center py-5">
+
+                                            <div style="font-size:2.5rem;">
+                                                🛍️
+                                            </div>
+
+                                            <h6 class="fw-bold mt-2">
+                                                No products found
+                                            </h6>
+
+                                            <p class="text-muted mb-0">
+                                                This order doesn't contain any products.
+                                            </p>
+
+                                        </td>
+
+                                    </tr>
+
+                                    {% endfor %}
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+
+                        <!-- TOTAL -->
+                        <div class="total-section">
+
+                            <div>
+
+                                <div class="total-label">
+                                    Total Amount
+                                </div>
+
+                                <small class="text-muted">
+                                    Including all applicable charges
+                                </small>
+
+                            </div>
+
+                            <div class="total-amount">
+                                ₹{{ order.order_total }}
+                            </div>
+
+                        </div>
+
+
+                        <!-- INVOICE -->
+                        <div class="text-end mt-4">
+
+                            <a
+                                href="{% url 'invoice_pdf' order.id %}"
+                                class="btn-invoice">
+
+                                📄
+                                Download Invoice
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </main>
+
         </div>
 
-    </main>
+    </div>
 
-</div>
-
-</div>
 </section>
 
 {% endblock %}

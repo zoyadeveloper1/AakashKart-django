@@ -2,12 +2,753 @@
 {% load static %}
 
 {% block content %}
-<div class="container mt-5">
-    <h2 class="text-center">Create an Account</h2>
-    <form action="" method="POST">
-        {% csrf_token %}
-        {{ form }}
-        <button type="submit" class="btn btn-primary mt-3">Sign Up</button>
-    </form>
-</div>
+
+<style>
+
+/* ================= REGISTER PAGE ================= */
+
+.register-page {
+    min-height: calc(100vh - 140px);
+
+    display: flex;
+    align-items: center;
+
+    padding: 55px 15px;
+
+    background:
+        radial-gradient(
+            circle at 10% 20%,
+            rgba(99, 102, 241, .12),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 90% 80%,
+            rgba(168, 85, 247, .12),
+            transparent 30%
+        ),
+        #f8fafc;
+}
+
+
+/* Main Card */
+
+.register-card {
+    width: 100%;
+    max-width: 1050px;
+
+    margin: auto;
+
+    display: grid;
+    grid-template-columns: 42% 58%;
+
+    overflow: hidden;
+
+    border-radius: 28px;
+
+    background: rgba(255,255,255,.96);
+
+    border: 1px solid rgba(15,23,42,.07);
+
+    box-shadow:
+        0 25px 70px rgba(15,23,42,.12);
+
+    animation: registerAppear .6s ease;
+}
+
+
+/* ================= LEFT PANEL ================= */
+
+.register-left {
+    position: relative;
+
+    padding: 55px 45px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    overflow: hidden;
+
+    color: white;
+
+    background:
+        radial-gradient(
+            circle at 20% 20%,
+            rgba(255,255,255,.16),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 90% 80%,
+            rgba(255,255,255,.12),
+            transparent 30%
+        ),
+        linear-gradient(
+            145deg,
+            #4f46e5,
+            #7c3aed,
+            #9333ea
+        );
+}
+
+
+/* Decorative circles */
+
+.register-left::before {
+    content: "";
+
+    position: absolute;
+
+    width: 220px;
+    height: 220px;
+
+    border-radius: 50%;
+
+    right: -90px;
+    top: -80px;
+
+    background: rgba(255,255,255,.08);
+}
+
+.register-left::after {
+    content: "";
+
+    position: absolute;
+
+    width: 170px;
+    height: 170px;
+
+    border-radius: 50%;
+
+    left: -80px;
+    bottom: -60px;
+
+    background: rgba(255,255,255,.08);
+}
+
+
+/* Brand */
+
+.register-brand {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    margin-bottom: 35px;
+
+    font-size: 28px;
+    font-weight: 800;
+
+    color: white;
+}
+
+.register-brand-icon {
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 14px;
+
+    background: rgba(255,255,255,.16);
+
+    border: 1px solid rgba(255,255,255,.2);
+
+    backdrop-filter: blur(10px);
+
+    font-size: 23px;
+}
+
+
+/* Left heading */
+
+.register-left h1 {
+    position: relative;
+    z-index: 2;
+
+    font-size: 42px;
+    line-height: 1.15;
+
+    font-weight: 800;
+
+    margin-bottom: 18px;
+}
+
+.register-left h1 span {
+    color: #fde68a;
+}
+
+
+.register-left > p {
+    position: relative;
+    z-index: 2;
+
+    color: rgba(255,255,255,.82);
+
+    font-size: 15px;
+
+    line-height: 1.8;
+
+    max-width: 360px;
+}
+
+
+/* Benefits */
+
+.register-benefits {
+    position: relative;
+    z-index: 2;
+
+    margin-top: 30px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 16px;
+}
+
+
+.register-benefit {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    color: rgba(255,255,255,.92);
+
+    font-size: 14px;
+}
+
+
+.register-benefit-icon {
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: rgba(255,255,255,.13);
+
+    color: #fde68a;
+}
+
+
+/* ================= RIGHT FORM ================= */
+
+.register-right {
+    padding: 50px 55px;
+}
+
+
+.register-heading {
+    margin-bottom: 30px;
+}
+
+
+.register-heading h2 {
+    color: #111827;
+
+    font-size: 30px;
+    font-weight: 800;
+
+    margin-bottom: 7px;
+}
+
+
+.register-heading p {
+    color: #64748b;
+
+    font-size: 14px;
+
+    margin: 0;
+}
+
+
+/* Form */
+
+.register-form p {
+    margin-bottom: 20px;
+}
+
+
+/* Labels */
+
+.register-form label {
+    display: block;
+
+    color: #334155;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    margin-bottom: 8px;
+}
+
+
+/* Inputs */
+
+.register-form input {
+    width: 100%;
+
+    min-height: 48px;
+
+    padding: 12px 15px;
+
+    border-radius: 12px;
+
+    border: 1px solid #e2e8f0;
+
+    outline: none;
+
+    background: #f8fafc;
+
+    color: #0f172a;
+
+    font-size: 14px;
+
+    transition: all .25s ease;
+}
+
+
+.register-form input:focus {
+    background: #ffffff;
+
+    border-color: #6366f1;
+
+    box-shadow:
+        0 0 0 4px rgba(99,102,241,.10);
+}
+
+
+/* Help text */
+
+.register-form .helptext,
+.register-form ul.helptext {
+    display: block;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+
+    line-height: 1.6;
+
+    margin-top: 6px;
+}
+
+
+.register-form ul {
+    padding-left: 18px;
+}
+
+
+/* Errors */
+
+.register-form .errorlist {
+    list-style: none;
+
+    padding: 0;
+
+    margin: 6px 0 0;
+
+    color: #dc2626;
+
+    font-size: 12px;
+}
+
+
+/* Required */
+
+.register-form input:required {
+    background-image: none;
+}
+
+
+/* ================= BUTTON ================= */
+
+.register-btn {
+    width: 100%;
+
+    min-height: 50px;
+
+    margin-top: 5px;
+
+    border: none;
+
+    border-radius: 13px;
+
+    color: white;
+
+    font-size: 15px;
+
+    font-weight: 750;
+
+    letter-spacing: .2px;
+
+    cursor: pointer;
+
+    background:
+        linear-gradient(
+            135deg,
+            #6366f1,
+            #7c3aed
+        );
+
+    box-shadow:
+        0 10px 25px rgba(99,102,241,.25);
+
+    transition: all .3s ease;
+}
+
+
+.register-btn:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 15px 32px rgba(99,102,241,.32);
+}
+
+
+.register-btn:active {
+    transform: translateY(0);
+}
+
+
+/* ================= LOGIN ================= */
+
+.login-text {
+    text-align: center;
+
+    margin-top: 22px;
+
+    color: #64748b;
+
+    font-size: 13px;
+}
+
+
+.login-text a {
+    color: #6366f1;
+
+    font-weight: 700;
+
+    text-decoration: none;
+}
+
+
+.login-text a:hover {
+    text-decoration: underline;
+}
+
+
+/* ================= SECURITY ================= */
+
+.security-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    margin-top: 18px;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+}
+
+
+.security-note i {
+    color: #10b981;
+}
+
+
+/* ================= ANIMATION ================= */
+
+@keyframes registerAppear {
+
+    from {
+        opacity: 0;
+        transform: translateY(25px) scale(.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+}
+
+
+/* ================= TABLET ================= */
+
+@media (max-width: 900px) {
+
+    .register-card {
+        grid-template-columns: 1fr;
+    }
+
+    .register-left {
+        padding: 40px;
+
+        min-height: 320px;
+    }
+
+    .register-left h1 {
+        font-size: 34px;
+    }
+
+    .register-benefits {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .register-right {
+        padding: 40px;
+    }
+
+}
+
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 576px) {
+
+    .register-page {
+        padding: 25px 12px;
+    }
+
+    .register-card {
+        border-radius: 20px;
+    }
+
+    .register-left {
+        padding: 32px 25px;
+
+        min-height: auto;
+    }
+
+    .register-brand {
+        font-size: 23px;
+
+        margin-bottom: 25px;
+    }
+
+    .register-brand-icon {
+        width: 42px;
+        height: 42px;
+    }
+
+    .register-left h1 {
+        font-size: 30px;
+    }
+
+    .register-left > p {
+        font-size: 13px;
+    }
+
+    .register-benefits {
+        grid-template-columns: 1fr;
+    }
+
+    .register-right {
+        padding: 30px 22px;
+    }
+
+    .register-heading h2 {
+        font-size: 25px;
+    }
+
+}
+
+</style>
+
+
+<!-- ================= REGISTER PAGE ================= -->
+
+<section class="register-page">
+
+    <div class="register-card">
+
+
+        <!-- ================= LEFT ================= -->
+
+        <div class="register-left">
+
+            <div class="register-brand">
+
+                <div class="register-brand-icon">
+                    A
+                </div>
+
+                <span>
+                    Aakash<span>Kart</span>
+                </span>
+
+            </div>
+
+
+            <h1>
+                Shop smarter.<br>
+                Live <span>better.</span>
+            </h1>
+
+
+            <p>
+                Create your AakashKart account and unlock a
+                faster, easier and more personalized shopping
+                experience.
+            </p>
+
+
+            <div class="register-benefits">
+
+                <div class="register-benefit">
+
+                    <div class="register-benefit-icon">
+                        <i class="bi bi-lightning-charge-fill"></i>
+                    </div>
+
+                    <span>Fast & seamless checkout</span>
+
+                </div>
+
+
+                <div class="register-benefit">
+
+                    <div class="register-benefit-icon">
+                        <i class="bi bi-heart-fill"></i>
+                    </div>
+
+                    <span>Save your favorite products</span>
+
+                </div>
+
+
+                <div class="register-benefit">
+
+                    <div class="register-benefit-icon">
+                        <i class="bi bi-truck"></i>
+                    </div>
+
+                    <span>Track your orders easily</span>
+
+                </div>
+
+
+                <div class="register-benefit">
+
+                    <div class="register-benefit-icon">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+
+                    <span>Secure shopping experience</span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= RIGHT ================= -->
+
+        <div class="register-right">
+
+
+            <div class="register-heading">
+
+                <h2>Create your account</h2>
+
+                <p>
+                    Join AakashKart today — it only takes a minute.
+                </p>
+
+            </div>
+
+
+            <form action="" method="POST" class="register-form">
+
+                {% csrf_token %}
+
+
+                <!-- Django Form -->
+
+                {% for field in form %}
+
+                    <div class="register-field">
+
+                        {{ field.label_tag }}
+
+                        {{ field }}
+
+                        {% if field.help_text %}
+                            <small class="helptext">
+                                {{ field.help_text|safe }}
+                            </small>
+                        {% endif %}
+
+                        {% if field.errors %}
+                            {{ field.errors }}
+                        {% endif %}
+
+                    </div>
+
+                {% endfor %}
+
+
+                <button type="submit" class="register-btn">
+
+                    <i class="bi bi-person-plus-fill me-2"></i>
+
+                    Create Account
+
+                </button>
+
+
+            </form>
+
+
+            <div class="login-text">
+
+                Already have an account?
+
+                <a href="{% url 'login' %}">
+                    Sign in
+                </a>
+
+            </div>
+
+
+            <div class="security-note">
+
+                <i class="bi bi-shield-lock-fill"></i>
+
+                Your information is protected and secure.
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- Bootstrap Icons -->
+
+<link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+>
+
 {% endblock %}

@@ -7,7 +7,8 @@ urlpatterns = [
     # -------------------------------
     # CART ACTIONS
     # -------------------------------
-    path('add/<int:product_id>/', views.add_cart, name='add_cart'),  # Add item
+    path(
+    'add_cart/<int:product_id>/',views.add_cart,name='add_cart'),  # Add item
     path('decrease/<int:item_id>/', views.decrease_cart_item, name='decrease_cart_item'),  # Decrease quantity
     path('remove-cart-item/<int:cart_item_id>/', views.remove_cart_item, name='remove_cart_item'),
     path('cart/', views.cart_view, name='cart'),  # View cart

@@ -1,192 +1,2401 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout | AakashKart</title>
 
-    <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Secure checkout - AakashKart"
+    >
+
+    <title>
+        Checkout | AakashKart
+    </title>
+
+
+    <!-- =====================================================
+         BOOTSTRAP
+    ====================================================== -->
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+
+    <!-- =====================================================
+         BOOTSTRAP ICONS
+    ====================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+
+    <!-- =====================================================
+         GOOGLE FONT
+    ====================================================== -->
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <!-- =====================================================
+         CHECKOUT CSS
+    ====================================================== -->
 
     <style>
+
+        :root {
+
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+
+            --purple: #8b5cf6;
+            --pink: #ec4899;
+
+            --dark: #0f172a;
+            --dark-2: #1e293b;
+
+            --text: #1e293b;
+            --muted: #64748b;
+
+            --light: #f8fafc;
+
+            --white: #ffffff;
+
+            --border: #e2e8f0;
+
+            --success: #10b981;
+            --danger: #ef4444;
+
+            --shadow-sm:
+                0 5px 20px rgba(15,23,42,0.06);
+
+            --shadow-md:
+                0 15px 40px rgba(15,23,42,0.10);
+
+            --shadow-lg:
+                0 25px 70px rgba(15,23,42,0.15);
+        }
+
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+
         body {
-            background: #f1f3f6;
+
+            font-family:
+                "Poppins",
+                sans-serif;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #f8fafc,
+                    #eef2ff
+                );
+
+            color:
+                var(--text);
+
+            min-height:
+                100vh;
         }
-        .checkout-card, .summary-card {
-            background: #fff;
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+
+
+        /* =====================================================
+           SCROLLBAR
+        ====================================================== */
+
+        ::-webkit-scrollbar {
+            width: 8px;
         }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+
+            background:
+                linear-gradient(
+                    var(--primary),
+                    var(--purple)
+                );
+
+            border-radius: 50px;
+        }
+
+
+        /* =====================================================
+           NAVBAR
+        ====================================================== */
+
+        .checkout-navbar {
+
+            background:
+                rgba(15,23,42,0.96);
+
+            backdrop-filter:
+                blur(20px);
+
+            -webkit-backdrop-filter:
+                blur(20px);
+
+            box-shadow:
+                0 10px 35px
+                rgba(0,0,0,0.12);
+
+            padding:
+                14px 0;
+        }
+
+
+        .brand {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                9px;
+
+            text-decoration:
+                none;
+
+            color:
+                white;
+
+            font-size:
+                1.5rem;
+
+            font-weight:
+                800;
+        }
+
+
+        .brand:hover {
+            color: white;
+        }
+
+
+        .brand-icon {
+
+            width:
+                40px;
+
+            height:
+                40px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            border-radius:
+                12px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    var(--purple)
+                );
+
+            box-shadow:
+                0 8px 25px
+                rgba(99,102,241,0.35);
+        }
+
+
+        .brand-name {
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #ffffff,
+                    #c4b5fd
+                );
+
+            -webkit-background-clip:
+                text;
+
+            -webkit-text-fill-color:
+                transparent;
+        }
+
+
+        .secure-label {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                7px;
+
+            color:
+                #cbd5e1;
+
+            font-size:
+                12px;
+
+            font-weight:
+                500;
+        }
+
+
+        .secure-label i {
+            color:
+                #34d399;
+
+            font-size:
+                16px;
+        }
+
+
+        /* =====================================================
+           PAGE HEADER
+        ====================================================== */
+
+        .checkout-header {
+
+            padding:
+                55px 0 35px;
+
+            text-align:
+                center;
+        }
+
+
+        .checkout-badge {
+
+            display:
+                inline-flex;
+
+            align-items:
+                center;
+
+            gap:
+                7px;
+
+            padding:
+                8px 15px;
+
+            border-radius:
+                50px;
+
+            background:
+                rgba(99,102,241,0.08);
+
+            color:
+                var(--primary);
+
+            font-size:
+                11px;
+
+            font-weight:
+                700;
+
+            letter-spacing:
+                0.8px;
+
+            margin-bottom:
+                14px;
+        }
+
+
+        .checkout-header h1 {
+
+            font-size:
+                clamp(
+                    2rem,
+                    4vw,
+                    3rem
+                );
+
+            font-weight:
+                800;
+
+            letter-spacing:
+                -1px;
+
+            margin-bottom:
+                8px;
+        }
+
+
+        .checkout-header h1 span {
+
+            background:
+                linear-gradient(
+                    90deg,
+                    var(--primary),
+                    var(--purple),
+                    var(--pink)
+                );
+
+            -webkit-background-clip:
+                text;
+
+            -webkit-text-fill-color:
+                transparent;
+        }
+
+
+        .checkout-header p {
+
+            color:
+                var(--muted);
+
+            font-size:
+                14px;
+
+            margin:
+                0;
+        }
+
+
+        /* =====================================================
+           CHECKOUT CONTAINER
+        ====================================================== */
+
+        .checkout-section {
+
+            padding:
+                10px 0 80px;
+        }
+
+
+        /* =====================================================
+           MAIN CARD
+        ====================================================== */
+
+        .checkout-card {
+
+            background:
+                rgba(255,255,255,0.92);
+
+            backdrop-filter:
+                blur(18px);
+
+            -webkit-backdrop-filter:
+                blur(18px);
+
+            border:
+                1px solid
+                rgba(255,255,255,0.9);
+
+            border-radius:
+                24px;
+
+            padding:
+                30px;
+
+            box-shadow:
+                var(--shadow-md);
+        }
+
+
+        /* =====================================================
+           SECTION TITLE
+        ====================================================== */
+
+        .section-heading {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                12px;
+
+            margin-bottom:
+                24px;
+        }
+
+
+        .section-icon {
+
+            width:
+                45px;
+
+            height:
+                45px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            border-radius:
+                13px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #eef2ff,
+                    #f3e8ff
+                );
+
+            color:
+                var(--primary);
+
+            font-size:
+                20px;
+        }
+
+
+        .section-heading h3 {
+
+            font-size:
+                18px;
+
+            font-weight:
+                700;
+
+            margin:
+                0;
+        }
+
+
+        .section-heading p {
+
+            font-size:
+                11px;
+
+            color:
+                var(--muted);
+
+            margin:
+                3px 0 0;
+        }
+
+
+        /* =====================================================
+           FORM
+        ====================================================== */
+
+        .form-label {
+
+            font-size:
+                12px;
+
+            font-weight:
+                600;
+
+            color:
+                var(--dark);
+
+            margin-bottom:
+                7px;
+        }
+
+
+        .form-control {
+
+            min-height:
+                47px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius:
+                12px;
+
+            padding:
+                10px 14px;
+
+            font-size:
+                12px;
+
+            color:
+                var(--text);
+
+            background:
+                #ffffff;
+
+            transition:
+                0.3s ease;
+        }
+
+
+        .form-control:focus {
+
+            border-color:
+                var(--primary);
+
+            box-shadow:
+                0 0 0 4px
+                rgba(99,102,241,0.10);
+
+            background:
+                white;
+        }
+
+
+        .form-control::placeholder {
+            color: #94a3b8;
+        }
+
+
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+
+        /* =====================================================
+           ADDRESS CARD
+        ====================================================== */
+
+        .address-box {
+
+            padding:
+                18px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius:
+                16px;
+
+            background:
+                #f8fafc;
+
+            margin-top:
+                5px;
+
+            margin-bottom:
+                25px;
+        }
+
+
+        /* =====================================================
+           PAYMENT
+        ====================================================== */
+
+        .payment-title {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                space-between;
+
+            margin-bottom:
+                15px;
+        }
+
+
+        .payment-title h4 {
+
+            font-size:
+                16px;
+
+            font-weight:
+                700;
+
+            margin:
+                0;
+        }
+
+
+        .payment-title span {
+
+            font-size:
+                10px;
+
+            color:
+                var(--muted);
+        }
+
+
+        .payment-option {
+
+            position:
+                relative;
+
+            margin-bottom:
+                12px;
+        }
+
+
+        .payment-option input {
+
+            position:
+                absolute;
+
+            opacity:
+                0;
+        }
+
+
+        .payment-label {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                14px;
+
+            padding:
+                16px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius:
+                15px;
+
+            background:
+                white;
+
+            cursor:
+                pointer;
+
+            transition:
+                0.3s ease;
+        }
+
+
+        .payment-label:hover {
+
+            border-color:
+                #c7d2fe;
+
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                var(--shadow-sm);
+        }
+
+
+        .payment-option input:checked
+        + .payment-label {
+
+            border-color:
+                var(--primary);
+
+            background:
+                #eef2ff;
+
+            box-shadow:
+                0 8px 25px
+                rgba(99,102,241,0.12);
+        }
+
+
+        .payment-icon {
+
+            width:
+                45px;
+
+            height:
+                45px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            border-radius:
+                12px;
+
+            font-size:
+                20px;
+
+            background:
+                #f1f5f9;
+
+            color:
+                var(--primary);
+        }
+
+
+        .payment-info {
+
+            flex:
+                1;
+        }
+
+
+        .payment-info strong {
+
+            display:
+                block;
+
+            font-size:
+                13px;
+
+            font-weight:
+                700;
+
+            margin-bottom:
+                3px;
+        }
+
+
+        .payment-info small {
+
+            color:
+                var(--muted);
+
+            font-size:
+                10px;
+        }
+
+
+        .payment-check {
+
+            width:
+                20px;
+
+            height:
+                20px;
+
+            border:
+                2px solid
+                #cbd5e1;
+
+            border-radius:
+                50%;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            color:
+                white;
+
+            font-size:
+                11px;
+        }
+
+
+        .payment-option input:checked
+        + .payment-label
+        .payment-check {
+
+            background:
+                var(--primary);
+
+            border-color:
+                var(--primary);
+        }
+
+
+        /* =====================================================
+           PAYMENT BRAND
+        ====================================================== */
+
+        .payment-brands {
+
+            display:
+                flex;
+
+            flex-wrap:
+                wrap;
+
+            gap:
+                8px;
+
+            margin:
+                15px 0 5px;
+        }
+
+
+        .brand-chip {
+
+            display:
+                inline-flex;
+
+            align-items:
+                center;
+
+            gap:
+                5px;
+
+            padding:
+                6px 10px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius:
+                8px;
+
+            background:
+                white;
+
+            font-size:
+                9px;
+
+            font-weight:
+                600;
+
+            color:
+                var(--muted);
+        }
+
+
+        .brand-chip i {
+            font-size:
+                15px;
+
+            color:
+                var(--primary);
+        }
+
+
+        /* =====================================================
+           PLACE ORDER BUTTON
+        ====================================================== */
+
         .place-btn {
-            width: 100%;
-            background: #ff5c8d;
-            border: none;
-            padding: 12px;
-            font-size: 18px;
-            border-radius: 8px;
-            color: #fff;
-            transition: 0.3s ease;
+
+            width:
+                100%;
+
+            min-height:
+                54px;
+
+            border:
+                none;
+
+            border-radius:
+                14px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    var(--purple)
+                );
+
+            color:
+                white;
+
+            font-size:
+                14px;
+
+            font-weight:
+                700;
+
+            box-shadow:
+                0 12px 30px
+                rgba(99,102,241,0.25);
+
+            transition:
+                0.3s ease;
+
+            margin-top:
+                22px;
         }
+
+
         .place-btn:hover {
-            background: #ff3d75;
+
+            transform:
+                translateY(-3px);
+
+            box-shadow:
+                0 18px 35px
+                rgba(99,102,241,0.35);
+
+            color:
+                white;
         }
+
+
         .disabled-btn {
-            background: gray !important;
-            cursor: not-allowed;
+
+            background:
+                #94a3b8 !important;
+
+            box-shadow:
+                none;
+
+            cursor:
+                not-allowed;
         }
+
+
+        /* =====================================================
+           SECURITY
+        ====================================================== */
+
+        .security-note {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            gap:
+                7px;
+
+            margin-top:
+                15px;
+
+            color:
+                #64748b;
+
+            font-size:
+                10px;
+        }
+
+
+        .security-note i {
+            color:
+                var(--success);
+        }
+
+
+        /* =====================================================
+           ORDER SUMMARY
+        ====================================================== */
+
+        .summary-card {
+
+            position:
+                sticky;
+
+            top:
+                100px;
+
+            background:
+                rgba(15,23,42,0.98);
+
+            color:
+                white;
+
+            border-radius:
+                24px;
+
+            padding:
+                28px;
+
+            box-shadow:
+                var(--shadow-lg);
+
+            overflow:
+                hidden;
+        }
+
+
+        .summary-card::before {
+
+            content:
+                "";
+
+            position:
+                absolute;
+
+            width:
+                180px;
+
+            height:
+                180px;
+
+            right:
+                -70px;
+
+            top:
+                -70px;
+
+            border-radius:
+                50%;
+
+            background:
+                rgba(139,92,246,0.25);
+
+            filter:
+                blur(5px);
+        }
+
+
+        .summary-card::after {
+
+            content:
+                "";
+
+            position:
+                absolute;
+
+            width:
+                140px;
+
+            height:
+                140px;
+
+            left:
+                -80px;
+
+            bottom:
+                -80px;
+
+            border-radius:
+                50%;
+
+            background:
+                rgba(99,102,241,0.20);
+        }
+
+
+        .summary-content {
+
+            position:
+                relative;
+
+            z-index:
+                2;
+        }
+
+
+        .summary-header {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                space-between;
+
+            margin-bottom:
+                22px;
+        }
+
+
+        .summary-header h3 {
+
+            font-size:
+                19px;
+
+            font-weight:
+                700;
+
+            margin:
+                0;
+        }
+
+
+        .summary-badge {
+
+            padding:
+                6px 10px;
+
+            border-radius:
+                50px;
+
+            background:
+                rgba(16,185,129,0.12);
+
+            color:
+                #6ee7b7;
+
+            font-size:
+                9px;
+
+            font-weight:
+                700;
+        }
+
+
+        /* =====================================================
+           ORDER ITEMS
+        ====================================================== */
+
+        .order-item {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                12px;
+
+            padding:
+                12px 0;
+
+            border-bottom:
+                1px solid
+                rgba(255,255,255,0.08);
+        }
+
+
+        .order-image {
+
+            width:
+                58px;
+
+            height:
+                58px;
+
+            border-radius:
+                12px;
+
+            object-fit:
+                cover;
+
+            background:
+                #334155;
+
+            border:
+                1px solid
+                rgba(255,255,255,0.1);
+        }
+
+
+        .order-info {
+
+            flex:
+                1;
+
+            min-width:
+                0;
+        }
+
+
+        .order-info h6 {
+
+            font-size:
+                11px;
+
+            font-weight:
+                600;
+
+            margin:
+                0 0 3px;
+
+            white-space:
+                nowrap;
+
+            overflow:
+                hidden;
+
+            text-overflow:
+                ellipsis;
+        }
+
+
+        .order-info small {
+
+            color:
+                #94a3b8;
+
+            font-size:
+                9px;
+        }
+
+
+        .order-price {
+
+            font-size:
+                11px;
+
+            font-weight:
+                700;
+
+            color:
+                #c4b5fd;
+        }
+
+
+        /* =====================================================
+           TOTALS
+        ====================================================== */
+
+        .summary-row {
+
+            display:
+                flex;
+
+            justify-content:
+                space-between;
+
+            align-items:
+                center;
+
+            padding:
+                9px 0;
+
+            color:
+                #cbd5e1;
+
+            font-size:
+                11px;
+        }
+
+
+        .summary-row strong {
+
+            color:
+                white;
+
+            font-weight:
+                600;
+        }
+
+
+        .grand-total {
+
+            display:
+                flex;
+
+            justify-content:
+                space-between;
+
+            align-items:
+                center;
+
+            padding-top:
+                18px;
+
+            margin-top:
+                10px;
+
+            border-top:
+                1px solid
+                rgba(255,255,255,0.12);
+        }
+
+
+        .grand-total span:first-child {
+
+            font-size:
+                14px;
+
+            font-weight:
+                700;
+        }
+
+
+        .grand-total span:last-child {
+
+            font-size:
+                23px;
+
+            font-weight:
+                800;
+
+            color:
+                #6ee7b7;
+        }
+
+
+        /* =====================================================
+           FREE SHIPPING
+        ====================================================== */
+
+        .shipping-box {
+
+            margin-top:
+                20px;
+
+            padding:
+                13px;
+
+            border-radius:
+                12px;
+
+            background:
+                rgba(16,185,129,0.08);
+
+            border:
+                1px solid
+                rgba(16,185,129,0.15);
+
+            color:
+                #6ee7b7;
+
+            font-size:
+                10px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                8px;
+        }
+
+
+        /* =====================================================
+           FOOTER
+        ====================================================== */
+
+        .footer {
+
+            padding:
+                25px 0;
+
+            background:
+                #0f172a;
+
+            color:
+                #64748b;
+
+            text-align:
+                center;
+
+            font-size:
+                10px;
+        }
+
+
+        .footer strong {
+            color:
+                #a78bfa;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ====================================================== */
+
+        @media (max-width: 991px) {
+
+            .summary-card {
+
+                position:
+                    static;
+
+                margin-top:
+                    10px;
+            }
+
+        }
+
+
+        @media (max-width: 576px) {
+
+            .checkout-header {
+
+                padding:
+                    40px 0 25px;
+            }
+
+
+            .checkout-card {
+
+                padding:
+                    20px;
+
+                border-radius:
+                    18px;
+            }
+
+
+            .summary-card {
+
+                padding:
+                    21px;
+
+                border-radius:
+                    18px;
+            }
+
+
+            .checkout-header h1 {
+
+                font-size:
+                    2rem;
+            }
+
+
+            .secure-label {
+
+                display:
+                    none;
+            }
+
+
+            .brand {
+
+                font-size:
+                    1.3rem;
+            }
+
+
+            .brand-icon {
+
+                width:
+                    36px;
+
+                height:
+                    36px;
+            }
+
+        }
+
     </style>
+
 </head>
+
+
 <body>
 
-<div class="container py-5">
 
-    <h2 class="text-center mb-4 fw-bold">Checkout</h2>
+<!-- =====================================================
+     NAVBAR
+====================================================== -->
 
-    <div class="row g-4">
+<nav class="checkout-navbar">
 
-        <!-- LEFT SIDE -->
-        <div class="col-md-7">
-            <div class="checkout-card">
+    <div class="container">
 
-                <h4 class="mb-3 fw-semibold">Billing Details</h4>
+        <div class="d-flex align-items-center justify-content-between">
 
-                <form method="POST" action="{% url 'orders:place_order' %}" id="checkoutForm">
-                    {% csrf_token %}
 
-                    <div class="row">
+            <!-- BRAND -->
 
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">First Name</label>
-                            <input type="text" name="first_name" class="form-control" required>
-                        </div>
+            <a
+                href="{% url 'home' %}"
+                class="brand"
+            >
 
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Last Name</label>
-                            <input type="text" name="last_name" class="form-control" required>
-                        </div>
+                <span class="brand-icon">
 
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Phone</label>
-                            <input type="tel" name="phone" class="form-control" required pattern="[0-9]{10}">
-                        </div>
+                    <i class="bi bi-bag-heart-fill"></i>
 
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Email</label>
-                            <input type="email" name="email" class="form-control" required>
-                        </div>
+                </span>
 
-                        <div class="col-12 mb-3">
-                            <label class="form-label">Address Line 1</label>
-                            <input type="text" name="address_line_1" class="form-control" required>
-                        </div>
+                <span class="brand-name">
+                    AakashKart
+                </span>
 
-                        <div class="col-12 mb-3">
-                            <label class="form-label">Address Line 2</label>
-                            <input type="text" name="address_line_2" class="form-control">
-                        </div>
+            </a>
 
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label">City</label>
-                            <input type="text" name="city" class="form-control" required>
-                        </div>
 
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label">State</label>
-                            <input type="text" name="state" class="form-control" required>
-                        </div>
+            <!-- SECURITY -->
 
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label">Country</label>
-                            <input type="text" name="country" class="form-control" required>
-                        </div>
+            <div class="secure-label">
 
-                    </div>
+                <i class="bi bi-shield-check"></i>
 
-                    <!-- PAYMENT -->
-                    <h5 class="mt-4 fw-semibold">Payment Method</h5>
-
-                    <div class="form-check mt-2">
-                        <input class="form-check-input" type="radio" name="payment_method" value="COD" checked>
-                        <label class="form-check-label">Cash On Delivery</label>
-                    </div>
-
-                    <div class="form-check mt-2">
-                        <input class="form-check-input" type="radio" name="payment_method" value="ONLINE">
-                        <label class="form-check-label">Pay with PayPal</label>
-                    </div>
-
-                    {% if cart_items %}
-                        <button type="submit" class="place-btn mt-4">
-                            Place Order
-                        </button>
-                    {% else %}
-                        <button type="button" class="place-btn mt-4 disabled-btn" disabled>
-                            Cart Empty
-                        </button>
-                    {% endif %}
-
-                </form>
+                Secure Checkout
 
             </div>
-        </div>
 
-        <!-- RIGHT SIDE -->
-        <div class="col-md-5">
-            <div class="summary-card">
 
-                <h4 class="fw-semibold">Order Summary</h4>
-                <hr>
-
-                {% if cart_items %}
-                    {% for item in cart_items %}
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>{{ item.product.product_name }} (x{{ item.quantity }})</span>
-                        <span>₹{{ item.sub_total }}</span>
-                    </div>
-                    {% endfor %}
-
-                    <hr>
-
-                    <div class="d-flex justify-content-between">
-                        <h6>Subtotal</h6>
-                        <h6>₹{{ total }}</h6>
-                    </div>
-
-                    <div class="d-flex justify-content-between">
-                        <h6>Tax (5%)</h6>
-                        <h6>₹{{ tax }}</h6>
-                    </div>
-
-                    <div class="d-flex justify-content-between">
-                        <h5 class="fw-bold">Grand Total</h5>
-                        <h5 class="fw-bold text-success">₹{{ grand_total }}</h5>
-                    </div>
-
-                {% else %}
-                    <p class="text-center text-danger">Your cart is empty!</p>
-                {% endif %}
-
-            </div>
         </div>
 
     </div>
-</div>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</nav>
 
-<!-- SIMPLE VALIDATION -->
-<script>
-document.getElementById("checkoutForm").addEventListener("submit", function(e) {
-    let phone = document.querySelector("input[name='phone']").value;
 
-    if(phone.length !== 10){
-        alert("Enter valid 10 digit phone number");
-        e.preventDefault();
-    }
-});
+
+<!-- =====================================================
+     HEADER
+====================================================== -->
+
+<section class="checkout-header">
+
+    <div class="container">
+
+        <div class="checkout-badge">
+
+            <i class="bi bi-lock-fill"></i>
+
+            SAFE & SECURE PAYMENT
+
+        </div>
+
+
+        <h1>
+
+            Complete Your
+            <span>Order</span>
+
+        </h1>
+
+
+        <p>
+
+            Enter your details and choose your preferred
+            payment method.
+
+        </p>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     CHECKOUT SECTION
+====================================================== -->
+
+<section class="checkout-section">
+
+    <div class="container">
+
+        <div class="row g-4">
+
+
+            <!-- =================================================
+                 LEFT SIDE
+            ================================================== -->
+
+            <div class="col-lg-7">
+
+
+                <div class="checkout-card">
+
+
+                    <form
+                        method="POST"
+                        action="{% url 'orders:place_order' %}"
+                        id="checkoutForm"
+                    >
+
+                        {% csrf_token %}
+
+
+                        <!-- =====================================
+                             CUSTOMER INFORMATION
+                        ====================================== -->
+
+                        <div class="section-heading">
+
+                            <div class="section-icon">
+
+                                <i class="bi bi-person-fill"></i>
+
+                            </div>
+
+                            <div>
+
+                                <h3>
+                                    Customer Information
+                                </h3>
+
+                                <p>
+                                    Enter your contact details
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="row g-3">
+
+
+                            <!-- First Name -->
+
+                            <div class="col-md-6">
+
+                                <label class="form-label">
+                                    First Name
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="first_name"
+                                    class="form-control"
+                                    placeholder="Enter first name"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <!-- Last Name -->
+
+                            <div class="col-md-6">
+
+                                <label class="form-label">
+                                    Last Name
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="last_name"
+                                    class="form-control"
+                                    placeholder="Enter last name"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <!-- Phone -->
+
+                            <div class="col-md-6">
+
+                                <label class="form-label">
+                                    Phone Number
+                                </label>
+
+                                <input
+                                    type="tel"
+                                    name="phone"
+                                    class="form-control"
+                                    placeholder="10 digit mobile number"
+                                    pattern="[0-9]{10}"
+                                    maxlength="10"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <!-- Email -->
+
+                            <div class="col-md-6">
+
+                                <label class="form-label">
+                                    Email Address
+                                </label>
+
+                                <input
+                                    type="email"
+                                    name="email"
+                                    class="form-control"
+                                    placeholder="you@example.com"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- =====================================
+                             DELIVERY ADDRESS
+                        ====================================== -->
+
+                        <div class="section-heading mt-5">
+
+                            <div class="section-icon">
+
+                                <i class="bi bi-geo-alt-fill"></i>
+
+                            </div>
+
+                            <div>
+
+                                <h3>
+                                    Delivery Address
+                                </h3>
+
+                                <p>
+                                    Where should we deliver your order?
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="address-box">
+
+
+                            <!-- Address 1 -->
+
+                            <div class="mb-3">
+
+                                <label class="form-label">
+                                    Address Line 1
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="address_line_1"
+                                    class="form-control"
+                                    placeholder="House / Door No, Street"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <!-- Address 2 -->
+
+                            <div class="mb-3">
+
+                                <label class="form-label">
+                                    Address Line 2
+                                    <span class="text-muted">
+                                        (Optional)
+                                    </span>
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="address_line_2"
+                                    class="form-control"
+                                    placeholder="Apartment, Landmark"
+                                >
+
+                            </div>
+
+
+                            <div class="row g-3">
+
+
+                                <!-- City -->
+
+                                <div class="col-md-4">
+
+                                    <label class="form-label">
+                                        City
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        name="city"
+                                        class="form-control"
+                                        placeholder="City"
+                                        required
+                                    >
+
+                                </div>
+
+
+                                <!-- State -->
+
+                                <div class="col-md-4">
+
+                                    <label class="form-label">
+                                        State
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        name="state"
+                                        class="form-control"
+                                        placeholder="State"
+                                        required
+                                    >
+
+                                </div>
+
+
+                                <!-- Country -->
+
+                                <div class="col-md-4">
+
+                                    <label class="form-label">
+                                        Country
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        name="country"
+                                        class="form-control"
+                                        placeholder="Country"
+                                        value="India"
+                                        required
+                                    >
+
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- =====================================
+                             PAYMENT METHOD
+                        ====================================== -->
+
+                        <div class="payment-title">
+
+                            <h4>
+
+                                <i class="bi bi-credit-card-2-front me-2"></i>
+
+                                Payment Method
+
+                            </h4>
+
+                            <span>
+                                Choose one
+                            </span>
+
+                        </div>
+
+
+                        <!-- COD -->
+
+                        <div class="payment-option">
+
+                            <input
+                                type="radio"
+                                id="cod"
+                                name="payment_method"
+                                value="COD"
+                                checked
+                            >
+
+
+                            <label
+                                for="cod"
+                                class="payment-label"
+                            >
+
+                                <div class="payment-icon">
+
+                                    <i class="bi bi-cash-coin"></i>
+
+                                </div>
+
+
+                                <div class="payment-info">
+
+                                    <strong>
+                                        Cash on Delivery
+                                    </strong>
+
+                                    <small>
+                                        Pay when your order arrives
+                                    </small>
+
+                                </div>
+
+
+                                <div class="payment-check">
+
+                                    <i class="bi bi-check"></i>
+
+                                </div>
+
+                            </label>
+
+                        </div>
+
+
+
+                        <!-- ONLINE -->
+
+                        <div class="payment-option">
+
+                            <input
+                                type="radio"
+                                id="online"
+                                name="payment_method"
+                                value="ONLINE"
+                            >
+
+
+                            <label
+                                for="online"
+                                class="payment-label"
+                            >
+
+                                <div class="payment-icon">
+
+                                    <i class="bi bi-phone"></i>
+
+                                </div>
+
+
+                                <div class="payment-info">
+
+                                    <strong>
+                                        Online Payment
+                                    </strong>
+
+                                    <small>
+                                        UPI, Cards, Google Pay & more
+                                    </small>
+
+                                </div>
+
+
+                                <div class="payment-check">
+
+                                    <i class="bi bi-check"></i>
+
+                                </div>
+
+                            </label>
+
+                        </div>
+
+
+
+                        <!-- PAYMENT BRANDS -->
+
+                        <div class="payment-brands">
+
+                            <div class="brand-chip">
+
+                                <i class="bi bi-credit-card"></i>
+
+                                Visa
+
+                            </div>
+
+
+                            <div class="brand-chip">
+
+                                <i class="bi bi-credit-card-2-front"></i>
+
+                                Mastercard
+
+                            </div>
+
+
+                            <div class="brand-chip">
+
+                                <i class="bi bi-phone"></i>
+
+                                UPI
+
+                            </div>
+
+
+                            <div class="brand-chip">
+
+                                <i class="bi bi-google"></i>
+
+                                Google Pay
+
+                            </div>
+
+
+                            <div class="brand-chip">
+
+                                <i class="bi bi-paypal"></i>
+
+                                PayPal
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- =====================================
+                             PLACE ORDER
+                        ====================================== -->
+
+                        {% if cart_items %}
+
+                            <button
+                                type="submit"
+                                class="place-btn"
+                            >
+
+                                <i class="bi bi-lock-fill me-2"></i>
+
+                                Place Order Securely
+
+                                <i class="bi bi-arrow-right ms-2"></i>
+
+                            </button>
+
+                        {% else %}
+
+                            <button
+                                type="button"
+                                class="place-btn disabled-btn"
+                                disabled
+                            >
+
+                                Cart is Empty
+
+                            </button>
+
+                        {% endif %}
+
+
+                        <div class="security-note">
+
+                            <i class="bi bi-shield-check"></i>
+
+                            Your information is protected and secure.
+
+                        </div>
+
+
+                    </form>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 RIGHT SIDE - SUMMARY
+            ================================================== -->
+
+            <div class="col-lg-5">
+
+
+                <div class="summary-card">
+
+
+                    <div class="summary-content">
+
+
+                        <!-- Header -->
+
+                        <div class="summary-header">
+
+                            <h3>
+                                Order Summary
+                            </h3>
+
+                            <span class="summary-badge">
+
+                                SECURE
+
+                            </span>
+
+                        </div>
+
+
+
+                        {% if cart_items %}
+
+
+                            <!-- =================================
+                                 PRODUCTS
+                            ================================== -->
+
+                            {% for item in cart_items %}
+
+                            <div class="order-item">
+
+
+                                {% if item.product.image %}
+
+                                    <img
+                                        src="{{ item.product.image.url }}"
+                                        class="order-image"
+                                        alt="{{ item.product.product_name }}"
+                                    >
+
+                                {% else %}
+
+                                    <img
+                                        src="{% static 'images/default-product.jpg' %}"
+                                        class="order-image"
+                                        alt="Product"
+                                    >
+
+                                {% endif %}
+
+
+                                <div class="order-info">
+
+                                    <h6>
+
+                                        {{ item.product.product_name }}
+
+                                    </h6>
+
+                                    <small>
+
+                                        Quantity:
+                                        {{ item.quantity }}
+
+                                        {% if item.color %}
+                                            • {{ item.color }}
+                                        {% endif %}
+
+                                        {% if item.size %}
+                                            • {{ item.size }}
+                                        {% endif %}
+
+                                    </small>
+
+                                </div>
+
+
+                                <div class="order-price">
+
+                                    ₹{{ item.sub_total }}
+
+                                </div>
+
+
+                            </div>
+
+                            {% endfor %}
+
+
+
+                            <!-- =================================
+                                 TOTALS
+                            ================================== -->
+
+                            <div class="mt-3">
+
+
+                                <div class="summary-row">
+
+                                    <span>
+                                        Subtotal
+                                    </span>
+
+                                    <strong>
+                                        ₹{{ total }}
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="summary-row">
+
+                                    <span>
+                                        Tax
+                                    </span>
+
+                                    <strong>
+                                        ₹{{ tax }}
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="summary-row">
+
+                                    <span>
+                                        Shipping
+                                    </span>
+
+                                    <strong>
+                                        {% if shipping %}
+                                            ₹{{ shipping }}
+                                        {% else %}
+                                            FREE
+                                        {% endif %}
+                                    </strong>
+
+                                </div>
+
+
+                                <!-- Grand Total -->
+
+                                <div class="grand-total">
+
+                                    <span>
+                                        Grand Total
+                                    </span>
+
+                                    <span>
+                                        ₹{{ grand_total }}
+                                    </span>
+
+                                </div>
+
+
+                            </div>
+
+
+
+                            <!-- SHIPPING -->
+
+                            <div class="shipping-box">
+
+                                <i class="bi bi-truck"></i>
+
+                                Free & fast delivery available
+
+                            </div>
+
+
+                        {% else %}
+
+
+                            <div class="text-center py-5">
+
+                                <i
+                                    class="bi bi-cart-x"
+                                    style="font-size:50px;color:#64748b;"
+                                ></i>
+
+                                <h5 class="mt-3">
+                                    Your cart is empty
+                                </h5>
+
+                                <p
+                                    style="
+                                    color:#94a3b8;
+                                    font-size:11px;
+                                    "
+                                >
+                                    Add some products before checkout.
+                                </p>
+
+
+                                <a
+                                    href="{% url 'store:store' %}"
+                                    class="btn btn-primary rounded-pill px-4"
+                                >
+
+                                    Continue Shopping
+
+                                </a>
+
+                            </div>
+
+
+                        {% endif %}
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     FOOTER
+====================================================== -->
+
+<footer class="footer">
+
+    © 2026
+
+    <strong>
+        AakashKart
+    </strong>
+
+    · Secure Shopping Experience
+
+</footer>
+
+
+
+<!-- =====================================================
+     BOOTSTRAP JS
+====================================================== -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
 </script>
 
+
+
+<!-- =====================================================
+     PHONE VALIDATION
+====================================================== -->
+
+<script>
+
+    const checkoutForm =
+        document.getElementById("checkoutForm");
+
+
+    if (checkoutForm) {
+
+        checkoutForm.addEventListener(
+            "submit",
+            function(event) {
+
+                const phone =
+                    document.querySelector(
+                        "input[name='phone']"
+                    ).value.trim();
+
+
+                if (!/^[0-9]{10}$/.test(phone)) {
+
+                    event.preventDefault();
+
+                    alert(
+                        "Please enter a valid 10-digit mobile number."
+                    );
+
+                    return false;
+                }
+
+            }
+        );
+
+    }
+
+</script>
+
+
 </body>
+
 </html>

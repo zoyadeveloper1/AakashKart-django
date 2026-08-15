@@ -23,7 +23,7 @@ class Category(models.Model):
         super().save(*args, **kwargs)
 
     def get_url(self):
-        return reverse('store_by_category', args=[self.slug])
+        return reverse('store:store_by_category', args=[self.slug])
 
     def __str__(self):
         return self.category_name

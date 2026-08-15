@@ -1,131 +1,1666 @@
+/* =========================================================
+   MODERN E-COMMERCE STYLE.CSS
+   Font: Poppins
+========================================================= */
+
+
+/* =========================================================
+   1. FONT
+========================================================= */
+
 @font-face {
-    font-family: 'Poppins';
-    src: url('../fonts/poppins/Poppins-Regular.ttf') format('truetype');
+    font-family: "Poppins";
+    src: url("../fonts/poppins/Poppins-Regular.ttf") format("truetype");
     font-weight: 400;
 }
 
-.products {
-    padding: 20px;
+@font-face {
+    font-family: "Poppins";
+    src: url("../fonts/poppins/Poppins-Medium.ttf") format("truetype");
+    font-weight: 500;
 }
 
-.products h2 {
-    text-align: center;
-    margin-bottom: 15px;
-    font-family: 'Poppins', sans-serif;
+@font-face {
+    font-family: "Poppins";
+    src: url("../fonts/poppins/Poppins-SemiBold.ttf") format("truetype");
+    font-weight: 600;
 }
 
-.product-grid {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
+@font-face {
+    font-family: "Poppins";
+    src: url("../fonts/poppins/Poppins-Bold.ttf") format("truetype");
+    font-weight: 700;
 }
 
-.product-card {
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-    padding: 15px;
-    width: 220px;
-    text-align: center;
-    transition: transform 0.2s;
+
+/* =========================================================
+   2. ROOT VARIABLES
+========================================================= */
+
+:root {
+    --primary: #ff5722;
+    --primary-dark: #e64a19;
+    --secondary: #ff9800;
+
+    --yellow: #ffc107;
+
+    --dark: #212529;
+    --dark-light: #343a40;
+
+    --white: #ffffff;
+    --light: #f6f8fc;
+    --border: #e5e7eb;
+
+    --text: #333333;
+    --muted: #777777;
+
+    --success: #28a745;
+    --danger: #dc3545;
+
+    --shadow-sm:
+        0 4px 12px rgba(0, 0, 0, 0.06);
+
+    --shadow-md:
+        0 10px 30px rgba(0, 0, 0, 0.10);
+
+    --shadow-lg:
+        0 20px 50px rgba(0, 0, 0, 0.15);
+
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+
+    --transition: all 0.3s ease;
 }
 
-.product-card:hover {
-    transform: scale(1.05);
+
+/* =========================================================
+   3. GLOBAL RESET
+========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-.product-card img {
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f8f9fc 0%,
+            #eef2f7 100%
+        );
+
+    color: var(--text);
+
+    line-height: 1.6;
+
+    min-height: 100vh;
+}
+
+
+/* =========================================================
+   4. LINKS
+========================================================= */
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+
+/* =========================================================
+   5. IMAGES
+========================================================= */
+
+img {
     max-width: 100%;
+    display: block;
+}
+
+
+/* =========================================================
+   6. NAVBAR
+========================================================= */
+
+.navbar {
+    background:
+        rgba(33, 37, 41, 0.96) !important;
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    box-shadow:
+        0 4px 20px rgba(0, 0, 0, 0.12);
+
+    padding: 12px 5%;
+
+    position: relative;
+
+    z-index: 1000;
+}
+
+
+/* Navbar Brand */
+
+.navbar-brand {
+    font-size: 24px;
+
+    font-weight: 700;
+
+    color: var(--white) !important;
+
+    letter-spacing: -0.5px;
+
+    transition: var(--transition);
+}
+
+.navbar-brand:hover {
+    color: var(--yellow) !important;
+
+    transform: translateY(-1px);
+}
+
+
+/* Navbar Links */
+
+.navbar .nav-link {
+    color: #f8f9fa !important;
+
+    font-size: 14px;
+
+    font-weight: 500;
+
+    margin: 0 5px;
+
+    padding: 8px 12px !important;
+
     border-radius: 8px;
+
+    transition: var(--transition);
 }
 
-.product-card h3 {
-    font-size: 18px;
-    margin: 10px 0;
+.navbar .nav-link:hover {
+    background:
+        rgba(255, 193, 7, 0.12);
+
+    color: var(--yellow) !important;
 }
 
-.product-card p {
-    color: #ff5722;
-    font-weight: bold;
+
+/* Active Link */
+
+.navbar .nav-link.active {
+    color: var(--yellow) !important;
+
+    font-weight: 600;
 }
 
-.product-card button {
+
+/* =========================================================
+   7. NAVBAR DROPDOWN
+========================================================= */
+
+.navbar .dropdown-toggle {
+    color: var(--yellow) !important;
+
+    font-weight: 600;
+
+    transition: var(--transition);
+}
+
+.navbar .dropdown-toggle:hover {
+    color: var(--white) !important;
+
+    text-shadow:
+        0 0 10px rgba(255, 193, 7, 0.7);
+}
+
+
+/* Dropdown Menu */
+
+.dropdown-menu,
+.custom-dropdown {
+    min-width: 210px;
+
+    padding: 8px;
+
     margin-top: 10px;
-    padding: 8px 12px;
-    background: #ff5722;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+
+    background:
+        rgba(33, 37, 41, 0.97);
+
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+
+    border:
+        1px solid rgba(255, 193, 7, 0.25);
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 20px 45px rgba(0, 0, 0, 0.25);
+
+    animation:
+        dropdownFade 0.25s ease;
 }
 
-.product-card button:hover {
-    background: #e64a19;
+
+/* Dropdown Animation */
+
+@keyframes dropdownFade {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
 }
 
-.product-card:hover {
-    transform: scale(1.05);
-    transition: 0.3s ease-in-out;
+
+/* Dropdown Items */
+
+.dropdown-menu .dropdown-item,
+.custom-dropdown .dropdown-item {
+
+    color: #f8f9fa;
+
+    font-size: 14px;
+
+    padding: 10px 14px;
+
+    margin: 3px 0;
+
+    border-radius: 8px;
+
+    transition: var(--transition);
 }
 
-  /* Dropdown background + text color */
-  .dropdown-menu {
-    background-color: #0d6efd;  /* Blue background */
-  }
 
-  .dropdown-menu .dropdown-item {
-    color: white; /* White text */
-  }
+/* Dropdown Hover */
 
-  /* Hover effect */
-  .dropdown-menu .dropdown-item:hover {
-    background-color: #084298; /* Dark blue hover */
-    color: #fff;
-  }
-    
-/* Add this to your style.css or inside <style> */
+.dropdown-menu .dropdown-item:hover,
+.custom-dropdown .dropdown-item:hover {
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--yellow),
+            var(--secondary)
+        );
+
+    color: #000;
+
+    padding-left: 20px;
+}
+
+
+/* =========================================================
+   8. SEARCH BAR
+========================================================= */
+
+.input-group {
+    max-width: 650px;
+
+    margin: 20px auto;
+
+    position: relative;
+}
+
+
+/* Search Input */
+
 .input-group input.form-control {
-  border-radius: 50px 0 0 50px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  transition: all 0.3s ease;
+
+    height: 50px;
+
+    padding:
+        0 20px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        50px 0 0 50px;
+
+    background:
+        rgba(255, 255, 255, 0.95);
+
+    font-family:
+        "Poppins", sans-serif;
+
+    font-size: 14px;
+
+    color: var(--dark);
+
+    box-shadow:
+        var(--shadow-sm);
+
+    transition:
+        var(--transition);
 }
+
+
+/* Search Focus */
 
 .input-group input.form-control:focus {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  border-color: #ffc107;
+
+    outline: none;
+
+    border-color:
+        var(--secondary);
+
+    box-shadow:
+        0 0 0 4px
+        rgba(255, 152, 0, 0.12);
 }
+
+
+/* Search Button */
 
 .input-group .btn {
-  border-radius: 0 50px 50px 0;
+
+    min-width: 105px;
+
+    border: none;
+
+    border-radius:
+        0 50px 50px 0;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary),
+            var(--secondary)
+        );
+
+    color: var(--white);
+
+    font-family:
+        "Poppins", sans-serif;
+
+    font-weight: 600;
+
+    transition:
+        var(--transition);
 }
 
-/* Custom dropdown styling */
-.custom-dropdown {
-  background-color: #343a40; /* Dark background */
-  border: 1px solid #ffc107; /* Yellow border */
-  border-radius: 8px;
+.input-group .btn:hover {
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary-dark),
+            var(--primary)
+        );
+
+    transform:
+        translateX(2px);
 }
 
-/* Dropdown items */
-.custom-dropdown .dropdown-item {
-  color: #f8f9fa; /* White text */
-  transition: all 0.3s ease;
+
+/* =========================================================
+   9. PRODUCTS SECTION
+========================================================= */
+
+.products {
+
+    width: 100%;
+
+    max-width: 1400px;
+
+    margin:
+        0 auto;
+
+    padding:
+        55px 5%;
 }
 
-/* Hover effect */
-.custom-dropdown .dropdown-item:hover {
-  background-color: #ffc107;
-  color: #000;
-  padding-left: 18px;
+
+/* Products Heading */
+
+.products h2 {
+
+    text-align: center;
+
+    font-size: 32px;
+
+    font-weight: 700;
+
+    color: var(--dark);
+
+    margin-bottom: 45px;
+
+    letter-spacing:
+        -0.5px;
+
+    position: relative;
 }
 
-/* Dropdown toggle link (All Categories) */
-.navbar .nav-link.dropdown-toggle {
-  color: #ffc107 !important;
+
+/* Heading Underline */
+
+.products h2::after {
+
+    content: "";
+
+    display: block;
+
+    width: 60px;
+
+    height: 4px;
+
+    margin:
+        12px auto 0;
+
+    border-radius:
+        50px;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--primary),
+            var(--secondary)
+        );
 }
 
-.navbar .nav-link.dropdown-toggle:hover {
-  color: #fff !important;
-  text-shadow: 0 0 5px #ffc107;
+
+/* =========================================================
+   10. PRODUCT GRID
+========================================================= */
+
+.product-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(230px, 1fr)
+        );
+
+    gap: 28px;
+
+    width: 100%;
+}
+
+
+/* =========================================================
+   11. PRODUCT CARD
+========================================================= */
+
+.product-card {
+
+    position: relative;
+
+    background:
+        rgba(255, 255, 255, 0.96);
+
+    border:
+        1px solid rgba(0, 0, 0, 0.05);
+
+    border-radius:
+        var(--radius-lg);
+
+    padding: 18px;
+
+    text-align: center;
+
+    overflow: hidden;
+
+    box-shadow:
+        var(--shadow-sm);
+
+    transition:
+        transform 0.35s ease,
+        box-shadow 0.35s ease,
+        border-color 0.35s ease;
+}
+
+
+/* Card Hover */
+
+.product-card:hover {
+
+    transform:
+        translateY(-10px);
+
+    border-color:
+        rgba(255, 87, 34, 0.25);
+
+    box-shadow:
+        var(--shadow-lg);
+}
+
+
+/* =========================================================
+   12. PRODUCT IMAGE AREA
+========================================================= */
+
+.product-card img {
+
+    width: 100%;
+
+    height: 220px;
+
+    object-fit: contain;
+
+    padding: 10px;
+
+    border-radius:
+        var(--radius-md);
+
+    background:
+        #fafafa;
+
+    transition:
+        transform 0.45s ease;
+}
+
+
+/* Image Hover */
+
+.product-card:hover img {
+
+    transform:
+        scale(1.08);
+}
+
+
+/* =========================================================
+   13. PRODUCT TITLE
+========================================================= */
+
+.product-card h3 {
+
+    font-size: 18px;
+
+    font-weight: 600;
+
+    color:
+        var(--dark);
+
+    margin:
+        18px 0 8px;
+
+    transition:
+        var(--transition);
+}
+
+
+/* Title Hover */
+
+.product-card:hover h3 {
+
+    color:
+        var(--primary);
+}
+
+
+/* =========================================================
+   14. PRODUCT DESCRIPTION
+========================================================= */
+
+.product-card .description {
+
+    font-size: 13px;
+
+    color:
+        var(--muted);
+
+    margin-bottom:
+        8px;
+}
+
+
+/* =========================================================
+   15. PRODUCT PRICE
+========================================================= */
+
+.product-card p {
+
+    font-size: 19px;
+
+    font-weight: 700;
+
+    margin:
+        8px 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--primary),
+            var(--secondary)
+        );
+
+    -webkit-background-clip:
+        text;
+
+    -webkit-text-fill-color:
+        transparent;
+}
+
+
+/* =========================================================
+   16. OLD PRICE
+========================================================= */
+
+.product-card .old-price {
+
+    color:
+        #999;
+
+    font-size:
+        13px;
+
+    text-decoration:
+        line-through;
+
+    margin-right:
+        6px;
+}
+
+
+/* =========================================================
+   17. PRODUCT BUTTON
+========================================================= */
+
+.product-card button {
+
+    margin-top:
+        15px;
+
+    padding:
+        11px 22px;
+
+    border:
+        none;
+
+    border-radius:
+        50px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary),
+            var(--secondary)
+        );
+
+    color:
+        var(--white);
+
+    font-family:
+        "Poppins", sans-serif;
+
+    font-size:
+        14px;
+
+    font-weight:
+        600;
+
+    cursor:
+        pointer;
+
+    box-shadow:
+        0 7px 18px
+        rgba(255, 87, 34, 0.25);
+
+    transition:
+        var(--transition);
+}
+
+
+/* Button Hover */
+
+.product-card button:hover {
+
+    transform:
+        translateY(-3px);
+
+    box-shadow:
+        0 12px 25px
+        rgba(255, 87, 34, 0.35);
+}
+
+
+/* Button Click */
+
+.product-card button:active {
+
+    transform:
+        scale(0.96);
+}
+
+
+/* =========================================================
+   18. PRODUCT BADGE
+========================================================= */
+
+.product-card::before {
+
+    content:
+        "NEW";
+
+    position:
+        absolute;
+
+    top:
+        15px;
+
+    left:
+        15px;
+
+    z-index:
+        5;
+
+    padding:
+        5px 11px;
+
+    font-size:
+        10px;
+
+    font-weight:
+        700;
+
+    color:
+        var(--white);
+
+    background:
+        var(--primary);
+
+    border-radius:
+        50px;
+
+    box-shadow:
+        0 4px 10px
+        rgba(255, 87, 34, 0.25);
+}
+
+
+/* =========================================================
+   19. HEART / WISHLIST BUTTON
+========================================================= */
+
+.wishlist {
+
+    position:
+        absolute;
+
+    top:
+        15px;
+
+    right:
+        15px;
+
+    width:
+        38px;
+
+    height:
+        38px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border:
+        none;
+
+    border-radius:
+        50%;
+
+    background:
+        rgba(255, 255, 255, 0.95);
+
+    color:
+        #777;
+
+    cursor:
+        pointer;
+
+    box-shadow:
+        0 4px 12px
+        rgba(0, 0, 0, 0.08);
+
+    transition:
+        var(--transition);
+
+    z-index:
+        10;
+}
+
+
+.wishlist:hover {
+
+    color:
+        var(--danger);
+
+    transform:
+        scale(1.1);
+}
+
+
+/* =========================================================
+   20. ADD TO CART
+========================================================= */
+
+.add-to-cart {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        7px;
+
+    width:
+        100%;
+
+    padding:
+        11px 18px;
+
+    border:
+        none;
+
+    border-radius:
+        50px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary),
+            var(--secondary)
+        );
+
+    color:
+        white;
+
+    font-family:
+        "Poppins", sans-serif;
+
+    font-weight:
+        600;
+
+    cursor:
+        pointer;
+
+    transition:
+        var(--transition);
+}
+
+
+.add-to-cart:hover {
+
+    transform:
+        translateY(-3px);
+
+    box-shadow:
+        0 10px 25px
+        rgba(255, 87, 34, 0.3);
+}
+
+
+/* =========================================================
+   21. LOGIN / REGISTER BUTTON
+========================================================= */
+
+.btn-primary-custom {
+
+    padding:
+        10px 22px;
+
+    border:
+        none;
+
+    border-radius:
+        50px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary),
+            var(--secondary)
+        );
+
+    color:
+        white;
+
+    font-weight:
+        600;
+
+    transition:
+        var(--transition);
+}
+
+
+.btn-primary-custom:hover {
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 8px 20px
+        rgba(255, 87, 34, 0.3);
+}
+
+
+/* =========================================================
+   22. SECONDARY BUTTON
+========================================================= */
+
+.btn-outline-custom {
+
+    padding:
+        9px 20px;
+
+    border:
+        1px solid var(--primary);
+
+    border-radius:
+        50px;
+
+    background:
+        transparent;
+
+    color:
+        var(--primary);
+
+    font-weight:
+        600;
+
+    transition:
+        var(--transition);
+}
+
+
+.btn-outline-custom:hover {
+
+    background:
+        var(--primary);
+
+    color:
+        white;
+
+    transform:
+        translateY(-2px);
+}
+
+
+/* =========================================================
+   23. CART BADGE
+========================================================= */
+
+.cart-badge {
+
+    position:
+        absolute;
+
+    top:
+        -7px;
+
+    right:
+        -8px;
+
+    min-width:
+        20px;
+
+    height:
+        20px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    padding:
+        2px 6px;
+
+    border-radius:
+        50px;
+
+    background:
+        var(--danger);
+
+    color:
+        white;
+
+    font-size:
+        10px;
+
+    font-weight:
+        700;
+}
+
+
+/* =========================================================
+   24. ALERTS
+========================================================= */
+
+.alert {
+
+    border:
+        none;
+
+    border-radius:
+        12px;
+
+    font-size:
+        14px;
+
+    box-shadow:
+        var(--shadow-sm);
+}
+
+
+/* =========================================================
+   25. FORM INPUTS
+========================================================= */
+
+.form-control,
+.form-select {
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        10px;
+
+    padding:
+        11px 14px;
+
+    font-family:
+        "Poppins", sans-serif;
+
+    font-size:
+        14px;
+
+    transition:
+        var(--transition);
+}
+
+
+.form-control:focus,
+.form-select:focus {
+
+    border-color:
+        var(--secondary);
+
+    box-shadow:
+        0 0 0 4px
+        rgba(255, 152, 0, 0.12);
+
+    outline:
+        none;
+}
+
+
+/* =========================================================
+   26. PRODUCT DETAILS
+========================================================= */
+
+.product-details {
+
+    background:
+        white;
+
+    border-radius:
+        20px;
+
+    padding:
+        30px;
+
+    box-shadow:
+        var(--shadow-md);
+}
+
+
+.product-details img {
+
+    width:
+        100%;
+
+    max-height:
+        500px;
+
+    object-fit:
+        contain;
+
+    border-radius:
+        15px;
+}
+
+
+/* =========================================================
+   27. FOOTER
+========================================================= */
+
+footer {
+
+    margin-top:
+        60px;
+
+    padding:
+        45px 5%;
+
+    background:
+        #212529;
+
+    color:
+        #f8f9fa;
+
+    text-align:
+        center;
+}
+
+
+footer h4 {
+
+    color:
+        var(--yellow);
+
+    font-weight:
+        600;
+
+    margin-bottom:
+        15px;
+}
+
+
+footer p {
+
+    color:
+        #adb5bd;
+
+    font-size:
+        14px;
+}
+
+
+/* =========================================================
+   28. SCROLL TO TOP
+========================================================= */
+
+.scroll-top {
+
+    position:
+        fixed;
+
+    right:
+        25px;
+
+    bottom:
+        25px;
+
+    width:
+        45px;
+
+    height:
+        45px;
+
+    border:
+        none;
+
+    border-radius:
+        50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary),
+            var(--secondary)
+        );
+
+    color:
+        white;
+
+    cursor:
+        pointer;
+
+    box-shadow:
+        var(--shadow-md);
+
+    transition:
+        var(--transition);
+
+    z-index:
+        999;
+}
+
+
+.scroll-top:hover {
+
+    transform:
+        translateY(-5px);
+}
+
+
+/* =========================================================
+   29. LOADING ANIMATION
+========================================================= */
+
+.loading {
+
+    width:
+        40px;
+
+    height:
+        40px;
+
+    border:
+        4px solid #eee;
+
+    border-top:
+        4px solid var(--primary);
+
+    border-radius:
+        50%;
+
+    animation:
+        spin 0.8s linear infinite;
+
+    margin:
+        30px auto;
+}
+
+
+@keyframes spin {
+
+    to {
+        transform:
+            rotate(360deg);
+    }
+}
+
+
+/* =========================================================
+   30. FADE IN
+========================================================= */
+
+.fade-in {
+
+    animation:
+        fadeIn 0.7s ease;
+}
+
+
+@keyframes fadeIn {
+
+    from {
+
+        opacity:
+            0;
+
+        transform:
+            translateY(15px);
+    }
+
+    to {
+
+        opacity:
+            1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+
+/* =========================================================
+   31. TABLE
+========================================================= */
+
+.table {
+
+    background:
+        white;
+
+    border-radius:
+        12px;
+
+    overflow:
+        hidden;
+
+    box-shadow:
+        var(--shadow-sm);
+}
+
+
+.table th {
+
+    background:
+        #212529;
+
+    color:
+        white;
+
+    font-weight:
+        600;
+}
+
+
+.table td,
+.table th {
+
+    padding:
+        13px;
+
+    vertical-align:
+        middle;
+}
+
+
+/* =========================================================
+   32. PAGINATION
+========================================================= */
+
+.pagination .page-link {
+
+    color:
+        var(--primary);
+
+    border:
+        1px solid var(--border);
+
+    margin:
+        0 3px;
+
+    border-radius:
+        8px;
+
+    transition:
+        var(--transition);
+}
+
+
+.pagination .page-link:hover {
+
+    background:
+        var(--primary);
+
+    color:
+        white;
+
+    border-color:
+        var(--primary);
+}
+
+
+/* =========================================================
+   33. MOBILE RESPONSIVE
+========================================================= */
+
+@media (max-width: 992px) {
+
+    .navbar {
+        padding:
+            10px 4%;
+    }
+
+    .products {
+        padding:
+            45px 4%;
+    }
+
+    .product-grid {
+
+        grid-template-columns:
+            repeat(
+                3,
+                minmax(0, 1fr)
+            );
+
+        gap:
+            20px;
+    }
+}
+
+
+/* =========================================================
+   34. TABLET
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .products {
+        padding:
+            40px 20px;
+    }
+
+    .products h2 {
+        font-size:
+            26px;
+
+        margin-bottom:
+            30px;
+    }
+
+    .product-grid {
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+
+        gap:
+            16px;
+    }
+
+    .product-card {
+
+        padding:
+            14px;
+
+        border-radius:
+            15px;
+    }
+
+    .product-card img {
+
+        height:
+            175px;
+    }
+
+    .product-card h3 {
+
+        font-size:
+            15px;
+
+        margin-top:
+            13px;
+    }
+
+    .product-card p {
+
+        font-size:
+            16px;
+    }
+
+    .product-card button {
+
+        padding:
+            9px 15px;
+
+        font-size:
+            13px;
+    }
+
+    .input-group {
+
+        width:
+            95%;
+
+        margin:
+            15px auto;
+    }
+}
+
+
+/* =========================================================
+   35. MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+    .navbar-brand {
+
+        font-size:
+            20px;
+    }
+
+    .products {
+
+        padding:
+            30px 15px;
+    }
+
+    .products h2 {
+
+        font-size:
+            23px;
+    }
+
+    .product-grid {
+
+        grid-template-columns:
+            1fr;
+
+        gap:
+            18px;
+    }
+
+    .product-card img {
+
+        height:
+            220px;
+    }
+
+    .product-card h3 {
+
+        font-size:
+            17px;
+    }
+
+    .product-card p {
+
+        font-size:
+            18px;
+    }
+
+    .product-card button {
+
+        width:
+            100%;
+    }
+
+    .input-group input.form-control {
+
+        height:
+            45px;
+
+        font-size:
+            13px;
+    }
+
+    .input-group .btn {
+
+        min-width:
+            85px;
+    }
+
+    footer {
+
+        padding:
+            35px 20px;
+    }
+}
+
+
+/* =========================================================
+   36. EXTRA SMALL DEVICES
+========================================================= */
+
+@media (max-width: 360px) {
+
+    .products h2 {
+
+        font-size:
+            21px;
+    }
+
+    .product-card {
+
+        padding:
+            12px;
+    }
+
+    .product-card img {
+
+        height:
+            190px;
+    }
+
+    .input-group .btn {
+
+        min-width:
+            70px;
+
+        font-size:
+            12px;
+    }
+}
+
+
+/* =========================================================
+   37. REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    * {
+
+        animation-duration:
+            0.01ms !important;
+
+        animation-iteration-count:
+            1 !important;
+
+        transition-duration:
+            0.01ms !important;
+
+        scroll-behavior:
+            auto !important;
+    }
 }

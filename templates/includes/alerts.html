@@ -1,10 +1,446 @@
 {% if messages %}
-<ul class="messages">
+
+<!-- ================= MODERN DJANGO MESSAGES ================= -->
+<div class="ak-message-container">
+
     {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
-        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
-        {{ message }}
-    </li>
+
+        <div class="ak-message
+            {% if message.tags %}
+                {{ message.tags }}
+            {% else %}
+                info
+            {% endif %}"
+            role="alert">
+
+            <!-- Icon -->
+            <div class="ak-message-icon">
+
+                {% if 'success' in message.tags %}
+                    <i class="bi bi-check-lg"></i>
+
+                {% elif 'error' in message.tags %}
+                    <i class="bi bi-x-lg"></i>
+
+                {% elif 'warning' in message.tags %}
+                    <i class="bi bi-exclamation-lg"></i>
+
+                {% else %}
+                    <i class="bi bi-info-lg"></i>
+                {% endif %}
+
+            </div>
+
+
+            <!-- Message Content -->
+            <div class="ak-message-content">
+
+                <strong>
+                    {% if 'success' in message.tags %}
+                        Success
+
+                    {% elif 'error' in message.tags %}
+                        Error
+
+                    {% elif 'warning' in message.tags %}
+                        Warning
+
+                    {% else %}
+                        Information
+                    {% endif %}
+                </strong>
+
+                <p>
+                    {{ message }}
+                </p>
+
+            </div>
+
+
+            <!-- Close -->
+            <button type="button"
+                    class="ak-message-close"
+                    aria-label="Close">
+                <i class="bi bi-x"></i>
+            </button>
+
+
+            <!-- Progress -->
+            <div class="ak-message-progress"></div>
+
+        </div>
+
     {% endfor %}
-</ul>
+
+</div>
+
 {% endif %}
+
+
+<!-- Bootstrap Icons -->
+<link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+>
+
+
+<style>
+
+/* ================= MESSAGE CONTAINER ================= */
+
+.ak-message-container {
+    position: fixed;
+
+    top: 90px;
+    right: 25px;
+
+    width: min(420px, calc(100% - 30px));
+
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+
+    z-index: 99999;
+
+    pointer-events: none;
+}
+
+
+/* ================= MESSAGE ================= */
+
+.ak-message {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    gap: 13px;
+
+    padding: 16px 18px;
+
+    min-height: 76px;
+
+    overflow: hidden;
+
+    border-radius: 16px;
+
+    background: rgba(255,255,255,.96);
+
+    border: 1px solid rgba(0,0,0,.06);
+
+    box-shadow:
+        0 15px 45px rgba(15,23,42,.16);
+
+    backdrop-filter: blur(18px);
+
+    pointer-events: auto;
+
+    animation:
+        akMessageIn .45s cubic-bezier(.2,.8,.2,1);
+
+    transition:
+        opacity .35s ease,
+        transform .35s ease;
+}
+
+
+/* ================= ICON ================= */
+
+.ak-message-icon {
+    width: 42px;
+    height: 42px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 13px;
+
+    font-size: 20px;
+}
+
+
+/* ================= CONTENT ================= */
+
+.ak-message-content {
+    flex: 1;
+
+    min-width: 0;
+}
+
+.ak-message-content strong {
+    display: block;
+
+    color: #111827;
+
+    font-size: 14px;
+    font-weight: 750;
+
+    margin-bottom: 3px;
+}
+
+.ak-message-content p {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 13px;
+    line-height: 1.45;
+
+    word-break: break-word;
+}
+
+
+/* ================= CLOSE ================= */
+
+.ak-message-close {
+    width: 30px;
+    height: 30px;
+
+    flex-shrink: 0;
+
+    border: none;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: transparent;
+
+    color: #94a3b8;
+
+    font-size: 19px;
+
+    cursor: pointer;
+
+    transition: all .25s ease;
+}
+
+.ak-message-close:hover {
+    background: #f1f5f9;
+    color: #111827;
+
+    transform: rotate(90deg);
+}
+
+
+/* ================= SUCCESS ================= */
+
+.ak-message.success {
+    border-left: 4px solid #10b981;
+}
+
+.ak-message.success .ak-message-icon {
+    color: #059669;
+
+    background: #d1fae5;
+}
+
+
+/* ================= ERROR ================= */
+
+.ak-message.error {
+    border-left: 4px solid #ef4444;
+}
+
+.ak-message.error .ak-message-icon {
+    color: #dc2626;
+
+    background: #fee2e2;
+}
+
+
+/* Django sometimes uses "danger" */
+
+.ak-message.danger {
+    border-left: 4px solid #ef4444;
+}
+
+.ak-message.danger .ak-message-icon {
+    color: #dc2626;
+
+    background: #fee2e2;
+}
+
+
+/* ================= WARNING ================= */
+
+.ak-message.warning {
+    border-left: 4px solid #f59e0b;
+}
+
+.ak-message.warning .ak-message-icon {
+    color: #d97706;
+
+    background: #fef3c7;
+}
+
+
+/* ================= INFO ================= */
+
+.ak-message.info {
+    border-left: 4px solid #6366f1;
+}
+
+.ak-message.info .ak-message-icon {
+    color: #4f46e5;
+
+    background: #e0e7ff;
+}
+
+
+/* ================= PROGRESS BAR ================= */
+
+.ak-message-progress {
+    position: absolute;
+
+    left: 0;
+    bottom: 0;
+
+    height: 3px;
+
+    width: 100%;
+
+    background: currentColor;
+
+    opacity: .18;
+
+    animation: akProgress 5s linear forwards;
+}
+
+
+/* ================= ANIMATIONS ================= */
+
+@keyframes akMessageIn {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateX(80px)
+            scale(.95);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateX(0)
+            scale(1);
+    }
+
+}
+
+
+@keyframes akProgress {
+
+    from {
+        width: 100%;
+    }
+
+    to {
+        width: 0%;
+    }
+
+}
+
+
+/* ================= EXIT ================= */
+
+.ak-message.ak-hide {
+    opacity: 0;
+
+    transform:
+        translateX(80px)
+        scale(.95);
+}
+
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 576px) {
+
+    .ak-message-container {
+        top: 75px;
+        right: 15px;
+
+        width: calc(100% - 30px);
+    }
+
+    .ak-message {
+        padding: 14px;
+
+        border-radius: 14px;
+    }
+
+    .ak-message-icon {
+        width: 38px;
+        height: 38px;
+
+        font-size: 18px;
+    }
+
+    .ak-message-content strong {
+        font-size: 13px;
+    }
+
+    .ak-message-content p {
+        font-size: 12px;
+    }
+
+}
+
+</style>
+
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const messages =
+        document.querySelectorAll(".ak-message");
+
+    messages.forEach(function (message) {
+
+        const closeButton =
+            message.querySelector(".ak-message-close");
+
+
+        /* Close button */
+
+        closeButton.addEventListener("click", function () {
+
+            message.classList.add("ak-hide");
+
+            setTimeout(function () {
+                message.remove();
+            }, 350);
+
+        });
+
+
+        /* Auto hide after 5 seconds */
+
+        setTimeout(function () {
+
+            if (document.body.contains(message)) {
+
+                message.classList.add("ak-hide");
+
+                setTimeout(function () {
+                    message.remove();
+                }, 350);
+
+            }
+
+        }, 5000);
+
+    });
+
+});
+
+</script>

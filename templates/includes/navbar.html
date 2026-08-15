@@ -1,88 +1,743 @@
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #232f3e; height: 70px;">
-  <div class="container">
+<!-- =========================
+     MODERN AAKASHKART NAVBAR
+========================= -->
 
-    <!-- Brand -->
-    <a class="navbar-brand fw-bold fs-4" href="{% url 'home' %}">AakashKart</a>
+<nav class="ak-navbar">
 
-    <!-- Mobile Toggler -->
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+    <div class="container">
 
-    <!-- Navbar Content -->
-    <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="ak-nav-inner">
 
-      <!-- Left Links -->
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link text-white fw-semibold px-3" href="{% url 'home' %}">Home</a>
-        </li>
-        <li class="nav-item">
-          {# Use correct store URL name. Remove namespace if not defined #}
-          <a class="nav-link text-white fw-semibold px-3" href="{% url 'store:store' %} ">Store</a>
-        </li>
-      </ul>
+            <!-- BRAND -->
+            <a class="ak-brand" href="{% url 'home' %}">
+                <span class="brand-icon">A</span>
+                <span>Aakash<span>Kart</span></span>
+            </a>
 
-      <!-- Center Search Bar -->
-      <form class="d-flex mx-lg-auto my-2 my-lg-0" method="get"
-            action="{% url 'store:search' %}" style="max-width: 450px; width: 100%;">
-        <input class="form-control me-2" type="search" name="keyword" placeholder="Search products, brands..."
-               value="{{ query|default:'' }}">
-        <button class="btn btn-warning fw-semibold" type="submit">Search</button>
-      </form>
 
-      <!-- Right Links -->
-      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-        {% if user.is_authenticated %}
-          <li class="nav-item">
-            <a class="nav-link text-white fw-semibold px-3" href="{% url 'dashboard' %}">Dashboard</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link text-white fw-semibold px-3" href="{% url 'logout' %}">Logout</a>
-          </li>
-        {% else %}
-          <li class="nav-item">
-            <a class="nav-link text-white fw-semibold px-3" href="{% url 'login' %}">Login</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link text-white fw-semibold px-3" href="{% url 'register' %}">Register</a>
-          </li>
-        {% endif %}
-        <li class="nav-item">
-          <a class="nav-link text-white fw-semibold px-3" href="{% url 'carts:cart' %}">Cart 🛒</a>
-        </li>
-      </ul>
+            <!-- MOBILE TOGGLE -->
+            <button class="ak-toggle"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#akNavbar"
+                    aria-controls="akNavbar"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+
+                <span></span>
+                <span></span>
+                <span></span>
+
+            </button>
+
+
+            <!-- NAV CONTENT -->
+            <div class="collapse navbar-collapse" id="akNavbar">
+
+                <!-- LEFT NAV -->
+                <ul class="navbar-nav ak-left-nav">
+
+                    <li class="nav-item">
+                        <a class="ak-link active"
+                           href="{% url 'home' %}">
+                            <span>⌂</span>
+                            Home
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="ak-link"
+                           href="{% url 'store:store' %}">
+                            <span>🛍</span>
+                            Store
+                        </a>
+                    </li>
+
+                </ul>
+
+
+                <!-- SEARCH -->
+                <form class="ak-search"
+                      method="get"
+                      action="{% url 'store:search' %}">
+
+                    <span class="search-icon">⌕</span>
+
+                    <input
+                        type="search"
+                        name="keyword"
+                        placeholder="Search products, brands..."
+                        value="{{ query|default:'' }}"
+                        autocomplete="off">
+
+                    <button type="submit">
+                        Search
+                    </button>
+
+                </form>
+
+
+                <!-- RIGHT NAV -->
+                <ul class="navbar-nav ak-right-nav">
+
+                    {% if user.is_authenticated %}
+
+                        <!-- DASHBOARD -->
+                        <li class="nav-item">
+                            <a class="ak-link"
+                               href="{% url 'dashboard' %}">
+                                <span>👤</span>
+                                Dashboard
+                            </a>
+                        </li>
+
+                        <!-- LOGOUT -->
+                        <li class="nav-item">
+                            <a class="ak-link"
+                               href="{% url 'logout' %}">
+                                Logout
+                            </a>
+                        </li>
+
+                    {% else %}
+
+                        <!-- LOGIN -->
+                        <li class="nav-item">
+                            <a class="ak-link"
+                               href="{% url 'login' %}">
+                                Login
+                            </a>
+                        </li>
+
+                        <!-- REGISTER -->
+                        <li class="nav-item">
+                            <a class="ak-register"
+                               href="{% url 'register' %}">
+                                Register
+                            </a>
+                        </li>
+
+                    {% endif %}
+
+
+                    <!-- CART -->
+                    <li class="nav-item">
+
+                        <a class="ak-cart"
+                           href="{% url 'carts:cart' %}">
+
+                            <span class="cart-icon">🛒</span>
+
+                            <span>Cart</span>
+
+                            {% if cart_items %}
+                                <span class="cart-badge">
+                                    {{ cart_items|length }}
+                                </span>
+                            {% endif %}
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
 
     </div>
-  </div>
+
 </nav>
 
-<!-- Custom CSS for better alignment -->
+
+<!-- =========================
+     NAVBAR CSS
+========================= -->
+
 <style>
-  /* Responsive search bar on mobile */
-  @media (max-width: 992px) {
-    .navbar .d-flex {
-      width: 100%;
-      margin: 10px 0;
+
+    /* =================================
+       MAIN NAVBAR
+    ================================= */
+
+    .ak-navbar {
+        height: 76px;
+        width: 100%;
+        background:
+            linear-gradient(
+                135deg,
+                #111827 0%,
+                #1f2937 50%,
+                #232f3e 100%
+            );
+
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+
+        box-shadow:
+            0 8px 30px rgba(0,0,0,0.15);
+
+        position: sticky;
+        top: 0;
+        z-index: 9999;
+
+        display: flex;
+        align-items: center;
     }
-  }
 
-  /* Navbar link spacing + style */
-  .navbar-nav .nav-link {
-    font-size: 0.95rem;
-    transition: all 0.3s ease;
-  }
 
-  .navbar-nav .nav-link:hover {
-    text-decoration: underline;
-  }
-
-  /* Brand font adjust for small screens */
-  @media (max-width: 576px) {
-    .navbar-brand {
-      font-size: 1.3rem;
+    .ak-nav-inner {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        min-height: 76px;
     }
-  }
+
+
+    /* =================================
+       BRAND
+    ================================= */
+
+    .ak-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        text-decoration: none;
+
+        color: #ffffff;
+
+        font-size: 23px;
+        font-weight: 800;
+
+        letter-spacing: -0.5px;
+
+        white-space: nowrap;
+
+        transition: 0.3s ease;
+    }
+
+
+    .ak-brand:hover {
+        color: #ffffff;
+        transform: translateY(-1px);
+    }
+
+
+    .ak-brand > span:last-child span {
+        color: #fbbf24;
+    }
+
+
+    .brand-icon {
+        width: 38px;
+        height: 38px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 11px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #f59e0b,
+                #fbbf24
+            );
+
+        color: #111827;
+
+        font-size: 20px;
+        font-weight: 900;
+
+        box-shadow:
+            0 6px 18px rgba(251,191,36,0.25);
+    }
+
+
+    /* =================================
+       LEFT NAV
+    ================================= */
+
+    .ak-left-nav {
+        display: flex;
+        align-items: center;
+
+        margin-left: 28px;
+        gap: 4px;
+    }
+
+
+    .ak-link {
+        position: relative;
+
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+
+        color: #e5e7eb !important;
+
+        text-decoration: none;
+
+        padding: 10px 13px;
+
+        font-size: 14px;
+        font-weight: 600;
+
+        border-radius: 10px;
+
+        transition:
+            color 0.25s ease,
+            background 0.25s ease,
+            transform 0.25s ease;
+    }
+
+
+    .ak-link:hover {
+        color: #ffffff !important;
+
+        background: rgba(255,255,255,0.08);
+
+        transform: translateY(-1px);
+    }
+
+
+    .ak-link.active {
+        color: #fbbf24 !important;
+    }
+
+
+    .ak-link span {
+        font-size: 16px;
+    }
+
+
+    /* =================================
+       SEARCH BAR
+    ================================= */
+
+    .ak-search {
+        flex: 1;
+
+        max-width: 430px;
+
+        height: 45px;
+
+        margin-left: 28px;
+        margin-right: 25px;
+
+        display: flex;
+        align-items: center;
+
+        background: #ffffff;
+
+        border-radius: 13px;
+
+        padding: 4px;
+
+        box-shadow:
+            0 5px 20px rgba(0,0,0,0.12);
+
+        transition: 0.3s ease;
+    }
+
+
+    .ak-search:focus-within {
+        transform: translateY(-1px);
+
+        box-shadow:
+            0 8px 28px rgba(251,191,36,0.18);
+
+        outline: 2px solid rgba(251,191,36,0.35);
+    }
+
+
+    .search-icon {
+        padding-left: 13px;
+
+        font-size: 23px;
+
+        color: #64748b;
+
+        line-height: 1;
+    }
+
+
+    .ak-search input {
+        flex: 1;
+
+        height: 100%;
+
+        border: none;
+        outline: none;
+
+        padding: 0 10px;
+
+        font-size: 14px;
+
+        color: #1e293b;
+
+        background: transparent;
+    }
+
+
+    .ak-search input::placeholder {
+        color: #94a3b8;
+    }
+
+
+    .ak-search button {
+        height: 37px;
+
+        border: none;
+
+        padding: 0 18px;
+
+        border-radius: 10px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #f59e0b,
+                #fbbf24
+            );
+
+        color: #111827;
+
+        font-size: 13px;
+        font-weight: 800;
+
+        cursor: pointer;
+
+        transition: 0.25s ease;
+    }
+
+
+    .ak-search button:hover {
+        transform: scale(1.03);
+
+        background:
+            linear-gradient(
+                135deg,
+                #fbbf24,
+                #f59e0b
+            );
+    }
+
+
+    /* =================================
+       RIGHT NAV
+    ================================= */
+
+    .ak-right-nav {
+        display: flex;
+        align-items: center;
+
+        gap: 3px;
+
+        margin-left: auto;
+    }
+
+
+    /* =================================
+       REGISTER
+    ================================= */
+
+    .ak-register {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        text-decoration: none;
+
+        padding: 9px 15px;
+
+        margin: 0 5px;
+
+        border-radius: 10px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #f59e0b,
+                #fbbf24
+            );
+
+        color: #111827 !important;
+
+        font-size: 14px;
+        font-weight: 800;
+
+        transition: 0.3s ease;
+
+        box-shadow:
+            0 5px 15px rgba(251,191,36,0.18);
+    }
+
+
+    .ak-register:hover {
+        transform: translateY(-2px);
+
+        box-shadow:
+            0 8px 22px rgba(251,191,36,0.28);
+    }
+
+
+    /* =================================
+       CART
+    ================================= */
+
+    .ak-cart {
+        position: relative;
+
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+
+        margin-left: 7px;
+
+        padding: 10px 14px;
+
+        color: #ffffff !important;
+
+        text-decoration: none;
+
+        font-size: 14px;
+        font-weight: 700;
+
+        border: 1px solid rgba(255,255,255,0.12);
+
+        border-radius: 11px;
+
+        background: rgba(255,255,255,0.06);
+
+        transition: 0.3s ease;
+    }
+
+
+    .ak-cart:hover {
+        background: rgba(255,255,255,0.12);
+
+        color: #fbbf24 !important;
+
+        transform: translateY(-2px);
+    }
+
+
+    .cart-icon {
+        font-size: 18px;
+    }
+
+
+    .cart-badge {
+        position: absolute;
+
+        top: -7px;
+        right: -7px;
+
+        min-width: 20px;
+        height: 20px;
+
+        padding: 0 5px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 50px;
+
+        background: #ef4444;
+
+        color: white;
+
+        border: 2px solid #1f2937;
+
+        font-size: 10px;
+        font-weight: 800;
+    }
+
+
+    /* =================================
+       MOBILE TOGGLE
+    ================================= */
+
+    .ak-toggle {
+        display: none;
+
+        margin-left: auto;
+
+        width: 44px;
+        height: 42px;
+
+        border: 1px solid rgba(255,255,255,0.15);
+
+        border-radius: 10px;
+
+        background: rgba(255,255,255,0.07);
+
+        padding: 9px;
+
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+
+    .ak-toggle span {
+        display: block;
+
+        width: 100%;
+        height: 2px;
+
+        background: #ffffff;
+
+        border-radius: 10px;
+    }
+
+
+    /* =================================
+       TABLET
+    ================================= */
+
+    @media (max-width: 1200px) {
+
+        .ak-left-nav {
+            margin-left: 15px;
+        }
+
+        .ak-search {
+            margin-left: 15px;
+            margin-right: 10px;
+        }
+
+        .ak-link {
+            padding: 9px 9px;
+        }
+
+        .ak-brand {
+            font-size: 20px;
+        }
+
+    }
+
+
+    /* =================================
+       MOBILE
+    ================================= */
+
+    @media (max-width: 991px) {
+
+        .ak-navbar {
+            height: auto;
+            min-height: 70px;
+        }
+
+
+        .ak-nav-inner {
+            min-height: 70px;
+
+            flex-wrap: wrap;
+        }
+
+
+        .ak-toggle {
+            display: flex;
+        }
+
+
+        .navbar-collapse {
+            width: 100%;
+
+            padding: 15px 0 20px;
+        }
+
+
+        .ak-left-nav,
+        .ak-right-nav {
+            margin: 0;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: stretch;
+
+            width: 100%;
+
+            gap: 4px;
+        }
+
+
+        .ak-link,
+        .ak-register,
+        .ak-cart {
+            width: 100%;
+
+            margin: 0;
+
+            justify-content: flex-start;
+
+            padding: 13px 15px;
+        }
+
+
+        .ak-register {
+            margin-top: 4px;
+        }
+
+
+        .ak-cart {
+            margin-top: 5px;
+        }
+
+
+        .ak-search {
+            order: -1;
+
+            width: 100%;
+            max-width: none;
+
+            margin: 5px 0 15px;
+
+            height: 46px;
+        }
+
+    }
+
+
+    /* =================================
+       SMALL MOBILE
+    ================================= */
+
+    @media (max-width: 576px) {
+
+        .ak-navbar {
+            padding: 0 8px;
+        }
+
+
+        .ak-brand {
+            font-size: 19px;
+        }
+
+
+        .brand-icon {
+            width: 34px;
+            height: 34px;
+
+            font-size: 18px;
+        }
+
+
+        .ak-search button {
+            padding: 0 14px;
+        }
+
+
+        .ak-search input {
+            font-size: 13px;
+        }
+
+    }
+
 </style>

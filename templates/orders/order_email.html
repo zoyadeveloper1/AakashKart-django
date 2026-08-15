@@ -1,15 +1,304 @@
-Hello {{ user.first_name }},
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-🎉 Your order has been placed successfully!
+    <title>Order Confirmation - AakashKart</title>
+</head>
 
-Order Number: {{ order.order_number }}
-Total Amount: ₹{{ order.total }}
+<body style="
+    margin:0;
+    padding:0;
+    background:#f4f6fb;
+    font-family:Arial, Helvetica, sans-serif;
+    color:#1f2937;
+">
 
-Shipping Address:
-{{ order.address_line_1 }},
-{{ order.city }},
-{{ order.state }},
-{{ order.country }}
+<table width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="background:#f4f6fb; padding:40px 15px;">
 
-Thanks for shopping with us 💖  
-– Team Shop
+    <tr>
+        <td align="center">
+
+            <!-- MAIN CARD -->
+            <table width="600" cellpadding="0" cellspacing="0" border="0"
+                   style="
+                   max-width:600px;
+                   width:100%;
+                   background:#ffffff;
+                   border-radius:20px;
+                   overflow:hidden;
+                   box-shadow:0 10px 35px rgba(0,0,0,0.08);
+                   ">
+
+                <!-- HEADER -->
+                <tr>
+                    <td align="center"
+                        style="
+                        padding:35px 25px;
+                        background:linear-gradient(135deg,#6366f1,#8b5cf6);
+                        color:#ffffff;
+                        ">
+
+                        <div style="
+                            font-size:28px;
+                            font-weight:800;
+                            letter-spacing:-0.5px;
+                        ">
+                            🛍️ AakashKart
+                        </div>
+
+                        <div style="
+                            margin-top:8px;
+                            font-size:14px;
+                            opacity:.9;
+                        ">
+                            Your trusted online shopping destination
+                        </div>
+
+                    </td>
+                </tr>
+
+
+                <!-- SUCCESS -->
+                <tr>
+                    <td align="center" style="padding:40px 30px 20px;">
+
+                        <div style="
+                            width:70px;
+                            height:70px;
+                            line-height:70px;
+                            border-radius:50%;
+                            background:#dcfce7;
+                            color:#16a34a;
+                            font-size:35px;
+                            font-weight:bold;
+                            margin:auto;
+                        ">
+                            ✓
+                        </div>
+
+                        <h1 style="
+                            margin:20px 0 8px;
+                            font-size:27px;
+                            color:#111827;
+                        ">
+                            Order Confirmed! 🎉
+                        </h1>
+
+                        <p style="
+                            margin:0;
+                            color:#6b7280;
+                            font-size:15px;
+                            line-height:1.7;
+                        ">
+                            Hello <strong>{{ user.first_name }}</strong>,
+                            your order has been successfully placed.
+                        </p>
+
+                    </td>
+                </tr>
+
+
+                <!-- ORDER SUMMARY -->
+                <tr>
+                    <td style="padding:10px 30px 25px;">
+
+                        <table width="100%" cellpadding="0" cellspacing="0"
+                               style="
+                               background:#f8fafc;
+                               border:1px solid #e5e7eb;
+                               border-radius:14px;
+                               ">
+
+                            <tr>
+                                <td style="padding:18px 20px;">
+
+                                    <div style="
+                                        color:#6b7280;
+                                        font-size:12px;
+                                        text-transform:uppercase;
+                                        letter-spacing:1px;
+                                    ">
+                                        Order Number
+                                    </div>
+
+                                    <div style="
+                                        margin-top:5px;
+                                        font-size:18px;
+                                        font-weight:700;
+                                        color:#111827;
+                                    ">
+                                        #{{ order.order_number }}
+                                    </div>
+
+                                </td>
+
+
+                                <td align="right"
+                                    style="padding:18px 20px;">
+
+                                    <div style="
+                                        color:#6b7280;
+                                        font-size:12px;
+                                        text-transform:uppercase;
+                                        letter-spacing:1px;
+                                    ">
+                                        Total Amount
+                                    </div>
+
+                                    <div style="
+                                        margin-top:5px;
+                                        font-size:20px;
+                                        font-weight:800;
+                                        color:#16a34a;
+                                    ">
+                                        ₹{{ order.total }}
+                                    </div>
+
+                                </td>
+                            </tr>
+
+                        </table>
+
+                    </td>
+                </tr>
+
+
+                <!-- SHIPPING ADDRESS -->
+                <tr>
+                    <td style="padding:0 30px 25px;">
+
+                        <h3 style="
+                            margin:0 0 15px;
+                            font-size:18px;
+                            color:#111827;
+                        ">
+                            📦 Shipping Address
+                        </h3>
+
+                        <table width="100%" cellpadding="0" cellspacing="0"
+                               style="
+                               border-left:4px solid #6366f1;
+                               background:#fafafa;
+                               ">
+
+                            <tr>
+                                <td style="
+                                    padding:16px 18px;
+                                    color:#4b5563;
+                                    font-size:14px;
+                                    line-height:1.8;
+                                ">
+
+                                    <strong style="color:#111827;">
+                                        {{ user.first_name }}
+                                    </strong>
+                                    <br>
+
+                                    {{ order.address_line_1 }}
+                                    <br>
+
+                                    {{ order.city }},
+                                    {{ order.state }}
+                                    <br>
+
+                                    {{ order.country }}
+
+                                </td>
+                            </tr>
+
+                        </table>
+
+                    </td>
+                </tr>
+
+
+                <!-- STATUS -->
+                <tr>
+                    <td align="center" style="padding:5px 30px 30px;">
+
+                        <div style="
+                            display:inline-block;
+                            background:#ecfdf5;
+                            color:#15803d;
+                            padding:9px 18px;
+                            border-radius:30px;
+                            font-size:13px;
+                            font-weight:700;
+                        ">
+                            ✓ Order Successfully Placed
+                        </div>
+
+                    </td>
+                </tr>
+
+
+                <!-- MESSAGE -->
+                <tr>
+                    <td align="center"
+                        style="
+                        padding:30px;
+                        background:#f8fafc;
+                        border-top:1px solid #e5e7eb;
+                        ">
+
+                        <h3 style="
+                            margin:0 0 10px;
+                            font-size:18px;
+                            color:#111827;
+                        ">
+                            Thanks for shopping with us! 💖
+                        </h3>
+
+                        <p style="
+                            margin:0;
+                            color:#6b7280;
+                            font-size:14px;
+                            line-height:1.7;
+                        ">
+                            We’re excited to get your order to you.
+                            <br>
+                            Your order is now being processed.
+                        </p>
+
+                    </td>
+                </tr>
+
+
+                <!-- FOOTER -->
+                <tr>
+                    <td align="center"
+                        style="
+                        padding:22px;
+                        background:#111827;
+                        color:#9ca3af;
+                        font-size:12px;
+                        line-height:1.6;
+                        ">
+
+                        <strong style="color:#ffffff;">
+                            AakashKart
+                        </strong>
+
+                        <br>
+
+                        © 2026 AakashKart. All rights reserved.
+
+                        <br>
+
+                        Made with ❤️ by Team AakashKart
+
+                    </td>
+                </tr>
+
+            </table>
+
+        </td>
+    </tr>
+
+</table>
+
+</body>
+</html>

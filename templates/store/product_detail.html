@@ -1,277 +1,3281 @@
 {% load static %}
+
 {% block content %}
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ single_product.product_name }} | AakashKart</title>
 
-  <!-- Bootstrap -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
 
-  <style>
-    body {
-      background-color: #f5f5f5;
-      font-family: 'Segoe UI', sans-serif;
-    }
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    .navbar .nav-link:hover {
-      color: #ffc107 !important;
-      transition: 0.2s;
-    }
+    <meta
+        name="description"
+        content="{{ single_product.product_name }} | AakashKart"
+    >
 
-    .btn-gradient {
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      border: none;
-      color: #fff;
-      transition: 0.3s ease;
-      border-radius: 8px;
-    }
+    <title>
+        {{ single_product.product_name }} | AakashKart
+    </title>
 
-    .btn-gradient:hover {
-      background: linear-gradient(135deg, #764ba2, #667eea);
-      transform: scale(1.05);
-      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-    }
 
-    .product-image-box {
-      background: #fff;
-      border-radius: 12px;
-      padding: 15px;
-      text-align: center;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    }
+    <!-- =====================================================
+         BOOTSTRAP
+    ====================================================== -->
 
-    .img-fluid {
-      max-height: 350px;
-      object-fit: contain;
-    }
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
 
-    .review-card {
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      background-color: #fff;
-    }
-  </style>
+
+    <!-- =====================================================
+         BOOTSTRAP ICONS
+    ====================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+
+    <!-- =====================================================
+         GOOGLE FONT
+    ====================================================== -->
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <!-- =====================================================
+         CUSTOM CSS
+    ====================================================== -->
+
+    <style>
+
+        /* =================================================
+           ROOT
+        ================================================= */
+
+        :root {
+
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+
+            --purple: #8b5cf6;
+            --pink: #ec4899;
+
+            --dark: #0f172a;
+            --dark-2: #1e293b;
+
+            --text: #1e293b;
+            --muted: #64748b;
+
+            --light: #f8fafc;
+            --white: #ffffff;
+
+            --border: #e2e8f0;
+
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+
+            --shadow-sm:
+                0 5px 20px rgba(15, 23, 42, 0.06);
+
+            --shadow-md:
+                0 12px 35px rgba(15, 23, 42, 0.10);
+
+            --shadow-lg:
+                0 25px 60px rgba(15, 23, 42, 0.15);
+        }
+
+
+        /* =================================================
+           RESET
+        ================================================= */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+
+        body {
+
+            font-family:
+                "Poppins",
+                sans-serif;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #f8fafc 0%,
+                    #eef2ff 100%
+                );
+
+            color:
+                var(--text);
+
+            min-height:
+                100vh;
+
+            overflow-x:
+                hidden;
+        }
+
+
+        /* =================================================
+           SCROLLBAR
+        ================================================= */
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+
+        ::-webkit-scrollbar-thumb {
+
+            background:
+                linear-gradient(
+                    var(--primary),
+                    var(--purple)
+                );
+
+            border-radius:
+                50px;
+        }
+
+
+        /* =================================================
+           NAVBAR
+        ================================================= */
+
+        .modern-navbar {
+
+            position:
+                sticky;
+
+            top:
+                0;
+
+            z-index:
+                1050;
+
+            padding:
+                13px 0;
+
+            background:
+                rgba(15, 23, 42, 0.94);
+
+            backdrop-filter:
+                blur(20px);
+
+            -webkit-backdrop-filter:
+                blur(20px);
+
+            border-bottom:
+                1px solid
+                rgba(255,255,255,0.08);
+
+            box-shadow:
+                0 8px 30px
+                rgba(0,0,0,0.15);
+        }
+
+
+        /* =================================================
+           BRAND
+        ================================================= */
+
+        .brand {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                9px;
+
+            color:
+                white;
+
+            text-decoration:
+                none;
+
+            font-size:
+                1.55rem;
+
+            font-weight:
+                800;
+
+            letter-spacing:
+                -0.7px;
+        }
+
+
+        .brand:hover {
+            color: white;
+        }
+
+
+        .brand-icon {
+
+            width:
+                39px;
+
+            height:
+                39px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            border-radius:
+                12px;
+
+            color:
+                white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    var(--purple)
+                );
+
+            box-shadow:
+                0 8px 20px
+                rgba(99,102,241,0.35);
+        }
+
+
+        .brand-name {
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #ffffff,
+                    #c4b5fd
+                );
+
+            -webkit-background-clip:
+                text;
+
+            -webkit-text-fill-color:
+                transparent;
+        }
+
+
+        /* =================================================
+           NAV LINKS
+        ================================================= */
+
+        .modern-navbar .nav-link {
+
+            color:
+                rgba(255,255,255,0.82) !important;
+
+            font-size:
+                12px;
+
+            font-weight:
+                500;
+
+            padding:
+                9px 12px !important;
+
+            border-radius:
+                10px;
+
+            transition:
+                0.3s ease;
+        }
+
+
+        .modern-navbar .nav-link:hover {
+
+            color:
+                white !important;
+
+            background:
+                rgba(255,255,255,0.08);
+
+            transform:
+                translateY(-2px);
+        }
+
+
+        /* =================================================
+           SEARCH
+        ================================================= */
+
+        .search-box {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            width:
+                310px;
+
+            background:
+                white;
+
+            border-radius:
+                50px;
+
+            overflow:
+                hidden;
+
+            box-shadow:
+                0 5px 20px
+                rgba(0,0,0,0.12);
+        }
+
+
+        .search-box input {
+
+            width:
+                100%;
+
+            border:
+                none;
+
+            outline:
+                none;
+
+            padding:
+                10px 17px;
+
+            font-family:
+                "Poppins",
+                sans-serif;
+
+            font-size:
+                11px;
+        }
+
+
+        .search-btn {
+
+            width:
+                42px;
+
+            height:
+                42px;
+
+            margin-right:
+                3px;
+
+            border:
+                none;
+
+            border-radius:
+                50%;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    var(--purple)
+                );
+
+            color:
+                white;
+
+            transition:
+                0.3s ease;
+        }
+
+
+        .search-btn:hover {
+
+            transform:
+                scale(1.08);
+        }
+
+
+        /* =================================================
+           PAGE
+        ================================================= */
+
+        .product-section {
+
+            padding:
+                55px 0 80px;
+        }
+
+
+        /* =================================================
+           BREADCRUMB
+        ================================================= */
+
+        .breadcrumb-box {
+
+            margin-bottom:
+                25px;
+        }
+
+
+        .breadcrumb {
+
+            margin:
+                0;
+
+            font-size:
+                11px;
+        }
+
+
+        .breadcrumb-item a {
+
+            color:
+                var(--primary);
+
+            text-decoration:
+                none;
+
+            font-weight:
+                500;
+        }
+
+
+        .breadcrumb-item.active {
+
+            color:
+                var(--muted);
+        }
+
+
+        /* =================================================
+           PRODUCT IMAGE CARD
+        ================================================= */
+
+        .product-image-card {
+
+            position:
+                relative;
+
+            min-height:
+                500px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            padding:
+                30px;
+
+            background:
+                rgba(255,255,255,0.9);
+
+            border:
+                1px solid
+                rgba(255,255,255,0.9);
+
+            border-radius:
+                25px;
+
+            box-shadow:
+                var(--shadow-md);
+
+            overflow:
+                hidden;
+        }
+
+
+        .product-image-card::before {
+
+            content:
+                "";
+
+            position:
+                absolute;
+
+            width:
+                300px;
+
+            height:
+                300px;
+
+            right:
+                -100px;
+
+            top:
+                -100px;
+
+            border-radius:
+                50%;
+
+            background:
+                rgba(139,92,246,0.10);
+
+            filter:
+                blur(5px);
+        }
+
+
+        .product-image-card::after {
+
+            content:
+                "";
+
+            position:
+                absolute;
+
+            width:
+                250px;
+
+            height:
+                250px;
+
+            left:
+                -100px;
+
+            bottom:
+                -100px;
+
+            border-radius:
+                50%;
+
+            background:
+                rgba(99,102,241,0.08);
+
+            filter:
+                blur(5px);
+        }
+
+
+        .product-image {
+
+            position:
+                relative;
+
+            z-index:
+                2;
+
+            width:
+                100%;
+
+            max-height:
+                450px;
+
+            object-fit:
+                contain;
+
+            transition:
+                transform 0.5s ease;
+        }
+
+
+        .product-image-card:hover
+        .product-image {
+
+            transform:
+                scale(1.05);
+        }
+
+
+        /* =================================================
+           SALE BADGE
+        ================================================= */
+
+        .sale-badge {
+
+            position:
+                absolute;
+
+            top:
+                20px;
+
+            left:
+                20px;
+
+            z-index:
+                10;
+
+            padding:
+                7px 13px;
+
+            border-radius:
+                50px;
+
+            color:
+                white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ef4444,
+                    #f97316
+                );
+
+            font-size:
+                9px;
+
+            font-weight:
+                700;
+
+            letter-spacing:
+                0.7px;
+
+            box-shadow:
+                0 7px 18px
+                rgba(239,68,68,0.25);
+        }
+
+
+        /* =================================================
+           WISHLIST
+        ================================================= */
+
+        .wishlist-btn {
+
+            position:
+                absolute;
+
+            top:
+                18px;
+
+            right:
+                18px;
+
+            z-index:
+                10;
+
+            width:
+                42px;
+
+            height:
+                42px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            border:
+                none;
+
+            border-radius:
+                50%;
+
+            background:
+                white;
+
+            color:
+                #64748b;
+
+            box-shadow:
+                0 7px 20px
+                rgba(0,0,0,0.10);
+
+            transition:
+                0.3s ease;
+        }
+
+
+        .wishlist-btn:hover {
+
+            color:
+                var(--danger);
+
+            transform:
+                scale(1.1);
+        }
+
+
+        .wishlist-btn.active {
+
+            color:
+                var(--danger);
+
+            background:
+                #fff1f2;
+        }
+
+
+        /* =================================================
+           PRODUCT INFO
+        ================================================= */
+
+        .product-info {
+
+            height:
+                100%;
+
+            padding:
+                10px 5px;
+        }
+
+
+        .product-category {
+
+            display:
+                inline-block;
+
+            color:
+                var(--primary);
+
+            font-size:
+                10px;
+
+            font-weight:
+                700;
+
+            text-transform:
+                uppercase;
+
+            letter-spacing:
+                1.2px;
+
+            margin-bottom:
+                10px;
+        }
+
+
+        .product-title {
+
+            font-size:
+                clamp(
+                    1.8rem,
+                    4vw,
+                    2.5rem
+                );
+
+            line-height:
+                1.25;
+
+            font-weight:
+                800;
+
+            color:
+                var(--dark);
+
+            margin-bottom:
+                12px;
+        }
+
+
+        .product-rating {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                8px;
+
+            margin-bottom:
+                18px;
+        }
+
+
+        .stars {
+
+            color:
+                #f59e0b;
+
+            letter-spacing:
+                2px;
+
+            font-size:
+                14px;
+        }
+
+
+        .rating-text {
+
+            color:
+                var(--muted);
+
+            font-size:
+                10px;
+        }
+
+
+        /* =================================================
+           PRICE
+        ================================================= */
+
+        .price-box {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                12px;
+
+            margin-bottom:
+                18px;
+        }
+
+
+        .current-price {
+
+            color:
+                var(--success);
+
+            font-size:
+                30px;
+
+            font-weight:
+                800;
+        }
+
+
+        .old-price {
+
+            color:
+                #94a3b8;
+
+            font-size:
+                15px;
+
+            font-weight:
+                500;
+        }
+
+
+        .discount-badge {
+
+            padding:
+                5px 9px;
+
+            border-radius:
+                7px;
+
+            background:
+                #ecfdf5;
+
+            color:
+                #059669;
+
+            font-size:
+                9px;
+
+            font-weight:
+                700;
+        }
+
+
+        /* =================================================
+           STOCK
+        ================================================= */
+
+        .stock-status {
+
+            display:
+                inline-flex;
+
+            align-items:
+                center;
+
+            gap:
+                6px;
+
+            padding:
+                7px 12px;
+
+            border-radius:
+                50px;
+
+            font-size:
+                10px;
+
+            font-weight:
+                600;
+
+            margin-bottom:
+                18px;
+        }
+
+
+        .stock-status.in-stock {
+
+            color:
+                #047857;
+
+            background:
+                #d1fae5;
+        }
+
+
+        .stock-status.out-stock {
+
+            color:
+                #b91c1c;
+
+            background:
+                #fee2e2;
+        }
+
+
+        /* =================================================
+           DESCRIPTION
+        ================================================= */
+
+        .description {
+
+            color:
+                var(--muted);
+
+            font-size:
+                12px;
+
+            line-height:
+                1.9;
+
+            margin-bottom:
+                25px;
+        }
+
+
+        /* =================================================
+           DIVIDER
+        ================================================= */
+
+        .product-divider {
+
+            height:
+                1px;
+
+            background:
+                var(--border);
+
+            margin:
+                20px 0;
+        }
+
+
+        /* =================================================
+           FORM
+        ================================================= */
+
+        .option-label {
+
+            display:
+                block;
+
+            font-size:
+                11px;
+
+            font-weight:
+                700;
+
+            margin-bottom:
+                8px;
+
+            color:
+                var(--dark);
+        }
+
+
+        .form-select,
+        .quantity-input {
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius:
+                11px;
+
+            padding:
+                10px 12px;
+
+            font-family:
+                "Poppins",
+                sans-serif;
+
+            font-size:
+                11px;
+
+            box-shadow:
+                none;
+        }
+
+
+        .form-select:focus,
+        .quantity-input:focus {
+
+            border-color:
+                var(--primary);
+
+            box-shadow:
+                0 0 0 3px
+                rgba(99,102,241,0.10);
+        }
+
+
+        /* =================================================
+           BUTTONS
+        ================================================= */
+
+        .cart-btn {
+
+            width:
+                100%;
+
+            padding:
+                13px 20px;
+
+            border:
+                none;
+
+            border-radius:
+                12px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    var(--purple)
+                );
+
+            color:
+                white;
+
+            font-size:
+                11px;
+
+            font-weight:
+                700;
+
+            transition:
+                0.3s ease;
+
+            box-shadow:
+                0 10px 25px
+                rgba(99,102,241,0.20);
+        }
+
+
+        .cart-btn:hover {
+
+            color:
+                white;
+
+            transform:
+                translateY(-3px);
+
+            box-shadow:
+                0 15px 30px
+                rgba(99,102,241,0.30);
+        }
+
+
+        .buy-btn {
+
+            width:
+                100%;
+
+            padding:
+                13px 20px;
+
+            border:
+                1px solid
+                var(--dark);
+
+            border-radius:
+                12px;
+
+            background:
+                var(--dark);
+
+            color:
+                white;
+
+            font-size:
+                11px;
+
+            font-weight:
+                700;
+
+            transition:
+                0.3s ease;
+        }
+
+
+        .buy-btn:hover {
+
+            color:
+                white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0f172a,
+                    #334155
+                );
+
+            transform:
+                translateY(-3px);
+        }
+
+
+        .view-cart-btn {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            width:
+                100%;
+
+            padding:
+                12px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius:
+                12px;
+
+            color:
+                var(--text);
+
+            background:
+                white;
+
+            text-decoration:
+                none;
+
+            font-size:
+                11px;
+
+            font-weight:
+                600;
+
+            transition:
+                0.3s ease;
+        }
+
+
+        .view-cart-btn:hover {
+
+            color:
+                var(--primary);
+
+            border-color:
+                var(--primary);
+
+            transform:
+                translateY(-2px);
+        }
+
+
+        /* =================================================
+           FEATURES
+        ================================================= */
+
+        .feature-box {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                10px;
+
+            padding:
+                13px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius:
+                12px;
+
+            background:
+                rgba(255,255,255,0.7);
+        }
+
+
+        .feature-icon {
+
+            width:
+                35px;
+
+            height:
+                35px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            border-radius:
+                10px;
+
+            color:
+                var(--primary);
+
+            background:
+                #eef2ff;
+
+            font-size:
+                15px;
+        }
+
+
+        .feature-title {
+
+            font-size:
+                10px;
+
+            font-weight:
+                700;
+
+            margin-bottom:
+                2px;
+        }
+
+
+        .feature-text {
+
+            font-size:
+                8px;
+
+            color:
+                var(--muted);
+        }
+
+
+        /* =================================================
+           REVIEWS
+        ================================================= */
+
+        .reviews-section {
+
+            margin-top:
+                70px;
+        }
+
+
+        .section-title {
+
+            font-size:
+                22px;
+
+            font-weight:
+                800;
+
+            color:
+                var(--dark);
+
+            margin-bottom:
+                25px;
+        }
+
+
+        .review-card {
+
+            padding:
+                20px;
+
+            margin-bottom:
+                15px;
+
+            background:
+                rgba(255,255,255,0.9);
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius:
+                17px;
+
+            box-shadow:
+                var(--shadow-sm);
+
+            transition:
+                0.3s ease;
+        }
+
+
+        .review-card:hover {
+
+            transform:
+                translateY(-3px);
+
+            box-shadow:
+                var(--shadow-md);
+        }
+
+
+        .review-user {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                space-between;
+
+            gap:
+                10px;
+
+            margin-bottom:
+                10px;
+        }
+
+
+        .review-user-name {
+
+            font-size:
+                12px;
+
+            font-weight:
+                700;
+        }
+
+
+        .review-date {
+
+            color:
+                #94a3b8;
+
+            font-size:
+                9px;
+        }
+
+
+        .review-stars {
+
+            color:
+                #f59e0b;
+
+            font-size:
+                13px;
+
+            margin-bottom:
+                8px;
+        }
+
+
+        .review-subject {
+
+            font-size:
+                12px;
+
+            font-weight:
+                700;
+
+            margin-bottom:
+                5px;
+        }
+
+
+        .review-text {
+
+            color:
+                var(--muted);
+
+            font-size:
+                11px;
+
+            line-height:
+                1.7;
+
+            margin:
+                0;
+        }
+
+
+        /* =================================================
+           REVIEW FORM
+        ================================================= */
+
+        .review-form-card {
+
+            padding:
+                25px;
+
+            background:
+                white;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius:
+                20px;
+
+            box-shadow:
+                var(--shadow-sm);
+        }
+
+
+        .review-form-title {
+
+            font-size:
+                16px;
+
+            font-weight:
+                700;
+
+            margin-bottom:
+                20px;
+        }
+
+
+        .submit-review {
+
+            padding:
+                11px 20px;
+
+            border:
+                none;
+
+            border-radius:
+                10px;
+
+            color:
+                white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    var(--purple)
+                );
+
+            font-size:
+                10px;
+
+            font-weight:
+                600;
+        }
+
+
+        /* =================================================
+           FOOTER
+        ================================================= */
+
+        .modern-footer {
+
+            margin-top:
+                30px;
+
+            padding:
+                50px 0 20px;
+
+            color:
+                white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0f172a,
+                    #1e293b
+                );
+        }
+
+
+        .footer-brand {
+
+            font-size:
+                20px;
+
+            font-weight:
+                800;
+
+            margin-bottom:
+                10px;
+        }
+
+
+        .footer-text {
+
+            max-width:
+                420px;
+
+            color:
+                #94a3b8;
+
+            font-size:
+                10px;
+
+            line-height:
+                1.8;
+        }
+
+
+        .footer-title {
+
+            font-size:
+                11px;
+
+            font-weight:
+                700;
+
+            margin-bottom:
+                14px;
+        }
+
+
+        .footer-links {
+
+            list-style:
+                none;
+
+            padding:
+                0;
+        }
+
+
+        .footer-links li {
+
+            margin-bottom:
+                8px;
+        }
+
+
+        .footer-links a {
+
+            color:
+                #94a3b8;
+
+            text-decoration:
+                none;
+
+            font-size:
+                9px;
+
+            transition:
+                0.3s ease;
+        }
+
+
+        .footer-links a:hover {
+
+            color:
+                #a78bfa;
+
+            padding-left:
+                4px;
+        }
+
+
+        .social-icons {
+
+            display:
+                flex;
+
+            gap:
+                8px;
+
+            margin-top:
+                15px;
+        }
+
+
+        .social-icons a {
+
+            width:
+                34px;
+
+            height:
+                34px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            border:
+                1px solid
+                rgba(255,255,255,0.1);
+
+            border-radius:
+                50%;
+
+            color:
+                white;
+
+            text-decoration:
+                none;
+
+            background:
+                rgba(255,255,255,0.05);
+
+            transition:
+                0.3s ease;
+        }
+
+
+        .social-icons a:hover {
+
+            background:
+                var(--primary);
+
+            transform:
+                translateY(-4px);
+        }
+
+
+        .footer-bottom {
+
+            margin-top:
+                35px;
+
+            padding-top:
+                18px;
+
+            border-top:
+                1px solid
+                rgba(255,255,255,0.08);
+
+            text-align:
+                center;
+
+            color:
+                #64748b;
+
+            font-size:
+                9px;
+        }
+
+
+        /* =================================================
+           RESPONSIVE
+        ================================================= */
+
+        @media (max-width: 992px) {
+
+            .search-box {
+
+                width:
+                    100%;
+
+                max-width:
+                    500px;
+
+                margin:
+                    12px 0;
+            }
+
+
+            .product-image-card {
+
+                min-height:
+                    420px;
+            }
+        }
+
+
+        @media (max-width: 768px) {
+
+            .product-section {
+
+                padding:
+                    35px 0 60px;
+            }
+
+
+            .product-image-card {
+
+                min-height:
+                    350px;
+
+                padding:
+                    20px;
+            }
+
+
+            .product-title {
+
+                font-size:
+                    1.7rem;
+            }
+
+
+            .current-price {
+
+                font-size:
+                    25px;
+            }
+
+
+            .product-info {
+
+                padding:
+                    10px 0;
+            }
+        }
+
+
+        @media (max-width: 576px) {
+
+            .brand {
+
+                font-size:
+                    1.25rem;
+            }
+
+
+            .brand-icon {
+
+                width:
+                    34px;
+
+                height:
+                    34px;
+            }
+
+
+            .product-image-card {
+
+                min-height:
+                    300px;
+
+                border-radius:
+                    20px;
+            }
+
+
+            .product-image {
+
+                max-height:
+                    270px;
+            }
+
+
+            .price-box {
+
+                flex-wrap:
+                    wrap;
+            }
+
+
+            .feature-box {
+
+                margin-bottom:
+                    8px;
+            }
+        }
+
+    </style>
+
 </head>
+
 
 <body>
 
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3 shadow-sm">
-  <div class="container">
-    <a class="navbar-brand fw-bold" href="{% url 'home' %}">AakashKart</a>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-      data-bs-target="#navbarNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+<!-- =====================================================
+     NAVBAR
+====================================================== -->
 
-    <div class="collapse navbar-collapse" id="navbarNav">
+<nav class="navbar navbar-expand-lg modern-navbar">
 
-      <ul class="navbar-nav me-auto">
-        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="{% url 'store:store' %}">Store</a></li>
-      </ul>
+    <div class="container">
 
-      <!-- Search -->
-      <form class="d-flex mx-auto" method="get" action="{% url 'store:store' %}">
-        <input type="search" name="q" class="form-control me-2"
-          placeholder="Search products..."
-          value="{{ query|default:'' }}">
-        <button class="btn btn-warning fw-bold">🔍</button>
-      </form>
 
-      <ul class="navbar-nav ms-3">
-        {% if user.is_authenticated %}
-          <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
-        {% else %}
-          <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
-        {% endif %}
-        <li class="nav-item"><a class="nav-link" href="{% url 'carts:cart' %}">Cart 🛒</a></li>
-      </ul>
+        <!-- Brand -->
+
+        <a
+            href="{% url 'home' %}"
+            class="brand"
+        >
+
+            <span class="brand-icon">
+
+                <i class="bi bi-bag-heart-fill"></i>
+
+            </span>
+
+            <span class="brand-name">
+
+                AakashKart
+
+            </span>
+
+        </a>
+
+
+        <!-- Mobile Button -->
+
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#mainNavbar"
+            aria-controls="mainNavbar"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+        >
+
+            <span class="navbar-toggler-icon"></span>
+
+        </button>
+
+
+        <div
+            class="collapse navbar-collapse"
+            id="mainNavbar"
+        >
+
+
+            <!-- Left Navigation -->
+
+            <ul class="navbar-nav me-auto ms-lg-4">
+
+
+                <li class="nav-item">
+
+                    <a
+                        class="nav-link"
+                        href="{% url 'home' %}"
+                    >
+
+                        <i class="bi bi-house me-1"></i>
+
+                        Home
+
+                    </a>
+
+                </li>
+
+
+                <li class="nav-item">
+
+                    <a
+                        class="nav-link"
+                        href="{% url 'store:store' %}"
+                    >
+
+                        <i class="bi bi-grid me-1"></i>
+
+                        Store
+
+                    </a>
+
+                </li>
+
+
+                <li class="nav-item">
+
+                    <a
+                        class="nav-link"
+                        href="{% url 'carts:cart' %}"
+                    >
+
+                        <i class="bi bi-bag me-1"></i>
+
+                        Cart
+
+                    </a>
+
+                </li>
+
+
+            </ul>
+
+
+            <!-- Search -->
+
+            <form
+                class="search-box mx-lg-auto"
+                method="get"
+                action="{% url 'store:search' %}"
+            >
+
+                <input
+                    type="search"
+                    name="q"
+                    placeholder="Search products..."
+                    value="{{ request.GET.q|default:'' }}"
+                    autocomplete="off"
+                >
+
+                <button
+                    type="submit"
+                    class="search-btn"
+                >
+
+                    <i class="bi bi-search"></i>
+
+                </button>
+
+            </form>
+
+
+            <!-- Right Navigation -->
+
+            <ul class="navbar-nav ms-lg-3">
+
+
+                {% if user.is_authenticated %}
+
+                <li class="nav-item">
+
+                    <a
+                        class="nav-link"
+                        href="{% url 'dashboard' %}"
+                    >
+
+                        <i class="bi bi-person-circle me-1"></i>
+
+                        Dashboard
+
+                    </a>
+
+                </li>
+
+
+                <li class="nav-item">
+
+                    <a
+                        class="nav-link"
+                        href="{% url 'logout' %}"
+                    >
+
+                        <i class="bi bi-box-arrow-right me-1"></i>
+
+                        Logout
+
+                    </a>
+
+                </li>
+
+
+                {% else %}
+
+                <li class="nav-item">
+
+                    <a
+                        class="nav-link"
+                        href="{% url 'login' %}"
+                    >
+
+                        Login
+
+                    </a>
+
+                </li>
+
+
+                <li class="nav-item">
+
+                    <a
+                        class="nav-link"
+                        href="{% url 'register' %}"
+                    >
+
+                        Register
+
+                    </a>
+
+                </li>
+
+                {% endif %}
+
+
+            </ul>
+
+        </div>
 
     </div>
-  </div>
+
 </nav>
 
 
-<!-- Product Section -->
-<div class="container my-5">
-  <div class="row g-4">
 
-    <!-- Image -->
-    <div class="col-md-6">
-      <div class="product-image-box">
-        {% if single_product.image %}
-          <img src="{{ single_product.image.url }}" class="img-fluid rounded">
-        {% else %}
-          <img src="{% static 'images/default-product.jpg' %}" class="img-fluid rounded">
-        {% endif %}
-      </div>
-    </div>
+<!-- =====================================================
+     PRODUCT SECTION
+====================================================== -->
 
-    <!-- Info -->
-    <div class="col-md-6">
-      <h2 class="fw-bold">{{ single_product.product_name }}</h2>
+<section class="product-section">
 
-      {% if single_product.is_available %}
-        <span class="badge bg-success">✔ In Stock</span>
-      {% else %}
-        <span class="badge bg-danger">❌ Out of Stock</span>
-      {% endif %}
+    <div class="container">
 
-      <h3 class="fw-bold text-primary mt-3">₹{{ single_product.price }}</h3>
 
-      {% if single_product.old_price %}
-        <p class="text-danger"><del>₹{{ single_product.old_price }}</del></p>
-      {% endif %}
+        <!-- Breadcrumb -->
 
-      <p class="text-secondary">
-        {{ single_product.description|default:"No description available." }}
-      </p>
+        <div class="breadcrumb-box">
 
-      <!-- Add to Cart -->
-      <form method="post" action="{% url 'carts:add_cart' single_product.id %}">
-        {% csrf_token %}
+            <nav aria-label="breadcrumb">
 
-        <div class="row g-3 mb-3">
+                <ol class="breadcrumb">
 
-          <div class="col-md-4">
-            <label class="form-label fw-bold">Color</label>
-            <select name="color" class="form-select" required>
-              <option value="" disabled selected>Choose Color</option>
-              {% for var in single_product.variation_set.all %}
-                {% if var.variation_category == "color" %}
-                  <option value="{{ var.variation_value }}">{{ var.variation_value }}</option>
-                {% endif %}
-              {% endfor %}
-            </select>
-          </div>
+                    <li class="breadcrumb-item">
 
-          <div class="col-md-4">
-            <label class="form-label fw-bold">Size</label>
-            <select name="size" class="form-select" required>
-              <option value="" disabled selected>Choose Size</option>
-              {% for var in single_product.variation_set.all %}
-                {% if var.variation_category == "size" %}
-                  <option value="{{ var.variation_value }}">{{ var.variation_value }}</option>
-                {% endif %}
-              {% endfor %}
-            </select>
-          </div>
+                        <a href="{% url 'home' %}">
+                            Home
+                        </a>
 
-          <div class="col-md-4">
-            <label class="form-label fw-bold">Quantity</label>
-            <input type="number" name="quantity"
-              class="form-control text-center" value="1" min="1">
-          </div>
+                    </li>
+
+                    <li class="breadcrumb-item">
+
+                        <a href="{% url 'store:store' %}">
+                            Store
+                        </a>
+
+                    </li>
+
+                    <li
+                        class="breadcrumb-item active"
+                        aria-current="page"
+                    >
+
+                        {{ single_product.product_name }}
+
+                    </li>
+
+                </ol>
+
+            </nav>
 
         </div>
 
-        {% if single_product.stock > 0 %}
-          <button type="submit" class="btn btn-gradient btn-lg w-50">
-            Add to Cart 🛒
-          </button>
-        {% else %}
-          <h5 class="text-danger">OUT OF STOCK</h5>
-        {% endif %}
-      </form>
-
-      <a href="{% url 'carts:cart' %}" class="btn btn-outline-primary btn-lg w-50 mt-2">
-        View Cart 🛒
-      </a>
-    </div>
-
-  </div>
 
 
-  <!-- Reviews Section -->
-  <div class="mt-5">
-    <h3 class="fw-bold mb-4">Customer Reviews 💬</h3>
+        <!-- Product -->
 
-    {% if reviews %}
-      {% for review in reviews %}
-        <div class="review-card p-3 mb-3">
+        <div class="row g-5">
 
-          <h6 class="fw-bold text-primary">
-            {{ review.user.username }}
-            <small class="text-muted ms-2">
-              {{ review.created_at|date:"M d, Y" }}
-            </small>
-          </h6>
 
-          <p>
-            {% for i in "12345" %}
-              {% if forloop.counter <= review.rating %}
-                <span class="text-warning">&#9733;</span>
-              {% else %}
-                <span class="text-secondary">&#9733;</span>
-              {% endif %}
-            {% endfor %}
-          </p>
+            <!-- =================================================
+                 IMAGE
+            ================================================== -->
 
-          <h6 class="fw-bold">{{ review.subject }}</h6>
-          <p>{{ review.review }}</p>
+            <div class="col-lg-6">
+
+
+                <div class="product-image-card">
+
+
+                    <!-- Sale -->
+
+                    <span class="sale-badge">
+
+                        <i class="bi bi-lightning-fill"></i>
+
+                        SALE
+
+                    </span>
+
+
+                    <!-- Wishlist -->
+
+                    <button
+                        type="button"
+                        class="wishlist-btn"
+                        id="wishlistButton"
+                        aria-label="Add to wishlist"
+                    >
+
+                        <i class="bi bi-heart"></i>
+
+                    </button>
+
+
+                    <!-- Image -->
+
+                    {% if single_product.image %}
+
+                        <img
+                            src="{{ single_product.image.url }}"
+                            alt="{{ single_product.product_name }}"
+                            class="product-image"
+                        >
+
+                    {% else %}
+
+                        <img
+                            src="{% static 'images/default-product.jpg' %}"
+                            alt="Default Product"
+                            class="product-image"
+                        >
+
+                    {% endif %}
+
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 PRODUCT INFO
+            ================================================== -->
+
+            <div class="col-lg-6">
+
+
+                <div class="product-info">
+
+
+                    <div class="product-category">
+
+                        Premium Collection
+
+                    </div>
+
+
+                    <h1 class="product-title">
+
+                        {{ single_product.product_name }}
+
+                    </h1>
+
+
+                    <!-- Rating -->
+
+                    <div class="product-rating">
+
+                        <span class="stars">
+
+                            ★★★★★
+
+                        </span>
+
+                        <span class="rating-text">
+
+                            Customer Reviews
+
+                        </span>
+
+                    </div>
+
+
+                    <!-- Price -->
+
+                    <div class="price-box">
+
+
+                        <span class="current-price">
+
+                            ₹{{ single_product.price }}
+
+                        </span>
+
+
+                        {% if single_product.old_price %}
+
+                        <span class="old-price">
+
+                            <del>
+                                ₹{{ single_product.old_price }}
+                            </del>
+
+                        </span>
+
+                        <span class="discount-badge">
+
+                            SPECIAL DEAL
+
+                        </span>
+
+                        {% endif %}
+
+
+                    </div>
+
+
+                    <!-- Stock -->
+
+                    {% if single_product.is_available and single_product.stock > 0 %}
+
+                        <div class="stock-status in-stock">
+
+                            <i class="bi bi-check-circle-fill"></i>
+
+                            In Stock
+
+                        </div>
+
+                    {% else %}
+
+                        <div class="stock-status out-stock">
+
+                            <i class="bi bi-x-circle-fill"></i>
+
+                            Out of Stock
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <!-- Description -->
+
+                    <p class="description">
+
+                        {{ single_product.description|default:"No description available for this product." }}
+
+                    </p>
+
+
+                    <div class="product-divider"></div>
+
+
+
+                    <!-- =================================================
+                         ADD TO CART FORM
+                    ================================================== -->
+
+                    {% if single_product.is_available and single_product.stock > 0 %}
+
+
+                    <form
+                        method="post"
+                        action="{% url 'carts:add_cart' single_product.id %}"
+                    >
+
+                        {% csrf_token %}
+
+
+                        <div class="row g-3">
+
+
+                            <!-- Color -->
+
+                            <div class="col-md-4">
+
+                                <label
+                                    class="option-label"
+                                    for="color"
+                                >
+
+                                    Color
+
+                                </label>
+
+
+                                <select
+                                    name="color"
+                                    id="color"
+                                    class="form-select"
+                                    required
+                                >
+
+                                    <option
+                                        value=""
+                                        selected
+                                        disabled
+                                    >
+
+                                        Choose Color
+
+                                    </option>
+
+
+                                    {% for var in single_product.variation_set.all %}
+
+                                        {% if var.variation_category == "color" %}
+
+                                            <option
+                                                value="{{ var.variation_value }}"
+                                            >
+
+                                                {{ var.variation_value }}
+
+                                            </option>
+
+                                        {% endif %}
+
+                                    {% endfor %}
+
+                                </select>
+
+                            </div>
+
+
+
+                            <!-- Size -->
+
+                            <div class="col-md-4">
+
+                                <label
+                                    class="option-label"
+                                    for="size"
+                                >
+
+                                    Size
+
+                                </label>
+
+
+                                <select
+                                    name="size"
+                                    id="size"
+                                    class="form-select"
+                                    required
+                                >
+
+                                    <option
+                                        value=""
+                                        selected
+                                        disabled
+                                    >
+
+                                        Choose Size
+
+                                    </option>
+
+
+                                    {% for var in single_product.variation_set.all %}
+
+                                        {% if var.variation_category == "size" %}
+
+                                            <option
+                                                value="{{ var.variation_value }}"
+                                            >
+
+                                                {{ var.variation_value }}
+
+                                            </option>
+
+                                        {% endif %}
+
+                                    {% endfor %}
+
+                                </select>
+
+                            </div>
+
+
+
+                            <!-- Quantity -->
+
+                            <div class="col-md-4">
+
+                                <label
+                                    class="option-label"
+                                    for="quantity"
+                                >
+
+                                    Quantity
+
+                                </label>
+
+
+                                <input
+                                    type="number"
+                                    name="quantity"
+                                    id="quantity"
+                                    class="form-control quantity-input"
+                                    value="1"
+                                    min="1"
+                                    max="{{ single_product.stock }}"
+                                >
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- Buttons -->
+
+                        <div class="row g-3 mt-2">
+
+
+                            <div class="col-md-6">
+
+                                <button
+                                    type="submit"
+                                    class="cart-btn"
+                                >
+
+                                    <i class="bi bi-cart-plus me-2"></i>
+
+                                    Add to Cart
+
+                                </button>
+
+                            </div>
+
+
+                            <div class="col-md-6">
+
+                                <button
+                                    type="submit"
+                                    name="buy_now"
+                                    value="1"
+                                    class="buy-btn"
+                                >
+
+                                    <i class="bi bi-lightning-charge-fill me-2"></i>
+
+                                    Buy Now
+
+                                </button>
+
+                            </div>
+
+
+                        </div>
+
+                    </form>
+
+
+                    {% else %}
+
+
+                    <div class="alert alert-danger">
+
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+
+                        This product is currently out of stock.
+
+                    </div>
+
+
+                    {% endif %}
+
+
+
+                    <!-- View Cart -->
+
+                    <div class="mt-3">
+
+                        <a
+                            href="{% url 'carts:cart' %}"
+                            class="view-cart-btn"
+                        >
+
+                            <i class="bi bi-bag me-2"></i>
+
+                            View Shopping Cart
+
+                        </a>
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         FEATURES
+                    ================================================== -->
+
+                    <div class="row g-2 mt-4">
+
+
+                        <div class="col-md-6">
+
+                            <div class="feature-box">
+
+                                <div class="feature-icon">
+
+                                    <i class="bi bi-truck"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <div class="feature-title">
+
+                                        Fast Delivery
+
+                                    </div>
+
+                                    <div class="feature-text">
+
+                                        Quick & secure shipping
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <div class="feature-box">
+
+                                <div class="feature-icon">
+
+                                    <i class="bi bi-shield-check"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <div class="feature-title">
+
+                                        Secure Payment
+
+                                    </div>
+
+                                    <div class="feature-text">
+
+                                        100% secure checkout
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <div class="feature-box">
+
+                                <div class="feature-icon">
+
+                                    <i class="bi bi-arrow-repeat"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <div class="feature-title">
+
+                                        Easy Returns
+
+                                    </div>
+
+                                    <div class="feature-text">
+
+                                        Hassle-free returns
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <div class="feature-box">
+
+                                <div class="feature-icon">
+
+                                    <i class="bi bi-headset"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <div class="feature-title">
+
+                                        Customer Support
+
+                                    </div>
+
+                                    <div class="feature-text">
+
+                                        We're here to help
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+            </div>
 
         </div>
-      {% endfor %}
-    {% else %}
-      <p class="text-muted">No reviews yet. Be the first to review! 🎉</p>
-    {% endif %}
 
 
-    {% if user.is_authenticated %}
-      <div class="review-card p-4 mt-4">
-        <h5 class="fw-bold mb-3">Write a Review ✍️</h5>
 
-        <form method="post"
-          action="{% url 'store:add_review' single_product.id %}">
-          {% csrf_token %}
+        <!-- =====================================================
+             REVIEWS
+        ====================================================== -->
 
-          <div class="mb-3">
-            <label class="form-label">Rating</label>
-            <select name="rating" class="form-select" required>
-              <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
-              <option value="4">⭐⭐⭐⭐ Good</option>
-              <option value="3">⭐⭐⭐ Average</option>
-              <option value="2">⭐⭐ Poor</option>
-              <option value="1">⭐ Very Bad</option>
-            </select>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Review Title</label>
-            <input type="text" name="subject"
-              class="form-control" required>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Your Review</label>
-            <textarea name="review"
-              class="form-control" rows="3" required></textarea>
-          </div>
-
-          <button type="submit" class="btn btn-gradient">
-            Submit Review 🚀
-          </button>
-        </form>
-      </div>
-    {% else %}
-      <p class="text-muted mt-3">
-        👉 <a href="{% url 'login' %}">Login</a> to write a review.
-      </p>
-    {% endif %}
-
-  </div>
-
-</div>
+        <div class="reviews-section">
 
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+            <h2 class="section-title">
+
+                Customer Reviews
+
+                <i class="bi bi-chat-heart text-primary"></i>
+
+            </h2>
+
+
+
+            {% if reviews %}
+
+
+                {% for review in reviews %}
+
+
+                <div class="review-card">
+
+
+                    <div class="review-user">
+
+
+                        <div>
+
+                            <div class="review-user-name">
+
+                                <i class="bi bi-person-circle me-1"></i>
+
+                                {{ review.user.username }}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="review-date">
+
+                            {{ review.created_at|date:"M d, Y" }}
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <!-- Rating -->
+
+                    <div class="review-stars">
+
+
+                        {% for i in "12345" %}
+
+                            {% if forloop.counter <= review.rating %}
+
+                                <span>★</span>
+
+                            {% else %}
+
+                                <span class="text-secondary">★</span>
+
+                            {% endif %}
+
+                        {% endfor %}
+
+
+                    </div>
+
+
+
+                    <h6 class="review-subject">
+
+                        {{ review.subject }}
+
+                    </h6>
+
+
+                    <p class="review-text">
+
+                        {{ review.review }}
+
+                    </p>
+
+
+                </div>
+
+
+                {% endfor %}
+
+
+            {% else %}
+
+
+                <div class="review-card text-center py-5">
+
+                    <i
+                        class="bi bi-chat-square-text"
+                        style="font-size: 40px; color:#cbd5e1;"
+                    ></i>
+
+
+                    <h5 class="mt-3">
+
+                        No Reviews Yet
+
+                    </h5>
+
+
+                    <p class="text-muted small">
+
+                        Be the first customer to review this product.
+
+                    </p>
+
+                </div>
+
+
+            {% endif %}
+
+
+
+            <!-- =================================================
+                 WRITE REVIEW
+            ================================================== -->
+
+            {% if user.is_authenticated %}
+
+
+            <div class="review-form-card mt-4">
+
+
+                <h4 class="review-form-title">
+
+                    <i class="bi bi-pencil-square text-primary me-2"></i>
+
+                    Write a Review
+
+                </h4>
+
+
+                <form
+                    method="post"
+                    action="{% url 'store:add_review' single_product.id %}"
+                >
+
+                    {% csrf_token %}
+
+
+                    <!-- Rating -->
+
+                    <div class="mb-3">
+
+                        <label class="option-label">
+
+                            Rating
+
+                        </label>
+
+
+                        <select
+                            name="rating"
+                            class="form-select"
+                            required
+                        >
+
+                            <option value="5">
+
+                                ⭐⭐⭐⭐⭐ Excellent
+
+                            </option>
+
+                            <option value="4">
+
+                                ⭐⭐⭐⭐ Good
+
+                            </option>
+
+                            <option value="3">
+
+                                ⭐⭐⭐ Average
+
+                            </option>
+
+                            <option value="2">
+
+                                ⭐⭐ Poor
+
+                            </option>
+
+                            <option value="1">
+
+                                ⭐ Very Bad
+
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <!-- Subject -->
+
+                    <div class="mb-3">
+
+                        <label class="option-label">
+
+                            Review Title
+
+                        </label>
+
+
+                        <input
+                            type="text"
+                            name="subject"
+                            class="form-control"
+                            placeholder="Enter review title..."
+                            required
+                        >
+
+                    </div>
+
+
+
+                    <!-- Review -->
+
+                    <div class="mb-3">
+
+                        <label class="option-label">
+
+                            Your Review
+
+                        </label>
+
+
+                        <textarea
+                            name="review"
+                            class="form-control"
+                            rows="4"
+                            placeholder="Share your experience..."
+                            required
+                        ></textarea>
+
+                    </div>
+
+
+
+                    <button
+                        type="submit"
+                        class="submit-review"
+                    >
+
+                        <i class="bi bi-send me-1"></i>
+
+                        Submit Review
+
+                    </button>
+
+
+                </form>
+
+            </div>
+
+
+            {% else %}
+
+
+            <div class="review-card text-center mt-4">
+
+                <i
+                    class="bi bi-person-lock"
+                    style="font-size: 30px; color:#6366f1;"
+                ></i>
+
+
+                <p class="mt-2 mb-2">
+
+                    Login to write a review.
+
+                </p>
+
+
+                <a
+                    href="{% url 'login' %}"
+                    class="btn btn-primary btn-sm rounded-pill px-4"
+                >
+
+                    Login
+
+                </a>
+
+            </div>
+
+
+            {% endif %}
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     FOOTER
+====================================================== -->
+
+<footer class="modern-footer">
+
+
+    <div class="container">
+
+
+        <div class="row g-4">
+
+
+            <!-- Brand -->
+
+            <div class="col-lg-5">
+
+
+                <div class="footer-brand">
+
+                    🛍️ AakashKart
+
+                </div>
+
+
+                <p class="footer-text">
+
+                    Your modern online shopping destination.
+                    Discover quality products, premium collections
+                    and amazing deals.
+
+                </p>
+
+
+                <div class="social-icons">
+
+
+                    <a href="#">
+
+                        <i class="bi bi-facebook"></i>
+
+                    </a>
+
+
+                    <a href="#">
+
+                        <i class="bi bi-instagram"></i>
+
+                    </a>
+
+
+                    <a href="#">
+
+                        <i class="bi bi-twitter-x"></i>
+
+                    </a>
+
+
+                    <a href="#">
+
+                        <i class="bi bi-linkedin"></i>
+
+                    </a>
+
+
+                </div>
+
+            </div>
+
+
+
+            <!-- Shopping -->
+
+            <div class="col-6 col-lg-2">
+
+
+                <h6 class="footer-title">
+
+                    Shopping
+
+                </h6>
+
+
+                <ul class="footer-links">
+
+
+                    <li>
+
+                        <a href="{% url 'home' %}">
+
+                            Home
+
+                        </a>
+
+                    </li>
+
+
+                    <li>
+
+                        <a href="{% url 'store:store' %}">
+
+                            Store
+
+                        </a>
+
+                    </li>
+
+
+                    <li>
+
+                        <a href="{% url 'carts:cart' %}">
+
+                            Cart
+
+                        </a>
+
+                    </li>
+
+
+                </ul>
+
+            </div>
+
+
+
+            <!-- Account -->
+
+            <div class="col-6 col-lg-2">
+
+
+                <h6 class="footer-title">
+
+                    Account
+
+                </h6>
+
+
+                <ul class="footer-links">
+
+
+                    <li>
+
+                        <a href="{% url 'login' %}">
+
+                            Login
+
+                        </a>
+
+                    </li>
+
+
+                    <li>
+
+                        <a href="{% url 'register' %}">
+
+                            Register
+
+                        </a>
+
+                    </li>
+
+
+                    {% if user.is_authenticated %}
+
+                    <li>
+
+                        <a href="{% url 'dashboard' %}">
+
+                            Dashboard
+
+                        </a>
+
+                    </li>
+
+                    {% endif %}
+
+
+                </ul>
+
+            </div>
+
+
+
+            <!-- Support -->
+
+            <div class="col-lg-3">
+
+
+                <h6 class="footer-title">
+
+                    Support
+
+                </h6>
+
+
+                <ul class="footer-links">
+
+
+                    <li>
+
+                        <a href="#">
+
+                            Help Center
+
+                        </a>
+
+                    </li>
+
+
+                    <li>
+
+                        <a href="#">
+
+                            Contact Us
+
+                        </a>
+
+                    </li>
+
+
+                    <li>
+
+                        <a href="#">
+
+                            Privacy Policy
+
+                        </a>
+
+                    </li>
+
+
+                </ul>
+
+            </div>
+
+
+        </div>
+
+
+
+        <div class="footer-bottom">
+
+            © 2026 AakashKart.
+            All rights reserved.
+
+        </div>
+
+
+    </div>
+
+</footer>
+
+
+
+<!-- =====================================================
+     BOOTSTRAP JS
+====================================================== -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+></script>
+
+
+
+<!-- =====================================================
+     WISHLIST JS
+====================================================== -->
+
+<script>
+
+    const wishlistButton =
+        document.getElementById(
+            "wishlistButton"
+        );
+
+
+    if (wishlistButton) {
+
+        wishlistButton.addEventListener(
+            "click",
+            function () {
+
+                const icon =
+                    this.querySelector("i");
+
+
+                icon.classList.toggle(
+                    "bi-heart"
+                );
+
+
+                icon.classList.toggle(
+                    "bi-heart-fill"
+                );
+
+
+                this.classList.toggle(
+                    "active"
+                );
+
+            }
+        );
+
+    }
+
+</script>
+
+
 </body>
+
 </html>
+
 {% endblock %}

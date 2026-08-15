@@ -6,10 +6,12 @@ app_name = "store"
 urlpatterns = [
     # ==================== STORE ====================
     path('', views.store, name='store'),
+
+    path('category/<slug:category_slug>/', views.store, name='store_by_category'),
     # ==================== SEARCH ====================
     path('search/', views.search, name='search'),
     # ==================== CATEGORY ====================
-    path('category/<slug:category_slug>/', views.store, name='category-store'),
+  
     # ==================== PRODUCT DETAIL ====================
     path('product/<slug:category_slug>/<slug:product_slug>/',views.product_detail,name='product_detail'),
     # ==================== REVIEWS ====================
