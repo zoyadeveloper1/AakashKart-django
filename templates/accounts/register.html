@@ -39,9 +39,7 @@
     height: 260px;
     top: -100px;
     left: -80px;
-
     background: rgba(99,102,241,.10);
-
     animation: floatingOne 7s ease-in-out infinite;
 }
 
@@ -50,9 +48,7 @@
     height: 220px;
     right: -70px;
     bottom: -80px;
-
     background: rgba(236,72,153,.10);
-
     animation: floatingTwo 8s ease-in-out infinite;
 }
 
@@ -90,7 +86,7 @@
 
     margin: auto;
 
-    background: rgba(255,255,255,.88);
+    background: rgba(255,255,255,.92);
 
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
@@ -122,7 +118,9 @@
 }
 
 
-/* Gradient top line */
+/* =====================================================
+   TOP GRADIENT
+===================================================== */
 
 .register-card::before {
     content: "";
@@ -274,7 +272,7 @@
 
 
 /* =====================================================
-   DJANGO INPUTS
+   INPUTS
 ===================================================== */
 
 .register-body input[type="text"],
@@ -303,8 +301,7 @@
     transition:
         border-color .3s ease,
         box-shadow .3s ease,
-        transform .3s ease,
-        background .3s ease;
+        transform .3s ease;
 }
 
 .register-body input[type="text"]:focus,
@@ -313,8 +310,6 @@
 .register-body input[type="tel"]:focus {
 
     border-color: #6366f1;
-
-    background: #fff;
 
     box-shadow:
         0 0 0 4px rgba(99,102,241,.10);
@@ -360,8 +355,7 @@
             #22c55e
         );
 
-    transition:
-        width .35s ease;
+    transition: width .35s ease;
 }
 
 
@@ -373,6 +367,7 @@
     list-style: none;
 
     padding: 0;
+
     margin: 7px 0 0;
 
     color: #dc2626;
@@ -408,13 +403,14 @@
 
 .terms-box:hover {
     background: #f1f5f9;
-
     border-color: #c7d2fe;
 }
 
-.terms-box input {
+.terms-box input[type="checkbox"] {
     width: 18px;
     height: 18px;
+
+    flex-shrink: 0;
 
     accent-color: #6366f1;
 
@@ -504,7 +500,9 @@
 }
 
 
-/* Shine animation */
+/* =====================================================
+   BUTTON SHINE
+===================================================== */
 
 .btn-register::before {
     content: "";
@@ -594,6 +592,9 @@
 ===================================================== */
 
 .register-footer {
+    position: relative;
+    z-index: 2;
+
     text-align: center;
 
     padding: 20px;
@@ -635,8 +636,8 @@
         height: 65px;
         font-size: 1.7rem;
     }
-
 }
+
 
 @media (max-width: 480px) {
 
@@ -652,9 +653,17 @@
         font-size: .9rem;
     }
 
+    .terms-box {
+        align-items: flex-start;
+    }
 }
+
 </style>
 
+
+<!-- =====================================================
+     REGISTER PAGE
+===================================================== -->
 
 <div class="register-page">
 
@@ -681,33 +690,39 @@
 
             {% include 'includes/alerts.html' %}
 
-
             <form
                 method="POST"
                 action="{% url 'register' %}"
-                novalidate
                 id="registerForm"
             >
 
                 {% csrf_token %}
 
-                {{ form.non_field_errors }}
+                <!-- NON FIELD ERRORS -->
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
 
 
                 <!-- FORM FIELDS -->
-
                 <div class="row g-4">
 
                     <!-- FIRST NAME -->
                     <div class="col-md-6">
 
-                        <label for="id_first_name">
+                        <label for="{{ form.first_name.id_for_label }}">
                             First Name
                         </label>
 
                         {{ form.first_name }}
 
-                        {{ form.first_name.errors }}
+                        {% if form.first_name.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.first_name.errors }}
+                            </div>
+                        {% endif %}
 
                     </div>
 
@@ -715,13 +730,17 @@
                     <!-- LAST NAME -->
                     <div class="col-md-6">
 
-                        <label for="id_last_name">
+                        <label for="{{ form.last_name.id_for_label }}">
                             Last Name
                         </label>
 
                         {{ form.last_name }}
 
-                        {{ form.last_name.errors }}
+                        {% if form.last_name.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.last_name.errors }}
+                            </div>
+                        {% endif %}
 
                     </div>
 
@@ -729,13 +748,17 @@
                     <!-- EMAIL -->
                     <div class="col-md-6">
 
-                        <label for="id_email">
+                        <label for="{{ form.email.id_for_label }}">
                             Email Address
                         </label>
 
                         {{ form.email }}
 
-                        {{ form.email.errors }}
+                        {% if form.email.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.email.errors }}
+                            </div>
+                        {% endif %}
 
                     </div>
 
@@ -743,13 +766,17 @@
                     <!-- PHONE -->
                     <div class="col-md-6">
 
-                        <label for="id_phone_number">
+                        <label for="{{ form.phone_number.id_for_label }}">
                             Phone Number
                         </label>
 
                         {{ form.phone_number }}
 
-                        {{ form.phone_number.errors }}
+                        {% if form.phone_number.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.phone_number.errors }}
+                            </div>
+                        {% endif %}
 
                     </div>
 
@@ -757,14 +784,12 @@
                     <!-- PASSWORD -->
                     <div class="col-md-6">
 
-                        <label for="id_password">
+                        <label for="{{ form.password.id_for_label }}">
                             Password
                         </label>
 
                         <div class="password-wrapper">
-
                             {{ form.password }}
-
                         </div>
 
                         <div class="pw-meter">
@@ -778,7 +803,11 @@
                             Use 8+ characters for a stronger password.
                         </small>
 
-                        {{ form.password.errors }}
+                        {% if form.password.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.password.errors }}
+                            </div>
+                        {% endif %}
 
                     </div>
 
@@ -786,7 +815,7 @@
                     <!-- CONFIRM PASSWORD -->
                     <div class="col-md-6">
 
-                        <label for="id_confirm_password">
+                        <label for="{{ form.confirm_password.id_for_label }}">
                             Confirm Password
                         </label>
 
@@ -797,7 +826,11 @@
                             class="mt-1 d-block"
                         ></small>
 
-                        {{ form.confirm_password.errors }}
+                        {% if form.confirm_password.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.confirm_password.errors }}
+                            </div>
+                        {% endif %}
 
                     </div>
 
@@ -810,13 +843,13 @@
                             <input
                                 type="checkbox"
                                 id="terms"
-                                required
+                                name="terms"
                             >
 
                             <label for="terms">
 
                                 I agree to the
-                                <a href="#">
+                                <a href="#" onclick="return false;">
                                     Terms & Conditions
                                 </a>
                                 and Privacy Policy.
@@ -886,128 +919,171 @@
 
 
 <script>
+document.addEventListener("DOMContentLoaded", function () {
 
-/* =====================================================
-   PASSWORD STRENGTH
-===================================================== */
+    /* =====================================================
+       ELEMENTS
+    ===================================================== */
 
-const passwordInput =
-    document.getElementById("id_password");
+    const registerForm = document.getElementById("registerForm");
 
-const passwordBar =
-    document.getElementById("pwBar");
+    const passwordInput =
+        document.getElementById("id_password");
 
-const passwordHint =
-    document.getElementById("passwordHint");
+    const confirmPassword =
+        document.getElementById("id_confirm_password");
 
+    const passwordBar =
+        document.getElementById("pwBar");
 
-function calculatePasswordStrength(password) {
+    const passwordHint =
+        document.getElementById("passwordHint");
 
-    let score = 0;
+    const matchMessage =
+        document.getElementById("matchMessage");
 
-    if (password.length >= 8)
-        score++;
-
-    if (/[A-Z]/.test(password))
-        score++;
-
-    if (/[0-9]/.test(password))
-        score++;
-
-    if (/[^A-Za-z0-9]/.test(password))
-        score++;
-
-    return score;
-}
+    const terms =
+        document.getElementById("terms");
 
 
-if (passwordInput) {
+    /* =====================================================
+       PASSWORD STRENGTH
+    ===================================================== */
 
-    passwordInput.addEventListener("input", function () {
+    function calculatePasswordStrength(password) {
 
-        const score =
-            calculatePasswordStrength(this.value);
+        let score = 0;
 
-        const percentage =
-            (score / 4) * 100;
-
-        passwordBar.style.width =
-            percentage + "%";
-
-
-        if (score === 0) {
-
-            passwordHint.textContent =
-                "Use 8+ characters for a stronger password.";
-
-        } else if (score === 1) {
-
-            passwordHint.textContent =
-                "Weak password";
-
-            passwordHint.className =
-                "text-danger mt-1 d-block";
-
-        } else if (score === 2) {
-
-            passwordHint.textContent =
-                "Medium password";
-
-            passwordHint.className =
-                "text-warning mt-1 d-block";
-
-        } else if (score === 3) {
-
-            passwordHint.textContent =
-                "Good password";
-
-            passwordHint.className =
-                "text-primary mt-1 d-block";
-
-        } else {
-
-            passwordHint.textContent =
-                "Strong password ✓";
-
-            passwordHint.className =
-                "text-success mt-1 d-block";
+        if (password.length >= 8) {
+            score++;
         }
 
-    });
+        if (/[A-Z]/.test(password)) {
+            score++;
+        }
 
-}
+        if (/[0-9]/.test(password)) {
+            score++;
+        }
+
+        if (/[^A-Za-z0-9]/.test(password)) {
+            score++;
+        }
+
+        return score;
+    }
 
 
-/* =====================================================
-   CONFIRM PASSWORD
-===================================================== */
+    if (passwordInput) {
 
-const confirmPassword =
-    document.getElementById("id_confirm_password");
+        passwordInput.addEventListener("input", function () {
 
-const matchMessage =
-    document.getElementById("matchMessage");
+            const password = this.value;
+
+            const score =
+                calculatePasswordStrength(password);
+
+            const percentage =
+                (score / 4) * 100;
+
+            if (passwordBar) {
+                passwordBar.style.width =
+                    percentage + "%";
+            }
 
 
-if (confirmPassword) {
+            if (!passwordHint) {
+                return;
+            }
 
-    confirmPassword.addEventListener("input", function () {
 
-        if (!this.value) {
+            if (score === 0) {
+
+                passwordHint.textContent =
+                    "Use 8+ characters for a stronger password.";
+
+                passwordHint.className =
+                    "text-muted mt-1 d-block";
+
+            }
+
+            else if (score === 1) {
+
+                passwordHint.textContent =
+                    "Weak password";
+
+                passwordHint.className =
+                    "text-danger mt-1 d-block";
+
+            }
+
+            else if (score === 2) {
+
+                passwordHint.textContent =
+                    "Medium password";
+
+                passwordHint.className =
+                    "text-warning mt-1 d-block";
+
+            }
+
+            else if (score === 3) {
+
+                passwordHint.textContent =
+                    "Good password";
+
+                passwordHint.className =
+                    "text-primary mt-1 d-block";
+
+            }
+
+            else {
+
+                passwordHint.textContent =
+                    "Strong password ✓";
+
+                passwordHint.className =
+                    "text-success mt-1 d-block";
+            }
+
+        });
+    }
+
+
+    /* =====================================================
+       CONFIRM PASSWORD
+    ===================================================== */
+
+    function checkPasswordMatch() {
+
+        if (!confirmPassword || !matchMessage || !passwordInput) {
+            return true;
+        }
+
+        const password =
+            passwordInput.value;
+
+        const confirm =
+            confirmPassword.value;
+
+
+        if (!confirm) {
 
             matchMessage.textContent = "";
 
-            return;
+            return true;
         }
 
 
-        if (passwordInput.value === this.value) {
+        if (password === confirm) {
 
             matchMessage.textContent =
                 "✓ Passwords match";
 
             matchMessage.className =
                 "text-success mt-1 d-block";
+
+            return true;
 
         } else {
 
@@ -1017,38 +1093,85 @@ if (confirmPassword) {
             matchMessage.className =
                 "text-danger mt-1 d-block";
 
+            return false;
         }
-
-    });
-
-}
+    }
 
 
-/* =====================================================
-   TERMS VALIDATION
-===================================================== */
+    if (confirmPassword) {
 
-document
-    .getElementById("registerForm")
-    .addEventListener("submit", function(event) {
+        confirmPassword.addEventListener(
+            "input",
+            checkPasswordMatch
+        );
+    }
 
-        const terms =
-            document.getElementById("terms");
 
-        if (!terms.checked) {
+    if (passwordInput) {
 
-            event.preventDefault();
+        passwordInput.addEventListener(
+            "input",
+            function () {
 
-            terms.focus();
+                if (confirmPassword && confirmPassword.value) {
+                    checkPasswordMatch();
+                }
 
-            alert(
-                "Please agree to the Terms & Conditions before creating your account."
-            );
+            }
+        );
+    }
 
-        }
 
-    });
+    /* =====================================================
+       FORM VALIDATION
+    ===================================================== */
 
+    if (registerForm) {
+
+        registerForm.addEventListener(
+            "submit",
+            function (event) {
+
+                /* TERMS */
+
+                if (terms && !terms.checked) {
+
+                    event.preventDefault();
+
+                    terms.focus();
+
+                    alert(
+                        "Please agree to the Terms & Conditions before creating your account."
+                    );
+
+                    return;
+                }
+
+
+                /* PASSWORD MATCH */
+
+                if (
+                    passwordInput &&
+                    confirmPassword &&
+                    passwordInput.value !== confirmPassword.value
+                ) {
+
+                    event.preventDefault();
+
+                    confirmPassword.focus();
+
+                    alert(
+                        "Passwords do not match."
+                    );
+
+                    return;
+                }
+
+            }
+        );
+    }
+
+});
 </script>
 
 {% endblock %}

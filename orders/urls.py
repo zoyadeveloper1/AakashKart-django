@@ -1,33 +1,59 @@
 from django.urls import path
 from . import views
 
+
 app_name = "orders"
+
 
 urlpatterns = [
 
-    # ==============================
-    # CHECKOUT & PLACE ORDER
-    # ==============================
-    path("checkout/", views.checkout, name="checkout"),
-    path("place-order/", views.place_order, name="place_order"),
+    # ========================================================
+    # CHECKOUT
+    # ========================================================
 
-    # ==============================
-    # PAYPAL PAGE
-    # ==============================
+    path(
+        "checkout/",
+        views.checkout,
+        name="checkout"
+    ),
+
+
+    # ========================================================
+    # PLACE ORDER
+    # ========================================================
+
+    path(
+        "place-order/",
+        views.place_order,
+        name="place_order"
+    ),
+
+
+    # ========================================================
+    # PAYPAL CHECKOUT PAGE
+    # ========================================================
+
     path(
         "paypal/<int:order_id>/",
         views.paypal_checkout,
         name="paypal_checkout"
     ),
 
-    # ==============================
-    # PAYPAL AJAX APIs
-    # ==============================
+
+    # ========================================================
+    # PAYPAL CREATE ORDER API
+    # ========================================================
+
     path(
         "paypal/create/",
         views.create_paypal_order,
         name="create_paypal_order"
     ),
+
+
+    # ========================================================
+    # PAYPAL CAPTURE API
+    # ========================================================
 
     path(
         "capture-paypal-order/<str:paypal_order_id>/",
@@ -35,14 +61,21 @@ urlpatterns = [
         name="capture_paypal_order"
     ),
 
-    # ==============================
-    # ORDER SUCCESS PAGES
-    # ==============================
+
+    # ========================================================
+    # ORDER COMPLETE
+    # ========================================================
+
     path(
         "order-complete/<str:order_number>/",
         views.order_complete,
         name="order_complete"
     ),
+
+
+    # ========================================================
+    # PAYMENT SUCCESSFUL
+    # ========================================================
 
     path(
         "payment-successful/<str:order_number>/",
