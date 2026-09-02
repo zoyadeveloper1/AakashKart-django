@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.db import transaction
 
@@ -13,7 +13,6 @@ import requests
 
 from carts.models import Cart, CartItem
 from .models import Order, OrderProduct, Payment
-
 
 # ============================================================
 # PAYPAL CONFIGURATION
