@@ -41,9 +41,6 @@ class CustomLoginView(LoginView):
 # ---------------------------------------------------
 # REGISTER
 # ---------------------------------------------------
-
-
-
 def register(request):
 
     if request.method == 'POST':
@@ -54,44 +51,14 @@ def register(request):
 
             user = form.save(commit=False)
 
-            # Create username from email
             user.username = user.email.split('@')[0]
+            user.is_active = True
 
-            # Account inactive until email verification
-            user.is_active = False
-
-            # Save account
             user.save()
-
-            # Current website/domain
-            current_site = get_current_site(request)
-
-            # Verification email content
-            message = render_to_string(
-                'accounts/account_verification_email.html',
-                {
-                    'user': user,
-                    'domain': current_site.domain,
-                    'uid': urlsafe_base64_encode(
-                        force_bytes(user.pk)
-                    ),
-                    'token': default_token_generator.make_token(user),
-                }
-            )
-
-            # Send email
-            email = EmailMessage(
-                subject='Activate your account',
-                body=message,
-                to=[user.email],
-            )
-
-            email.content_subtype = 'html'
-            email.send()
 
             messages.success(
                 request,
-                'Activation email sent ✔ Please check your email.'
+                'Registration successful! You can login now.'
             )
 
             return redirect('login')
@@ -104,6 +71,8 @@ def register(request):
         'accounts/register.html',
         {'form': form}
     )
+
+
 # ---------------------------------------------------
 # SIGNUP (alias)
 # ---------------------------------------------------

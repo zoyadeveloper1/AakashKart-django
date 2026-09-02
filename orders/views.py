@@ -19,23 +19,11 @@ from .models import Order, OrderProduct, Payment
 # PAYPAL CONFIGURATION
 # ============================================================
 
-PAYPAL_CLIENT_ID = getattr(
-    settings,
-    "PAYPAL_CLIENT_ID",
-    ""
-)
+PAYPAL_CLIENT_ID = settings.PAYPAL_CLIENT_ID
+PAYPAL_SECRET = settings.PAYPAL_SECRET
 
-PAYPAL_SECRET = getattr(
-    settings,
-    "PAYPAL_SECRET",
-    ""
-)
-
-PAYPAL_API = getattr(
-    settings,
-    "PAYPAL_BASE_URL",
-    "https://api-m.sandbox.paypal.com"
-).rstrip("/")
+# PayPal Sandbox API
+PAYPAL_API = "https://api-m.sandbox.paypal.com"
 
 
 # ============================================================
@@ -43,6 +31,9 @@ PAYPAL_API = getattr(
 # ============================================================
 
 def get_client_ip(request):
+    """
+    Get visitor/client IP address.
+    """
 
     x_forwarded_for = request.META.get(
         "HTTP_X_FORWARDED_FOR"
@@ -51,35 +42,23 @@ def get_client_ip(request):
     if x_forwarded_for:
         return x_forwarded_for.split(",")[0].strip()
 
-    return request.META.get(
-        "REMOTE_ADDR"
-    )
+    return request.META.get("REMOTE_ADDR")
 
 
 # ============================================================
-# DECIMAL CONVERTER
+# CONVERT VALUE TO DECIMAL
 # ============================================================
 
 def to_decimal(value):
+    """
+    Safely convert float/int/string/Decimal to Decimal.
 
-    if value is None:
-        return Decimal("0.00")
+    This fixes:
+    unsupported operand type(s) for /:
+    'float' and 'decimal.Decimal'
+    """
 
-    return Decimal(
-        str(value)
-    )
-
-
-# ============================================================
-# MONEY FORMAT
-# ============================================================
-
-def money(value):
-
-    return to_decimal(value).quantize(
-        Decimal("0.01"),
-        rounding=ROUND_HALF_UP
-    )
+    return Decimal(str(value))
 
 
 # ============================================================
@@ -89,14 +68,6 @@ def money(value):
 def get_paypal_access_token():
 
     try:
-
-        if not PAYPAL_CLIENT_ID:
-            print("PAYPAL CLIENT ID MISSING")
-            return None
-
-        if not PAYPAL_SECRET:
-            print("PAYPAL SECRET MISSING")
-            return None
 
         response = requests.post(
 
@@ -113,8 +84,7 @@ def get_paypal_access_token():
             },
 
             data={
-                "grant_type":
-                    "client_credentials"
+                "grant_type": "client_credentials"
             },
 
             timeout=30,
@@ -127,16 +97,11 @@ def get_paypal_access_token():
 
         if response.status_code == 200:
 
-            data = response.json()
-
-            token = data.get(
+            token = response.json().get(
                 "access_token"
             )
 
-            print(
-                "PAYPAL TOKEN RECEIVED:",
-                bool(token)
-            )
+            print("PAYPAL TOKEN RECEIVED: YES")
 
             return token
 
@@ -151,16 +116,7 @@ def get_paypal_access_token():
 
         print(
             "PAYPAL TOKEN REQUEST ERROR:",
-            repr(e)
-        )
-
-        return None
-
-    except Exception as e:
-
-        print(
-            "PAYPAL TOKEN ERROR:",
-            repr(e)
+            str(e)
         )
 
         return None
@@ -193,54 +149,49 @@ def checkout(request):
     # SUBTOTAL
     # --------------------------------------------------------
 
-    total = Decimal("0.00")
-
-    for item in cart_items:
-
-        price = to_decimal(
-            item.product.price
+    total = sum(
+        (
+            to_decimal(item.product.price)
+            * item.quantity
         )
+        for item in cart_items
+    )
 
-        total += (
-            price * item.quantity
-        )
-
-    total = money(total)
+    total = total.quantize(
+        Decimal("0.01"),
+        rounding=ROUND_HALF_UP
+    )
 
     # --------------------------------------------------------
-    # TAX
+    # TAX 5%
     # --------------------------------------------------------
 
-    tax = money(
+    tax = (
         total * Decimal("0.05")
+    ).quantize(
+        Decimal("0.01"),
+        rounding=ROUND_HALF_UP
     )
 
     # --------------------------------------------------------
     # GRAND TOTAL
     # --------------------------------------------------------
 
-    grand_total = money(
+    grand_total = (
         total + tax
+    ).quantize(
+        Decimal("0.01"),
+        rounding=ROUND_HALF_UP
     )
 
     return render(
-
         request,
-
         "orders/checkout.html",
-
         {
-            "cart_items":
-                cart_items,
-
-            "total":
-                total,
-
-            "tax":
-                tax,
-
-            "grand_total":
-                grand_total,
+            "cart_items": cart_items,
+            "total": total,
+            "tax": tax,
+            "grand_total": grand_total,
         }
     )
 
@@ -257,6 +208,10 @@ def place_order(request):
         return redirect(
             "orders:checkout"
         )
+
+    # --------------------------------------------------------
+    # GET CART
+    # --------------------------------------------------------
 
     cart = get_object_or_404(
         Cart,
@@ -278,34 +233,39 @@ def place_order(request):
     # CALCULATE TOTAL
     # --------------------------------------------------------
 
-    total = Decimal("0.00")
-
-    for item in cart_items:
-
-        price = to_decimal(
-            item.product.price
+    total = sum(
+        (
+            to_decimal(item.product.price)
+            * item.quantity
         )
+        for item in cart_items
+    )
 
-        total += (
-            price * item.quantity
-        )
-
-    total = money(total)
+    total = total.quantize(
+        Decimal("0.01"),
+        rounding=ROUND_HALF_UP
+    )
 
     # --------------------------------------------------------
     # TAX
     # --------------------------------------------------------
 
-    tax = money(
+    tax = (
         total * Decimal("0.05")
+    ).quantize(
+        Decimal("0.01"),
+        rounding=ROUND_HALF_UP
     )
 
     # --------------------------------------------------------
     # GRAND TOTAL
     # --------------------------------------------------------
 
-    grand_total = money(
+    grand_total = (
         total + tax
+    ).quantize(
+        Decimal("0.01"),
+        rounding=ROUND_HALF_UP
     )
 
     # --------------------------------------------------------
@@ -317,48 +277,39 @@ def place_order(request):
         user=request.user,
 
         first_name=request.POST.get(
-            "first_name",
-            ""
+            "first_name"
         ),
 
         last_name=request.POST.get(
-            "last_name",
-            ""
+            "last_name"
         ),
 
         phone=request.POST.get(
-            "phone",
-            ""
+            "phone"
         ),
 
         email=request.POST.get(
-            "email",
-            ""
+            "email"
         ),
 
         address_line_1=request.POST.get(
-            "address_line_1",
-            ""
+            "address_line_1"
         ),
 
         address_line_2=request.POST.get(
-            "address_line_2",
-            ""
+            "address_line_2"
         ),
 
         city=request.POST.get(
-            "city",
-            ""
+            "city"
         ),
 
         state=request.POST.get(
-            "state",
-            ""
+            "state"
         ),
 
         country=request.POST.get(
-            "country",
-            ""
+            "country"
         ),
 
         total=grand_total,
@@ -382,7 +333,7 @@ def place_order(request):
     )
 
     # --------------------------------------------------------
-    # ORDER PRODUCTS
+    # CREATE ORDER PRODUCTS
     # --------------------------------------------------------
 
     for item in cart_items:
@@ -415,9 +366,9 @@ def place_order(request):
         payment_method
     )
 
-    # --------------------------------------------------------
-    # COD
-    # --------------------------------------------------------
+    # ========================================================
+    # CASH ON DELIVERY
+    # ========================================================
 
     if payment_method == "COD":
 
@@ -428,16 +379,20 @@ def place_order(request):
             order_number=order.order_number
         )
 
-    # --------------------------------------------------------
-    # PAYPAL
-    # --------------------------------------------------------
+    # ========================================================
+    # ONLINE / PAYPAL
+    # ========================================================
 
-    if payment_method == "ONLINE":
+    elif payment_method == "ONLINE":
 
         return redirect(
             "orders:paypal_checkout",
             order_id=order.id
         )
+
+    # ========================================================
+    # INVALID PAYMENT METHOD
+    # ========================================================
 
     return redirect(
         "orders:checkout"
@@ -469,11 +424,10 @@ def paypal_checkout(request, order_id):
         "orders/paypal.html",
 
         {
-            "order":
-                order,
+            "order": order,
 
             "paypal_client_id":
-                PAYPAL_CLIENT_ID,
+                settings.PAYPAL_CLIENT_ID,
         }
     )
 
@@ -489,14 +443,13 @@ def create_paypal_order(request):
     try:
 
         # ----------------------------------------------------
-        # METHOD
+        # CHECK METHOD
         # ----------------------------------------------------
 
         if request.method != "POST":
 
             return JsonResponse(
                 {
-                    "success": False,
                     "error":
                         "POST request required"
                 },
@@ -504,34 +457,19 @@ def create_paypal_order(request):
             )
 
         # ----------------------------------------------------
-        # REQUEST BODY
+        # READ JSON
         # ----------------------------------------------------
-
-        if not request.body:
-
-            return JsonResponse(
-                {
-                    "success": False,
-                    "error":
-                        "Empty request body"
-                },
-                status=400
-            )
 
         try:
 
             data = json.loads(
-                request.body.decode("utf-8")
+                request.body
             )
 
-        except (
-            json.JSONDecodeError,
-            UnicodeDecodeError
-        ):
+        except json.JSONDecodeError:
 
             return JsonResponse(
                 {
-                    "success": False,
                     "error":
                         "Invalid JSON request"
                 },
@@ -539,7 +477,7 @@ def create_paypal_order(request):
             )
 
         # ----------------------------------------------------
-        # ORDER ID
+        # GET ORDER ID
         # ----------------------------------------------------
 
         order_id = data.get(
@@ -550,7 +488,6 @@ def create_paypal_order(request):
 
             return JsonResponse(
                 {
-                    "success": False,
                     "error":
                         "Order ID is required"
                 },
@@ -558,7 +495,7 @@ def create_paypal_order(request):
             )
 
         # ----------------------------------------------------
-        # GET ORDER
+        # GET DJANGO ORDER
         # ----------------------------------------------------
 
         order = get_object_or_404(
@@ -578,13 +515,13 @@ def create_paypal_order(request):
         )
 
         print(
-            "DJANGO ORDER TOTAL:",
+            "ORDER TOTAL BEFORE CONVERSION:",
             order.total,
             type(order.total)
         )
 
         # ----------------------------------------------------
-        # PAYPAL TOKEN
+        # GET PAYPAL TOKEN
         # ----------------------------------------------------
 
         token = get_paypal_access_token()
@@ -592,58 +529,36 @@ def create_paypal_order(request):
         if not token:
 
             return JsonResponse(
-
                 {
-                    "success": False,
                     "error":
                         "Unable to authenticate with PayPal"
                 },
-
                 status=500
             )
 
         # ----------------------------------------------------
-        # ORDER TOTAL
+        # CONVERT ORDER TOTAL TO DECIMAL
         # ----------------------------------------------------
 
-        order_total = money(
+        order_total = to_decimal(
             order.total
         )
 
         # ----------------------------------------------------
         # INR → USD
         # ----------------------------------------------------
-        #
-        # DEMO exchange rate.
-        #
-        # Example:
-        # ₹208.95 / 83 = $2.52
-        #
-        # For production use a live exchange-rate service.
-        # ----------------------------------------------------
 
-        exchange_rate = Decimal(
-            "83"
+        # Demo/static exchange rate.
+        # Replace with live exchange rate for production.
+
+        exchange_rate = Decimal("83")
+
+        usd_amount = (
+            order_total / exchange_rate
+        ).quantize(
+            Decimal("0.01"),
+            rounding=ROUND_HALF_UP
         )
-
-        usd_amount = money(
-            order_total /
-            exchange_rate
-        )
-
-        # PayPal should not receive zero
-        if usd_amount <= Decimal("0.00"):
-
-            return JsonResponse(
-
-                {
-                    "success": False,
-                    "error":
-                        "Invalid payment amount"
-                },
-
-                status=400
-            )
 
         print(
             "ORDER TOTAL INR:",
@@ -653,49 +568,6 @@ def create_paypal_order(request):
         print(
             "PAYPAL AMOUNT USD:",
             usd_amount
-        )
-
-        # ----------------------------------------------------
-        # PAYLOAD
-        # ----------------------------------------------------
-
-        payload = {
-
-            "intent":
-                "CAPTURE",
-
-            "purchase_units": [
-
-                {
-
-                    "reference_id":
-                        str(
-                            order.order_number
-                        ),
-
-                    "description":
-                        (
-                            "AakashKart Order "
-                            f"{order.order_number}"
-                        ),
-
-                    "amount": {
-
-                        "currency_code":
-                            "USD",
-
-                        "value":
-                            str(
-                                usd_amount
-                            ),
-                    },
-                }
-            ],
-        }
-
-        print(
-            "PAYPAL CREATE PAYLOAD:",
-            payload
         )
 
         # ----------------------------------------------------
@@ -714,17 +586,50 @@ def create_paypal_order(request):
                 "Content-Type":
                     "application/json",
 
-                "Accept":
-                    "application/json",
-
                 "Prefer":
                     "return=representation",
             },
 
-            json=payload,
+            json={
+
+                "intent":
+                    "CAPTURE",
+
+                "purchase_units": [
+
+                    {
+
+                        "reference_id":
+                            str(
+                                order.order_number
+                            ),
+
+                        "description":
+                            (
+                                "AakashKart Order "
+                                f"{order.order_number}"
+                            ),
+
+                        "amount": {
+
+                            "currency_code":
+                                "USD",
+
+                            "value":
+                                str(
+                                    usd_amount
+                                ),
+                        },
+                    }
+                ],
+            },
 
             timeout=30,
         )
+
+        # ----------------------------------------------------
+        # PRINT PAYPAL RESPONSE
+        # ----------------------------------------------------
 
         print(
             "PAYPAL CREATE STATUS:",
@@ -737,102 +642,53 @@ def create_paypal_order(request):
         )
 
         # ----------------------------------------------------
-        # RESPONSE
-        # ----------------------------------------------------
-
-        try:
-
-            paypal_data = response.json()
-
-        except ValueError:
-
-            return JsonResponse(
-
-                {
-                    "success": False,
-
-                    "error":
-                        "PayPal returned an invalid response",
-
-                    "paypal_response":
-                        response.text[:1000],
-                },
-
-                status=502
-            )
-
-        # ----------------------------------------------------
-        # PAYPAL ERROR
+        # HANDLE PAYPAL ERROR
         # ----------------------------------------------------
 
         if not response.ok:
 
+            try:
+
+                details = response.json()
+
+            except ValueError:
+
+                details = {
+                    "message":
+                        response.text
+                }
+
             return JsonResponse(
 
                 {
-                    "success": False,
-
                     "error":
                         "PayPal order creation failed",
 
                     "details":
-                        paypal_data,
+                        details,
                 },
 
                 status=response.status_code
             )
 
         # ----------------------------------------------------
-        # ORDER ID CHECK
+        # SUCCESS
         # ----------------------------------------------------
 
-        paypal_order_id = paypal_data.get(
-            "id"
-        )
-
-        if not paypal_order_id:
-
-            return JsonResponse(
-
-                {
-                    "success": False,
-
-                    "error":
-                        "PayPal order ID missing",
-
-                    "details":
-                        paypal_data,
-                },
-
-                status=502
-            )
+        paypal_data = response.json()
 
         print(
             "PAYPAL ORDER ID:",
-            paypal_order_id
+            paypal_data.get("id")
         )
-
-        # ----------------------------------------------------
-        # RETURN JSON
-        # ----------------------------------------------------
 
         return JsonResponse(
-
-            {
-                "success": True,
-
-                "id":
-                    paypal_order_id,
-
-                "status":
-                    paypal_data.get(
-                        "status"
-                    ),
-
-                "paypal_order":
-                    paypal_data,
-            }
+            paypal_data
         )
+
+    # --------------------------------------------------------
+    # GENERAL ERROR
+    # --------------------------------------------------------
 
     except Exception as e:
 
@@ -844,8 +700,6 @@ def create_paypal_order(request):
         return JsonResponse(
 
             {
-                "success": False,
-
                 "error":
                     str(e)
             },
@@ -868,7 +722,7 @@ def capture_paypal_order(
     try:
 
         # ----------------------------------------------------
-        # METHOD
+        # CHECK METHOD
         # ----------------------------------------------------
 
         if request.method != "POST":
@@ -876,8 +730,6 @@ def capture_paypal_order(
             return JsonResponse(
 
                 {
-                    "success": False,
-
                     "error":
                         "POST request required"
                 },
@@ -886,7 +738,7 @@ def capture_paypal_order(
             )
 
         # ----------------------------------------------------
-        # TOKEN
+        # GET PAYPAL TOKEN
         # ----------------------------------------------------
 
         token = get_paypal_access_token()
@@ -896,8 +748,6 @@ def capture_paypal_order(
             return JsonResponse(
 
                 {
-                    "success": False,
-
                     "error":
                         "Unable to authenticate with PayPal"
                 },
@@ -906,7 +756,7 @@ def capture_paypal_order(
             )
 
         # ----------------------------------------------------
-        # CAPTURE
+        # CAPTURE PAYMENT
         # ----------------------------------------------------
 
         response = requests.post(
@@ -920,9 +770,6 @@ def capture_paypal_order(
                     f"Bearer {token}",
 
                 "Content-Type":
-                    "application/json",
-
-                "Accept":
                     "application/json",
 
                 "Prefer":
@@ -945,7 +792,7 @@ def capture_paypal_order(
         )
 
         # ----------------------------------------------------
-        # JSON RESPONSE
+        # READ JSON RESPONSE
         # ----------------------------------------------------
 
         try:
@@ -957,16 +804,11 @@ def capture_paypal_order(
             return JsonResponse(
 
                 {
-                    "success": False,
-
                     "error":
-                        "PayPal returned invalid capture response",
-
-                    "paypal_response":
-                        response.text[:1000],
+                        "Invalid response from PayPal"
                 },
 
-                status=502
+                status=500
             )
 
         # ----------------------------------------------------
@@ -978,8 +820,6 @@ def capture_paypal_order(
             return JsonResponse(
 
                 {
-                    "success": False,
-
                     "error":
                         "PayPal capture failed",
 
@@ -991,7 +831,7 @@ def capture_paypal_order(
             )
 
         # ----------------------------------------------------
-        # PAYMENT STATUS
+        # CHECK COMPLETED
         # ----------------------------------------------------
 
         if data.get("status") != "COMPLETED":
@@ -999,8 +839,6 @@ def capture_paypal_order(
             return JsonResponse(
 
                 {
-                    "success": False,
-
                     "error":
                         "Payment was not completed",
 
@@ -1011,9 +849,9 @@ def capture_paypal_order(
                 status=400
             )
 
-        # ----------------------------------------------------
-        # PURCHASE UNITS
-        # ----------------------------------------------------
+        # ====================================================
+        # GET PURCHASE UNIT
+        # ====================================================
 
         purchase_units = data.get(
             "purchase_units",
@@ -1025,8 +863,6 @@ def capture_paypal_order(
             return JsonResponse(
 
                 {
-                    "success": False,
-
                     "error":
                         "Purchase information missing"
                 },
@@ -1035,10 +871,11 @@ def capture_paypal_order(
             )
 
         # ----------------------------------------------------
-        # REFERENCE ID
+        # GET REFERENCE ID
         # ----------------------------------------------------
 
         reference_id = (
+
             purchase_units[0]
             .get("reference_id")
         )
@@ -1048,8 +885,6 @@ def capture_paypal_order(
             return JsonResponse(
 
                 {
-                    "success": False,
-
                     "error":
                         "Order reference missing"
                 },
@@ -1062,9 +897,9 @@ def capture_paypal_order(
             reference_id
         )
 
-        # ----------------------------------------------------
-        # GET DJANGO ORDER
-        # ----------------------------------------------------
+        # ====================================================
+        # FIND DJANGO ORDER
+        # ====================================================
 
         order = get_object_or_404(
 
@@ -1077,23 +912,21 @@ def capture_paypal_order(
             status="Pending"
         )
 
-        # ----------------------------------------------------
-        # DUPLICATE PAYMENT CHECK
-        # ----------------------------------------------------
+        # ====================================================
+        # PREVENT DUPLICATE PAYMENT
+        # ====================================================
 
-        existing_payment = (
-            Payment.objects.filter(
-                payment_id=paypal_order_id
-            ).first()
-        )
+        existing_payment = Payment.objects.filter(
+
+            payment_id=paypal_order_id
+
+        ).first()
 
         if existing_payment:
 
             return JsonResponse(
 
                 {
-                    "success": False,
-
                     "error":
                         "Payment already processed"
                 },
@@ -1101,56 +934,39 @@ def capture_paypal_order(
                 status=400
             )
 
-        # ----------------------------------------------------
-        # PAYMENT AMOUNT
-        # ----------------------------------------------------
+        # ====================================================
+        # CREATE PAYMENT
+        # ====================================================
 
-        amount_paid = money(
-            order.total
+        Payment.objects.create(
+
+            user=request.user,
+
+            order=order,
+
+            payment_id=paypal_order_id,
+
+            payment_method="PayPal",
+
+            amount_paid=order.total,
+
+            status="Completed",
         )
-
-        # ----------------------------------------------------
-        # CREATE PAYMENT + COMPLETE ORDER
-        # ----------------------------------------------------
-
-        with transaction.atomic():
-
-            Payment.objects.create(
-
-                user=request.user,
-
-                order=order,
-
-                payment_id=
-                    paypal_order_id,
-
-                payment_method=
-                    "PayPal",
-
-                amount_paid=
-                    amount_paid,
-
-                status=
-                    "Completed",
-            )
-
-            complete_order(
-                order
-            )
 
         print(
             "PAYMENT CREATED:",
             paypal_order_id
         )
 
-        print(
-            "ORDER COMPLETED:",
-            order.order_number
-        )
+        # ====================================================
+        # COMPLETE ORDER
+        # ====================================================
 
-        # ----------------------------------------------------
+        complete_order(order)
+
+        # ====================================================
         # SUCCESS URL
-        # ----------------------------------------------------
+        # ====================================================
 
         success_url = redirect(
 
@@ -1158,24 +974,26 @@ def capture_paypal_order(
 
             order_number=
                 order.order_number
-
         ).url
 
         return JsonResponse(
 
             {
-                "success": True,
+
+                "success":
+                    True,
 
                 "message":
                     "Payment completed successfully",
 
                 "redirect_url":
                     success_url,
-
-                "order_number":
-                    order.order_number,
             }
         )
+
+    # --------------------------------------------------------
+    # GENERAL ERROR
+    # --------------------------------------------------------
 
     except Exception as e:
 
@@ -1187,8 +1005,6 @@ def capture_paypal_order(
         return JsonResponse(
 
             {
-                "success": False,
-
                 "error":
                     str(e)
             },
@@ -1201,12 +1017,11 @@ def capture_paypal_order(
 # COMPLETE ORDER
 # ============================================================
 
+@transaction.atomic
 def complete_order(order):
 
-    order_products = (
-        OrderProduct.objects.filter(
-            order=order
-        )
+    order_products = OrderProduct.objects.filter(
+        order=order
     )
 
     for item in order_products:
@@ -1214,13 +1029,12 @@ def complete_order(order):
         product = item.product
 
         # ----------------------------------------------------
-        # STOCK CHECK
+        # CHECK STOCK
         # ----------------------------------------------------
 
         if product.stock < item.quantity:
 
             raise ValueError(
-
                 f"Insufficient stock for "
                 f"{product.product_name}"
             )
@@ -1257,17 +1071,20 @@ def complete_order(order):
 
     order.save()
 
+    print(
+        "ORDER COMPLETED:",
+        order.order_number
+    )
+
     # --------------------------------------------------------
-    # EMAIL
+    # SEND EMAIL
     # --------------------------------------------------------
 
-    send_order_confirmation_email(
-        order
-    )
+    send_order_confirmation_email(order)
 
 
 # ============================================================
-# ORDER COMPLETE
+# ORDER COMPLETE PAGE
 # ============================================================
 
 @login_required
@@ -1280,17 +1097,14 @@ def order_complete(
 
         Order,
 
-        order_number=
-            order_number,
+        order_number=order_number,
 
-        user=
-            request.user
+        user=request.user
     )
 
-    order_products = (
-        OrderProduct.objects.filter(
-            order=order
-        )
+    order_products = OrderProduct.objects.filter(
+
+        order=order
     )
 
     return render(
@@ -1300,6 +1114,7 @@ def order_complete(
         "orders/order_complete.html",
 
         {
+
             "order":
                 order,
 
@@ -1310,7 +1125,7 @@ def order_complete(
 
 
 # ============================================================
-# ORDER EMAIL
+# SEND ORDER CONFIRMATION EMAIL
 # ============================================================
 
 def send_order_confirmation_email(order):
@@ -1319,7 +1134,6 @@ def send_order_confirmation_email(order):
 
         f"Order Confirmed 🎉 | "
         f"Order No: {order.order_number}"
-
     )
 
     message = render_to_string(
@@ -1327,6 +1141,7 @@ def send_order_confirmation_email(order):
         "orders/order_email.html",
 
         {
+
             "order":
                 order,
 
@@ -1345,7 +1160,7 @@ def send_order_confirmation_email(order):
 
         [order.email],
 
-        fail_silently=True,
+        fail_silently=False,
     )
 
 
@@ -1363,33 +1178,31 @@ def payment_successful(
 
         Order,
 
-        order_number=
-            order_number,
+        order_number=order_number,
 
-        user=
-            request.user,
+        user=request.user,
 
-        status=
-            "Completed"
+        status="Completed"
     )
 
-    order_products = (
-        OrderProduct.objects.filter(
-            order=order
-        )
+    order_products = OrderProduct.objects.filter(
+
+        order=order
     )
 
-    subtotal = Decimal("0.00")
+    subtotal = sum(
 
-    for item in order_products:
-
-        subtotal += (
+        (
             to_decimal(item.price)
             * item.quantity
         )
 
-    subtotal = money(
-        subtotal
+        for item in order_products
+    )
+
+    subtotal = subtotal.quantize(
+        Decimal("0.01"),
+        rounding=ROUND_HALF_UP
     )
 
     return render(
@@ -1399,6 +1212,7 @@ def payment_successful(
         "orders/payment_successful.html",
 
         {
+
             "order":
                 order,
 
