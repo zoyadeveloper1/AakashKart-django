@@ -1129,41 +1129,33 @@ def order_complete(
 # ============================================================
 
 def send_order_confirmation_email(order):
+    try:
+        subject = f"Order Confirmation - {order.order_number}"
 
-    subject = (
+        html_message = render_to_string(
+            "orders/order_confirmation_email.html",
+            {
+                "order": order,
+                "user": order.user,
+            }
+        )
 
-        f"Order Confirmed 🎉 | "
-        f"Order No: {order.order_number}"
-    )
+        email = EmailMessage(
+            subject=subject,
+            body=html_message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=[order.email],
+        )
 
-    message = render_to_string(
+        # 🔥 This tells Django that the body is HTML
+        email.content_subtype = "html"
 
-        "orders/order_email.html",
+        email.send(fail_silently=False)
 
-        {
+        print("ORDER CONFIRMATION EMAIL SENT:", order.email)
 
-            "order":
-                order,
-
-            "user":
-                order.user,
-        }
-    )
-
-    send_mail(
-
-        subject,
-
-        message,
-
-        settings.DEFAULT_FROM_EMAIL,
-
-        [order.email],
-
-        fail_silently=False,
-    )
-
-
+    except Exception as e:
+        print("EMAIL ERROR:", repr(e))
 # ============================================================
 # PAYMENT SUCCESSFUL
 # ============================================================

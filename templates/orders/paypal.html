@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,13 +13,26 @@
 
     <title>Pay with PayPal | AakashKart</title>
 
-    <script src="https://www.paypal.com/sdk/js?client-id={{ paypal_client_id }}&currency=USD&intent=capture"></script>
+
+    <!-- =====================================================
+         PAYPAL JAVASCRIPT SDK
+    ====================================================== -->
+
+    <script
+        src="https://www.paypal.com/sdk/js?client-id={{ paypal_client_id }}&currency=USD&intent=capture">
+    </script>
+
+
+    <!-- =====================================================
+         STYLE
+    ====================================================== -->
 
     <style>
 
         * {
             box-sizing: border-box;
         }
+
 
         body {
             margin: 0;
@@ -27,62 +41,120 @@
             font-family: Arial, sans-serif;
         }
 
+
         .paypal-wrapper {
+
             min-height: 100vh;
+
             display: flex;
+
             justify-content: center;
+
             align-items: center;
+
             padding: 30px 15px;
         }
 
+
         .paypal-card {
+
             width: 100%;
+
             max-width: 560px;
-            background: white;
+
+            background: #ffffff;
+
             padding: 35px;
+
             border-radius: 15px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.10);
+
+            box-shadow:
+                0 8px 30px
+                rgba(0, 0, 0, 0.10);
         }
 
+
         .paypal-title {
+
             text-align: center;
+
             font-size: 26px;
+
             font-weight: bold;
+
             margin-bottom: 10px;
         }
 
+
         .paypal-subtitle {
+
             text-align: center;
+
             color: #666;
+
             margin-bottom: 20px;
         }
 
+
         .amount {
+
             text-align: center;
+
             font-size: 28px;
+
             font-weight: bold;
+
             margin: 20px 0 30px;
         }
 
+
         #paypal-button-container {
+
             width: 100%;
         }
 
-        #paypal-error {
-            display: none;
-            margin-top: 20px;
-            padding: 12px;
-            background: #ffe5e5;
-            color: #d00000;
-            border-radius: 8px;
-            text-align: center;
-            word-break: break-word;
-        }
 
         #paypal-loading {
+
             text-align: center;
+
             color: #777;
+
             margin-bottom: 15px;
+        }
+
+
+        #paypal-error {
+
+            display: none;
+
+            margin-top: 20px;
+
+            padding: 14px;
+
+            background: #ffe5e5;
+
+            color: #d00000;
+
+            border-radius: 8px;
+
+            text-align: center;
+
+            word-break: break-word;
+
+            font-size: 14px;
+        }
+
+
+        .order-info {
+
+            text-align: center;
+
+            color: #777;
+
+            font-size: 14px;
+
+            margin-bottom: 20px;
         }
 
     </style>
@@ -92,45 +164,133 @@
 
 <body>
 
+
 <div class="paypal-wrapper">
+
 
     <div class="paypal-card">
 
+
+        <!-- =================================================
+             TITLE
+        ================================================== -->
+
         <div class="paypal-title">
+
             💳 Pay with PayPal
+
         </div>
+
 
         <div class="paypal-subtitle">
+
             Fast & secure online payment
+
         </div>
+
+
+        <!-- =================================================
+             ORDER NUMBER
+        ================================================== -->
+
+        <div class="order-info">
+
+            Order #{{ order.order_number }}
+
+        </div>
+
+
+        <!-- =================================================
+             TOTAL AMOUNT
+        ================================================== -->
 
         <div class="amount">
+
             ₹{{ order.total }}
+
         </div>
 
+
+        <!-- =================================================
+             LOADING
+        ================================================== -->
+
         <div id="paypal-loading">
+
             Loading PayPal...
+
         </div>
+
+
+        <!-- =================================================
+             PAYPAL BUTTON
+        ================================================== -->
 
         <div id="paypal-button-container"></div>
 
+
+        <!-- =================================================
+             ERROR
+        ================================================== -->
+
         <div id="paypal-error"></div>
+
 
     </div>
 
 </div>
 
 
+
 <script>
 
-const djangoOrderId = "{{ order.id }}";
+
+/* ==========================================================
+   DJANGO ORDER ID
+========================================================== */
+
+const djangoOrderId =
+    "{{ order.id }}";
+
+
+/* ==========================================================
+   CREATE PAYPAL ORDER URL
+
+   Django:
+
+   path(
+       "paypal/create/",
+       views.create_paypal_order,
+       name="create_paypal_order"
+   )
+========================================================== */
 
 const createUrl =
     "{% url 'orders:create_paypal_order' %}";
 
-const captureBaseUrl =
-    "/orders/capture-paypal-order/";
 
+/* ==========================================================
+   CAPTURE PAYPAL ORDER URL
+
+   Django:
+
+   path(
+       "capture-paypal-order/<str:paypal_order_id>/",
+       views.capture_paypal_order,
+       name="capture_paypal_order"
+   )
+
+   We generate the URL with a placeholder and
+   replace it with the real PayPal Order ID.
+========================================================== */
+
+const captureUrlTemplate =
+    "{% url 'orders:capture_paypal_order' paypal_order_id='PAYPAL_ORDER_ID' %}";
+
+
+/* ==========================================================
+   SHOW ERROR
+========================================================== */
 
 function showError(message) {
 
@@ -139,339 +299,791 @@ function showError(message) {
             "paypal-error"
         );
 
-    errorBox.style.display = "block";
+
+    errorBox.style.display =
+        "block";
+
 
     errorBox.textContent =
         message;
-
 }
 
+
+/* ==========================================================
+   HIDE LOADING
+========================================================== */
 
 function hideLoading() {
 
-    document.getElementById(
-        "paypal-loading"
-    ).style.display = "none";
+    const loading =
+        document.getElementById(
+            "paypal-loading"
+        );
 
+
+    loading.style.display =
+        "none";
 }
 
 
-async function parseJsonResponse(response) {
+/* ==========================================================
+   GET CSRF TOKEN
 
-    const contentType =
-        response.headers.get(
-            "content-type"
-        ) || "";
+   Even though the current Django views use
+   @csrf_exempt, keeping CSRF support here is
+   better for security.
+========================================================== */
 
-    const text =
-        await response.text();
+function getCookie(name) {
 
-    console.log(
-        "SERVER STATUS:",
-        response.status
-    );
+    let cookieValue = null;
 
-    console.log(
-        "SERVER CONTENT TYPE:",
-        contentType
-    );
 
-    console.log(
-        "SERVER RESPONSE:",
-        text
-    );
+    if (document.cookie &&
+        document.cookie !== "") {
 
-    if (
-        !contentType.includes(
-            "application/json"
-        )
-    ) {
+        const cookies =
+            document.cookie.split(";");
 
-        throw new Error(
-            "Server returned HTML instead of JSON. " +
-            "Check Django URL / deployment logs."
-        );
+
+        for (
+            let i = 0;
+            i < cookies.length;
+            i++
+        ) {
+
+            const cookie =
+                cookies[i].trim();
+
+
+            if (
+                cookie.substring(
+                    0,
+                    name.length + 1
+                ) ===
+                (name + "=")
+            ) {
+
+                cookieValue =
+                    decodeURIComponent(
+                        cookie.substring(
+                            name.length + 1
+                        )
+                    );
+
+                break;
+            }
+        }
     }
+
+
+    return cookieValue;
+}
+
+
+const csrftoken =
+    getCookie("csrftoken");
+
+
+/* ==========================================================
+   CREATE PAYPAL ORDER
+========================================================== */
+
+async function createPayPalOrder() {
+
+    console.log(
+        "===================================="
+    );
+
+    console.log(
+        "PAYPAL CREATE ORDER START"
+    );
+
+    console.log(
+        "===================================="
+    );
+
+
+    console.log(
+        "Django Order ID:",
+        djangoOrderId
+    );
+
+
+    console.log(
+        "Create URL:",
+        createUrl
+    );
+
 
     try {
 
-        return JSON.parse(text);
+        const response =
+            await fetch(
+                createUrl,
+                {
 
-    } catch (error) {
-
-        throw new Error(
-            "Invalid JSON response from server."
-        );
-    }
-}
+                    method: "POST",
 
 
-paypal.Buttons({
+                    credentials:
+                        "same-origin",
 
-    // ========================================================
-    // CREATE PAYPAL ORDER
-    // ========================================================
 
-    createOrder: async function () {
+                    headers: {
 
-        console.log(
-            "Creating PayPal order..."
-        );
+                        "Content-Type":
+                            "application/json",
 
-        try {
+                        "Accept":
+                            "application/json",
 
-            const response =
-                await fetch(
-                    createUrl,
-                    {
-                        method: "POST",
+                        "X-Requested-With":
+                            "XMLHttpRequest",
 
-                        headers: {
-                            "Content-Type":
-                                "application/json",
+                        ...(csrftoken
+                            ? {
+                                "X-CSRFToken":
+                                    csrftoken
+                            }
+                            : {})
+                    },
 
-                            "Accept":
-                                "application/json",
 
-                            "X-Requested-With":
-                                "XMLHttpRequest"
-                        },
-
-                        body: JSON.stringify({
+                    body:
+                        JSON.stringify({
 
                             order_id:
                                 djangoOrderId
 
                         })
-                    }
-                );
-
-
-            const data =
-                await parseJsonResponse(
-                    response
-                );
-
-
-            console.log(
-                "CREATE ORDER DATA:",
-                data
+                }
             );
 
-
-            if (
-                !response.ok ||
-                !data.success
-            ) {
-
-                throw new Error(
-                    data.error ||
-                    "Unable to create PayPal order."
-                );
-            }
-
-
-            if (!data.id) {
-
-                throw new Error(
-                    "PayPal Order ID was not returned."
-                );
-            }
-
-
-            console.log(
-                "PayPal Order ID:",
-                data.id
-            );
-
-
-            return data.id;
-
-        }
-
-        catch (error) {
-
-            console.error(
-                "CREATE ORDER ERROR:",
-                error
-            );
-
-            showError(
-                error.message
-            );
-
-            throw error;
-        }
-
-    },
-
-
-    // ========================================================
-    // PAYMENT APPROVED
-    // ========================================================
-
-    onApprove: async function (
-        data
-    ) {
 
         console.log(
-            "PAYPAL APPROVED:",
-            data
+            "CREATE HTTP STATUS:",
+            response.status
         );
+
+
+        console.log(
+            "CREATE RESPONSE URL:",
+            response.url
+        );
+
+
+        console.log(
+            "CREATE REDIRECTED:",
+            response.redirected
+        );
+
+
+        const contentType =
+            response.headers.get(
+                "content-type"
+            ) || "";
+
+
+        console.log(
+            "CREATE CONTENT TYPE:",
+            contentType
+        );
+
+
+        const text =
+            await response.text();
+
+
+        console.log(
+            "CREATE RAW RESPONSE:",
+            text
+        );
+
+
+        /* =================================================
+           LOGIN REDIRECT
+        ================================================== */
+
+        if (response.redirected) {
+
+            throw new Error(
+                "Your login session has expired. " +
+                "Please login again and retry payment."
+            );
+        }
+
+
+        /* =================================================
+           HTML RESPONSE
+        ================================================== */
+
+        if (
+            !contentType.includes(
+                "application/json"
+            )
+        ) {
+
+            throw new Error(
+                "Django returned HTML instead of JSON. " +
+                "Check the create PayPal URL and Django server logs."
+            );
+        }
+
+
+        /* =================================================
+           JSON PARSE
+        ================================================== */
+
+        let data;
 
 
         try {
 
-            const response =
-                await fetch(
+            data =
+                JSON.parse(text);
 
-                    captureBaseUrl +
-                    encodeURIComponent(
-                        data.orderID
-                    ) +
-                    "/",
+        }
+        catch (error) {
 
-                    {
-                        method: "POST",
+            throw new Error(
+                "Django returned invalid JSON."
+            );
+        }
 
-                        headers: {
-                            "Content-Type":
-                                "application/json",
 
-                            "Accept":
-                                "application/json",
+        console.log(
+            "CREATE JSON:",
+            data
+        );
 
-                            "X-Requested-With":
-                                "XMLHttpRequest"
-                        },
 
-                        body: JSON.stringify({
+        /* =================================================
+           BACKEND ERROR
+        ================================================== */
 
-                            paypal_order_id:
-                                data.orderID
+        if (!response.ok) {
 
-                        })
-                    }
+            let errorMessage =
+                data.error ||
+                data.message ||
+                "Unable to create PayPal order.";
+
+
+            if (data.details) {
+
+                console.error(
+                    "PAYPAL API DETAILS:",
+                    data.details
                 );
 
 
-            const result =
-                await parseJsonResponse(
-                    response
-                );
+                if (
+                    data.details.message
+                ) {
+
+                    errorMessage +=
+                        " " +
+                        data.details.message;
+                }
+            }
 
 
-            console.log(
-                "CAPTURE RESULT:",
-                result
+            throw new Error(
+                errorMessage
+            );
+        }
+
+
+        /* =================================================
+           PAYPAL ORDER ID
+        ================================================== */
+
+        if (!data.id) {
+
+            throw new Error(
+                "PayPal Order ID was not returned by Django."
+            );
+        }
+
+
+        console.log(
+            "PAYPAL ORDER ID:",
+            data.id
+        );
+
+
+        return data.id;
+
+    }
+    catch (error) {
+
+        console.error(
+            "CREATE PAYPAL ORDER ERROR:",
+            error
+        );
+
+
+        showError(
+            error.message
+        );
+
+
+        throw error;
+    }
+}
+
+
+
+/* ==========================================================
+   CAPTURE PAYPAL ORDER
+========================================================== */
+
+async function capturePayPalOrder(
+    paypalOrderId
+) {
+
+    console.log(
+        "===================================="
+    );
+
+    console.log(
+        "PAYPAL CAPTURE START"
+    );
+
+    console.log(
+        "===================================="
+    );
+
+
+    console.log(
+        "PayPal Order ID:",
+        paypalOrderId
+    );
+
+
+    try {
+
+
+        /* =================================================
+           BUILD CAPTURE URL
+        ================================================== */
+
+        const captureUrl =
+            captureUrlTemplate.replace(
+                "PAYPAL_ORDER_ID",
+                encodeURIComponent(
+                    paypalOrderId
+                )
             );
 
 
-            if (
-                !response.ok ||
-                !result.success
-            ) {
+        console.log(
+            "Capture URL:",
+            captureUrl
+        );
 
-                throw new Error(
-                    result.error ||
-                    "Payment capture failed."
+
+        /* =================================================
+           SEND CAPTURE REQUEST
+        ================================================== */
+
+        const response =
+            await fetch(
+                captureUrl,
+                {
+
+                    method: "POST",
+
+
+                    credentials:
+                        "same-origin",
+
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json",
+
+                        "Accept":
+                            "application/json",
+
+                        "X-Requested-With":
+                            "XMLHttpRequest",
+
+                        ...(csrftoken
+                            ? {
+                                "X-CSRFToken":
+                                    csrftoken
+                            }
+                            : {})
+                    },
+
+
+                    body:
+                        JSON.stringify({
+
+                            paypal_order_id:
+                                paypalOrderId
+
+                        })
+                }
+            );
+
+
+        console.log(
+            "CAPTURE HTTP STATUS:",
+            response.status
+        );
+
+
+        console.log(
+            "CAPTURE RESPONSE URL:",
+            response.url
+        );
+
+
+        const contentType =
+            response.headers.get(
+                "content-type"
+            ) || "";
+
+
+        console.log(
+            "CAPTURE CONTENT TYPE:",
+            contentType
+        );
+
+
+        const text =
+            await response.text();
+
+
+        console.log(
+            "CAPTURE RAW RESPONSE:",
+            text
+        );
+
+
+        /* =================================================
+           LOGIN REDIRECT
+        ================================================== */
+
+        if (response.redirected) {
+
+            throw new Error(
+                "Your login session has expired. " +
+                "Please login again."
+            );
+        }
+
+
+        /* =================================================
+           HTML RESPONSE
+        ================================================== */
+
+        if (
+            !contentType.includes(
+                "application/json"
+            )
+        ) {
+
+            throw new Error(
+                "Django returned HTML instead of JSON during payment capture."
+            );
+        }
+
+
+        /* =================================================
+           PARSE JSON
+        ================================================== */
+
+        let result;
+
+
+        try {
+
+            result =
+                JSON.parse(text);
+
+        }
+        catch (error) {
+
+            throw new Error(
+                "Django returned invalid JSON during payment capture."
+            );
+        }
+
+
+        console.log(
+            "CAPTURE JSON:",
+            result
+        );
+
+
+        /* =================================================
+           CAPTURE ERROR
+        ================================================== */
+
+        if (
+            !response.ok ||
+            !result.success
+        ) {
+
+            let message =
+                result.error ||
+                result.message ||
+                "Payment capture failed.";
+
+
+            if (result.details) {
+
+                console.error(
+                    "CAPTURE DETAILS:",
+                    result.details
                 );
             }
 
 
-            // =================================================
-            // SUCCESS
-            // =================================================
+            throw new Error(
+                message
+            );
+        }
+
+
+        /* =================================================
+           PAYMENT SUCCESS
+        ================================================== */
+
+        console.log(
+            "PAYMENT COMPLETED SUCCESSFULLY"
+        );
+
+
+        if (
+            result.redirect_url
+        ) {
 
             window.location.href =
                 result.redirect_url;
 
         }
+        else {
 
-        catch (error) {
-
-            console.error(
-                "CAPTURE ERROR:",
-                error
-            );
-
-            showError(
-                error.message
+            throw new Error(
+                "Payment completed, but redirect URL was not returned."
             );
         }
 
-    },
-
-
-    // ========================================================
-    // CANCEL
-    // ========================================================
-
-    onCancel: function (
-        data
-    ) {
-
-        console.log(
-            "PAYPAL PAYMENT CANCELLED:",
-            data
-        );
-
-        showError(
-            "Payment was cancelled."
-        );
-    },
-
-
-    // ========================================================
-    // ERROR
-    // ========================================================
-
-    onError: function (
-        error
-    ) {
+    }
+    catch (error) {
 
         console.error(
-            "PAYPAL SDK ERROR:",
+            "CAPTURE PAYPAL ORDER ERROR:",
             error
         );
 
-        showError(
-            "PayPal payment error. Please try again."
-        );
-    }
-
-}).render(
-    "#paypal-button-container"
-)
-.then(
-    function () {
-
-        hideLoading();
-
-        console.log(
-            "PayPal button rendered successfully."
-        );
-
-    }
-)
-.catch(
-    function (error) {
-
-        hideLoading();
-
-        console.error(
-            "PAYPAL RENDER ERROR:",
-            error
-        );
 
         showError(
-            "Unable to load PayPal."
+            error.message
         );
     }
-);
+}
+
+
+
+/* ==========================================================
+   CHECK PAYPAL SDK
+========================================================== */
+
+if (
+    typeof paypal ===
+    "undefined"
+) {
+
+    hideLoading();
+
+
+    showError(
+        "PayPal SDK failed to load. " +
+        "Please check your PayPal Client ID and internet connection."
+    );
+
+}
+else {
+
+
+    console.log(
+        "PayPal SDK loaded successfully."
+    );
+
+
+    /* ======================================================
+       PAYPAL BUTTONS
+    ======================================================= */
+
+    paypal.Buttons({
+
+        /* ==================================================
+           CREATE ORDER
+        =================================================== */
+
+        createOrder:
+            async function () {
+
+                return await
+                    createPayPalOrder();
+            },
+
+
+        /* ==================================================
+           APPROVE
+        =================================================== */
+
+        onApprove:
+            async function (data) {
+
+                console.log(
+                    "PAYPAL PAYMENT APPROVED:",
+                    data
+                );
+
+
+                if (
+                    !data ||
+                    !data.orderID
+                ) {
+
+                    showError(
+                        "PayPal Order ID was not received."
+                    );
+
+                    return;
+                }
+
+
+                await capturePayPalOrder(
+                    data.orderID
+                );
+            },
+
+
+        /* ==================================================
+           CANCEL
+        =================================================== */
+
+        onCancel:
+            function (data) {
+
+                console.log(
+                    "PAYPAL PAYMENT CANCELLED:",
+                    data
+                );
+
+
+                showError(
+                    "Payment was cancelled."
+                );
+            },
+
+
+        /* ==================================================
+           ERROR
+        =================================================== */
+
+        onError:
+            function (error) {
+
+                console.error(
+                    "PAYPAL SDK ERROR:",
+                    error
+                );
+
+
+                let message =
+                    "PayPal payment error.";
+
+
+                if (
+                    error &&
+                    error.message
+                ) {
+
+                    message +=
+                        " " +
+                        error.message;
+                }
+
+
+                showError(
+                    message
+                );
+            }
+
+    })
+
+
+    /* ======================================================
+       BUTTON RENDER SUCCESS
+    ======================================================= */
+
+    .render(
+        "#paypal-button-container"
+    )
+
+
+    .then(
+        function () {
+
+            hideLoading();
+
+
+            console.log(
+                "===================================="
+            );
+
+
+            console.log(
+                "PAYPAL BUTTON RENDERED SUCCESSFULLY"
+            );
+
+
+            console.log(
+                "===================================="
+            );
+        }
+    )
+
+
+    /* ======================================================
+       BUTTON RENDER ERROR
+    ======================================================= */
+
+    .catch(
+        function (error) {
+
+            hideLoading();
+
+
+            console.error(
+                "PAYPAL RENDER ERROR:",
+                error
+            );
+
+
+            showError(
+                error.message ||
+                "Unable to load PayPal."
+            );
+        }
+    );
+
+}
 
 </script>
+
 
 </body>
 
 </html>
+
